@@ -17,13 +17,13 @@ To clone the repository
 Navigate into the project directory:
     
 
-    git clone https://github.com/rupal-draft/Sociofy.git
+    cd Sociofy/
 
 Install dependencies:
 
     npm install
 
-    Create your own .env file based on the provided .env.example, and fill in your environment variables.
+Create your own .env file based on the provided .env.example, and fill in your environment variables.
 
 Running the Application
 
@@ -36,8 +36,6 @@ Once you've set up the project and configured your environment variables, you ca
 
 
 To start the server:
-
-sql
 
     npm start
 
