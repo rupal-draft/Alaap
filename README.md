@@ -6,18 +6,18 @@ Sociofy is a modern social media application designed to connect people and fost
 Getting Started
 
 To set up Sociofy on your local machine, follow these simple steps:
+To clone the repository
 
-    Clone the repository:
+    bash:
 
-    bash
+    git clone https://github.com/rupal-draft/Sociofy.git
 
-git clone https://github.com/rupal-draft/Sociofy.git
+
 
 Navigate into the project directory:
+    
 
-bash
-
-cd Sociofy
+    git clone https://github.com/rupal-draft/Sociofy.git
 
 Install dependencies:
 
@@ -31,9 +31,9 @@ Once you've set up the project and configured your environment variables, you ca
 
     To start the client:
 
-    arduino
+    npm run dev
 
-npm run dev
+
 
 To start the server:
 
