@@ -57,4 +57,4 @@ Acknowledgements
 
 Sociofy is built with love and contributions from the open-source community. We'd like to thank all the contributors who have helped make this project possible.
 
-For any questions or concerns, please contact us at your-email@example.com. We appreciate your interest in Sociofy! 🚀
+For any questions or concerns, please contact us at rupalpaultmsl@gmail.com. We appreciate your interest in Sociofy! 🚀
