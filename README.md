@@ -2,7 +2,7 @@
 
 Sociofy: A Social Media App
 
-Sociofy is a modern social media application designed to connect people and foster meaningful interactions. Built on the MERN (MongoDB, Express.js, React.js, Node.js) stack with Next.js for the frontend, Sociofy offers a seamless user experience coupled with powerful features.
+Sociofy is a modern social media application designed to connect people and foster meaningful interactions. Built on the MERN (MongoDB, Express.js, React.js, Node.js) stack with GraphQL for the backend and Next.js for the frontend, Sociofy offers a seamless user experience coupled with powerful features.
 Getting Started
 
 To set up Sociofy on your local machine, follow these simple steps:
