@@ -64,7 +64,7 @@ export default function SignupPage() {
                   <Input
                     variant="outline"
                     shape="round"
-                    color="undefined_undefined"
+                    color="gray_800"
                     name="name"
                     placeholder={`Anne Carry`}
                     className="self-stretch sm:pr-5"
@@ -81,7 +81,7 @@ export default function SignupPage() {
                   <Input
                     variant="outline"
                     shape="round"
-                    color="undefined_undefined"
+                    color="gray_800"
                     type="email"
                     name="email"
                     placeholder={`user@mail.com`}
@@ -108,7 +108,7 @@ export default function SignupPage() {
                   <Input
                     variant="outline"
                     shape="round"
-                    color="undefined_undefined"
+                    color="gray_800"
                     type="password"
                     name="password"
                     placeholder={`Password@123`}
@@ -174,7 +174,7 @@ export default function SignupPage() {
                   <Button
                     size="8xl"
                     variant="outline"
-                    color="undefined_undefined"
+                    color="light_blue_200"
                     leftIcon={
                       <Img
                         src="img_google.svg"
