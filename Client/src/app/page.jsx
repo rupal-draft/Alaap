@@ -30,14 +30,6 @@ const Home = () => {
         </li>
         <li style={{ marginBottom: "10px" }}>
           <Link
-            href="/stories"
-            style={{ color: "#87CEFA", textDecoration: "none" }}
-          >
-            Stories
-          </Link>
-        </li>
-        <li style={{ marginBottom: "10px" }}>
-          <Link
             href="/singlepost"
             style={{ color: "#87CEFA", textDecoration: "none" }}
           >
@@ -98,14 +90,6 @@ const Home = () => {
             style={{ color: "#87CEFA", textDecoration: "none" }}
           >
             Single Story
-          </Link>
-        </li>
-        <li style={{ marginBottom: "10px" }}>
-          <Link
-            href="/stories"
-            style={{ color: "#87CEFA", textDecoration: "none" }}
-          >
-            Stories
           </Link>
         </li>
         <li style={{ marginBottom: "10px" }}>
