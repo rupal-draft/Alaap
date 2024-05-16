@@ -2,16 +2,30 @@
 import React from "react";
 import { Img, Button, Text, Heading, Input } from "../../components";
 import Link from "next/link";
-import { MenuItem, Menu, Sidebar, sidebarClasses } from "react-pro-sidebar";
+import { Sidebar, sidebarClasses } from "react-pro-sidebar";
 
-const data = [
-  { imageone: "img_image_40x40.png" },
-  { imageone: "img_image_3.png" },
-  { imageone: "img_image_4.png" },
-  { imageone: "img_image_5.png" },
-  { imageone: "img_image_6.png" },
+// icons
+import { FaHome, FaUserFriends } from "react-icons/fa";
+import { FaCircleUser, FaFilter } from "react-icons/fa6";
+import { BsSendFill } from "react-icons/bs";
+import { IoIosNotifications, IoIosSettings, IoIosLogOut } from "react-icons/io";
+
+// data for navbar
+export const navData = [
+  { name: "Home", path: "/home1", icon: <FaHome /> },
+  { name: "Profile", path: "/myprofile", icon: <FaCircleUser /> },
+  { name: "Friends", path: "/myfriends", icon: <FaUserFriends /> },
+  { name: "Messages", path: "/messages", icon: <BsSendFill /> },
+  {
+    name: "Notifications",
+    path: "/notifications",
+    icon: <IoIosNotifications />,
+  },
 ];
-const data1 = [{ one: "#1" }, { one: "#2" }, { one: "#3" }, { one: "#4" }];
+export const navData1 = [
+  { name: "Settings", path: "/settings", icon: <IoIosSettings /> },
+  { name: "Logout", path: "/", icon: <IoIosLogOut /> },
+];
 
 export default function Home1Page() {
   const [collapsed, setCollapsed] = React.useState(false);
@@ -21,77 +35,122 @@ export default function Home1Page() {
   //    setCollapsed(!collapsed)
   //}
   return (
-    <div className="flex w-full items-start justify-between gap-5 bg-gray-100 md:flex-col">
+    <div className="flex w-full items-start justify-between gap-5 bg-[#dadada] md:flex-col">
+      {/* side bar */}
       <Sidebar
-        width="167px !important"
+        width="100px !important"
         collapsedWidth="80px !important"
         collapsed={collapsed}
-        rootStyles={{ [`.${sidebarClasses.container}`]: { gap: 101 } }}
-        className="!sticky top-0 flex h-screen flex-col gap-[101px] overflow-auto bg-indigo-A200 p-[45px] md:hidden md:gap-[75px] md:p-5 sm:gap-[50px]"
+        rootStyles={{
+          [`.${sidebarClasses.container}`]: { gap: 0 },
+        }}
+        className="!sticky top-0  h-screen overflow-auto bg-[#cdcdcd] pt-0 md:gap-[1px] sm:gap-[50px] flex lg:flex-col md:flex-row items-center justify-center"
       >
-        <Img
-          src="img_sidebar_logo.svg"
-          width={48}
-          height={48}
-          alt="sidebarlogo"
-          className="h-[48px] w-[48px] object-contain"
-        />
-        <Menu
-          menuItemStyles={{
-            button: {
-              padding: "12px",
-              backgroundColor: "#ffffff33",
-              borderRadius: "12px",
-              [`&:hover, &.ps-active`]: { backgroundColor: "#ffffff !important" },
-            },
-          }}
-          rootStyles={{ ["&>ul"]: { gap: "322px" } }}
-          className="mb-[15px] flex w-full flex-col"
-        >
-          <div className="flex flex-col gap-10">
-            <MenuItem
-              icon={<Img src="img_home.svg" width={24} height={24} alt="home" className="h-[24px] w-[24px]" />}
-            />
-            <MenuItem
-              icon={<Img src="img_calendar.svg" width={24} height={24} alt="calendar" className="h-[24px] w-[24px]" />}
-            />
-            <MenuItem
-              icon={<Img src="img_lock.svg" width={24} height={24} alt="lock" className="h-[24px] w-[24px]" />}
-            />
-            <MenuItem
-              icon={
-                <Img src="img_lock_white_a700.svg" width={24} height={24} alt="lock" className="h-[24px] w-[24px]" />
-              }
-            />
-            <MenuItem
-              icon={<Img src="img_search.svg" width={24} height={24} alt="search" className="h-[24px] w-[24px]" />}
-            />
+        <div className="flex flex-col items-center justify-center pt-11 gap-[50px]">
+          <Img
+            src="img_sidebar_logo.svg"
+            width={48}
+            height={48}
+            alt="sidebarlogo"
+            className="h-[48px] w-[48px] object-contain"
+          />
+
+          <div className="mb-[15px]  flex flex-col gap-80">
+            <div>
+              {navData.map((link, index) => {
+                return (
+                  // target="_blank"
+                  <Link href={link.path} key={index} className="mx-2">
+                    <div className="flex flex-col items-center justify-center relative group py-4 w-full">
+                      <div className="absolute top-[-15px] hidden group-hover:flex">
+                        <div className="bg-[#000] relative flex text-[#fff] items-center p-[6px] rounded-[3px]">
+                          {/* names */}
+                          <div className="text-[12px] leading-none font-semibold capitalize flex-grow text-center relative">
+                            {link.name}
+                            {/* triangle */}
+                            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-solid border-t-[10px] border-t-black border-x-[8px] border-x-transparent "></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-center p-3 cursor-pointer rounded-lg hover:bg-black text-2xl text-[#fff]">
+                        {link.icon}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div className="flex flex-col">
+              {navData1.map((link, index) => {
+                return (
+                  <Link href={link.path} key={index} className="mx-2">
+                    <div className="flex flex-col items-center justify-center relative group py-4 w-full">
+                      <div className="absolute top-[-15px] hidden group-hover:flex">
+                        <div className="bg-[#000] relative flex text-[#fff] items-center p-[6px] rounded-[3px]">
+                          {/* names */}
+                          <div className="text-[12px] leading-none font-semibold capitalize flex-grow text-center relative">
+                            {link.name}
+                            {/* triangle */}
+                            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-solid border-t-[10px] border-t-black border-x-[8px] border-x-transparent "></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-center p-3 cursor-pointer rounded-lg hover:bg-black text-2xl text-[#fff]">
+                        {link.icon}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-          <div className="flex flex-col">
-            <MenuItem
-              icon={
-                <Img src="img_arrow_left.svg" width={24} height={24} alt="arrowleft" className="h-[24px] w-[24px]" />
-              }
-            />
-          </div>
-        </Menu>
+        </div>
       </Sidebar>
-      <div className="flex w-[84%] items-start justify-center gap-[30px] self-end md:w-full md:flex-col md:p-5">
+
+      {/* main screen */}
+      <div className="flex w-[100%] items-start justify-center gap-[30px] self-end md:w-full md:flex-col mr-5 ">
         <div className="mt-10 flex flex-1 flex-col gap-10 md:self-stretch">
-          <div className="flex items-center justify-center gap-[13px] rounded-[12px] bg-white-A700 p-3 md:flex-col">
+          {/* search bar */}
+          <div className="flex items-center justify-center gap-[13px] rounded-[12px] bg-[#cdcdcd] p-3 md:flex-col">
             <Input
               size="sm"
               shape="square"
               name="search"
               placeholder={`Search in social…`}
-              prefix={<Img src="img_rewind.svg" width={18} height={18} alt="rewind" className="h-[18px] w-[18px]" />}
+              prefix={
+                <Img
+                  src="img_rewind.svg"
+                  width={18}
+                  height={18}
+                  alt="rewind"
+                  className="h-[18px] w-[18px]"
+                />
+              }
               className="flex-grow gap-[15px] md:p-5 sm:pr-5"
             />
-            <Heading size="s" as="h1" className="uppercase tracking-[1.00px] !text-gray-500">
-              Filters
+            <Heading size="s" as="h1" className="text-[1.5rem] !text-gray-500">
+              <Link href="\">
+                <div className="flex flex-col items-center justify-center relative group w-full">
+                  <div className="absolute top-[-35px] hidden group-hover:flex">
+                    <div className="bg-[#000] relative flex text-[#fff] items-center p-[6px] rounded-[3px]">
+                      {/* names */}
+                      <div className="text-[12px] leading-none font-semibold capitalize flex-grow text-center relative">
+                        Filter
+                        {/* triangle */}
+                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-solid border-t-[10px] border-t-black border-x-[8px] border-x-transparent "></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center cursor-pointer rounded-lg  text-2xl text-[#fff]">
+                    <FaFilter />
+                  </div>
+                </div>
+              </Link>
             </Heading>
           </div>
-          <div className="flex items-center gap-[30px] md:flex-col">
+
+          <div className="flex items-start gap-[30px] md:flex-col mb-10">
             <div className="flex w-full flex-col gap-[30px]">
               <div className="flex flex-col gap-[7px] rounded-[12px] bg-white-A700 p-[30px] sm:p-5">
                 <div className="flex items-start gap-[5px]">
@@ -176,17 +235,23 @@ export default function Home1Page() {
                       alt="image"
                       className="h-[180px] w-full rounded-lg object-cover"
                     />
-                    <div className="absolute bottom-0 left-0 right-0 top-0 m-auto flex h-max w-full justify-center rounded-lg bg-gray-900_66 px-14 py-[71px] md:p-5">
+                    {/* <div className="absolute bottom-0 left-0 right-0 top-0 m-auto flex h-max w-full justify-center rounded-lg bg-gray-900_66 px-14 py-[71px] md:p-5">
                       <Button size="3xl" shape="round" className="w-[38px]">
                         <Img src="img_contrast.svg" width={38} height={38} />
                       </Button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div className="flex w-[88%] justify-between gap-5 md:w-full">
                   <div className="flex gap-2.5">
                     <div className="flex items-center p-1.5">
-                      <Img src="img_favorite.svg" width={14} height={14} alt="favorite" className="h-[14px] w-[14px]" />
+                      <Img
+                        src="img_favorite.svg"
+                        width={14}
+                        height={14}
+                        alt="favorite"
+                        className="h-[14px] w-[14px]"
+                      />
                       <Text as="p" className="ml-[5px]">
                         326
                       </Text>
@@ -204,7 +269,13 @@ export default function Home1Page() {
                   </div>
                   <div className="flex items-center p-1.5">
                     <Text as="p">Share</Text>
-                    <Img src="img_question.svg" width={14} height={14} alt="question" className="h-[14px] w-[14px]" />
+                    <Img
+                      src="img_question.svg"
+                      width={14}
+                      height={14}
+                      alt="question"
+                      className="h-[14px] w-[14px]"
+                    />
                   </div>
                 </div>
                 <div className="flex w-[88%] items-center justify-center gap-[15px] rounded border-2 border-solid border-gray-500_33 p-[11px] md:w-full">
@@ -214,11 +285,23 @@ export default function Home1Page() {
                     name="comment"
                     placeholder={`Write a comment…`}
                     suffix={
-                      <Img src="img_settings.svg" width={14} height={14} alt="settings" className="h-[14px] w-[14px]" />
+                      <Img
+                        src="img_settings.svg"
+                        width={14}
+                        height={14}
+                        alt="settings"
+                        className="h-[14px] w-[14px]"
+                      />
                     }
                     className="flex-grow gap-3"
                   />
-                  <Img src="img_save.svg" width={14} height={14} alt="save" className="h-[14px] w-[14px]" />
+                  <Img
+                    src="img_save.svg"
+                    width={14}
+                    height={14}
+                    alt="save"
+                    className="h-[14px] w-[14px]"
+                  />
                 </div>
                 <div className="flex w-[88%] flex-col gap-2.5 md:w-full">
                   <div className="flex items-center justify-between gap-5">
@@ -234,14 +317,22 @@ export default function Home1Page() {
                         Billy Green
                       </Text>
                     </div>
-                    <Text size="s" as="p" className="mb-[5px] self-end !text-gray-500">
+                    <Text
+                      size="s"
+                      as="p"
+                      className="mb-[5px] self-end !text-gray-500"
+                    >
                       20min ago
                     </Text>
                   </div>
                   <div>
                     <div className="flex flex-col gap-2.5">
-                      <Text as="p" className="!font-normal leading-[22px] !text-gray-500">
-                        Awesome Edward, remeber that five tips for low cost holidays I sent you?
+                      <Text
+                        as="p"
+                        className="!font-normal leading-[22px] !text-gray-500"
+                      >
+                        Awesome Edward, remeber that five tips for low cost
+                        holidays I sent you?
                       </Text>
                       <div className="flex gap-[15px]">
                         <Img
@@ -277,12 +368,17 @@ export default function Home1Page() {
                           Billy Green
                         </Text>
                       </div>
-                      <Text size="s" as="p" className="mb-[5px] self-end !text-gray-500">
+                      <Text
+                        size="s"
+                        as="p"
+                        className="mb-[5px] self-end !text-gray-500"
+                      >
                         20min ago
                       </Text>
                     </div>
                     <Text as="p" className="!font-normal !text-gray-500">
-                      Awesome Edward, remeber that five tips for low cost holidays I sent you?
+                      Awesome Edward, remeber that five tips for low cost
+                      holidays I sent you?
                     </Text>
                   </div>
                   <div className="flex gap-[15px]">
@@ -293,103 +389,163 @@ export default function Home1Page() {
                       alt="favorite"
                       className="h-[14px] w-[14px]"
                     />
-                    <Img src="img_instagram.svg" width={14} height={14} alt="instagram" className="h-[14px] w-[14px]" />
+                    <Img
+                      src="img_instagram.svg"
+                      width={14}
+                      height={14}
+                      alt="instagram"
+                      className="h-[14px] w-[14px]"
+                    />
                   </div>
                 </div>
               </div>
             </div>
+
             <div className="flex w-full flex-col gap-[30px]">
-              <a href="https://www.youtube.com/embed/bv8Fxk0sz7I" target="_blank">
-                <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-[30px] sm:p-5">
-                  <div className="flex items-center justify-between gap-5 pr-2.5">
-                    <div className="flex w-[68%] items-center justify-center gap-2.5">
-                      <Img
-                        src="img_image_48x48.png"
-                        width={48}
-                        height={48}
-                        alt="image"
-                        className="h-[48px] w-[48px] rounded-[12px] object-cover"
-                      />
-                      <div className="flex flex-col items-start gap-[5px]">
-                        <Heading as="h3" className="!text-gray-900">
-                          Katherine Cole
-                        </Heading>
-                        <Text size="s" as="p" className="!text-gray-500">
-                          5min ago
-                        </Text>
-                      </div>
-                    </div>
-                    <Img
-                      src="img_notification.svg"
-                      width={18}
-                      height={18}
-                      alt="notification"
-                      className="h-[18px] w-[18px]"
-                    />
+              <div className="flex flex-col gap-[7px] rounded-[12px] bg-white-A700 p-[30px] sm:p-5">
+                <div className="flex items-start gap-[5px]">
+                  <Img
+                    src="img_avatar.png"
+                    width={38}
+                    height={38}
+                    alt="avatar"
+                    className="h-[38px] w-[38px] rounded-[12px] object-cover"
+                  />
+                  <div className="flex flex-1 justify-center rounded-[19px] bg-white-A700 p-2.5">
+                    <Text as="p" className="mb-[52px] !text-gray-500">
+                      What are you thinking?{" "}
+                    </Text>
                   </div>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex flex-col items-start justify-center">
+                </div>
+                <div className="flex items-center justify-between gap-5">
+                  <div className="flex gap-2.5 self-end">
+                    <Button className="w-[28px] rounded-lg">
+                      <Img src="img_camera.svg" width={28} height={28} />
+                    </Button>
+                    <Button className="w-[28px] rounded-lg">
+                      <Img src="img_upload.svg" width={28} height={28} />
+                    </Button>
+                    <Button className="w-[28px] rounded-lg">
+                      <Img src="img_plus.svg" width={28} height={28} />
+                    </Button>
+                  </div>
+                  <Button
+                    size="xl"
+                    rightIcon={
                       <Img
-                        src="img_image_150x290.png"
-                        width={290}
-                        height={150}
-                        alt="image"
-                        className="h-[150px] w-full rounded-lg object-cover md:h-auto"
+                        src="img_arrowright.svg"
+                        width={14}
+                        height={14}
+                        alt="arrow_right"
+                        className="h-[14px] w-[14px]"
                       />
-                      <div className="mt-5 flex flex-col gap-[15px] self-stretch">
-                        <Heading size="lg" as="h4" className="leading-[22px] !text-gray-900">
-                          The Best Fashion Instagrams of the Week: Céline Dion, Lizzo, and More
-                        </Heading>
-                        <Text as="p" className="leading-5 !text-gray-500">
-                          If you are looking for a break from the cold, take a cue from Lizzo: This week, the singer
-                          headed to Disneyland in warm and sunny California.
-                        </Text>
-                      </div>
-                      <Link href="#" className="mt-[11px]">
-                        <Heading size="s" as="h5" className="uppercase tracking-[1.00px] !text-indigo-A200">
-                          Read More
-                        </Heading>
-                      </Link>
+                    }
+                    className="min-w-[75px] rounded font-medium"
+                  >
+                    Share
+                  </Button>
+                </div>
+              </div>
+              <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-[30px] sm:p-5">
+                <div className="flex items-center justify-between gap-5 pr-2.5">
+                  <div className="flex w-[68%] items-center justify-center gap-2.5">
+                    <Img
+                      src="img_image_48x48.png"
+                      width={48}
+                      height={48}
+                      alt="image"
+                      className="h-[48px] w-[48px] rounded-[12px] object-cover"
+                    />
+                    <div className="flex flex-col items-start gap-[5px]">
+                      <Heading as="h3" className="!text-gray-900">
+                        Katherine Cole
+                      </Heading>
+                      <Text size="s" as="p" className="!text-gray-500">
+                        5min ago
+                      </Text>
                     </div>
-                    <div className="flex justify-between gap-5">
-                      <div className="flex items-center gap-[15px]">
-                        <div className="flex items-center p-1.5">
-                          <Img
-                            src="img_favorite.svg"
-                            width={14}
-                            height={14}
-                            alt="favorite"
-                            className="h-[14px] w-[14px]"
-                          />
-                          <Text as="p" className="ml-[5px]">
-                            326
-                          </Text>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Img
-                            src="img_instagram.svg"
-                            width={14}
-                            height={14}
-                            alt="instagram"
-                            className="h-[14px] w-[14px]"
-                          />
-                          <Text as="p">148</Text>
-                        </div>
-                      </div>
+                  </div>
+                  <Img
+                    src="img_notification.svg"
+                    width={18}
+                    height={18}
+                    alt="notification"
+                    className="h-[18px] w-[18px]"
+                  />
+                </div>
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col items-start justify-center">
+                    <Img
+                      src="img_image_150x290.png"
+                      width={290}
+                      height={150}
+                      alt="image"
+                      className="h-[150px] w-full rounded-lg object-cover md:h-auto"
+                    />
+                    <div className="mt-5 flex flex-col gap-[15px] self-stretch">
+                      <Heading
+                        size="lg"
+                        as="h4"
+                        className="leading-[22px] !text-gray-900"
+                      >
+                        The Best Fashion Instagrams of the Week: Céline Dion,
+                        Lizzo, and More
+                      </Heading>
+                      <Text as="p" className="leading-5 !text-gray-500">
+                        If you are looking for a break from the cold, take a cue
+                        from Lizzo: This week, the singer headed to Disneyland
+                        in warm and sunny California.
+                      </Text>
+                    </div>
+                    <Link href="#" className="mt-[11px]">
+                      <Heading
+                        size="s"
+                        as="h5"
+                        className="uppercase tracking-[1.00px] !text-indigo-A200"
+                      >
+                        Read More
+                      </Heading>
+                    </Link>
+                  </div>
+                  <div className="flex justify-between gap-5">
+                    <div className="flex items-center gap-[15px]">
                       <div className="flex items-center p-1.5">
-                        <Text as="p">Share</Text>
                         <Img
-                          src="img_question.svg"
+                          src="img_favorite.svg"
                           width={14}
                           height={14}
-                          alt="question"
+                          alt="favorite"
                           className="h-[14px] w-[14px]"
                         />
+                        <Text as="p" className="ml-[5px]">
+                          326
+                        </Text>
                       </div>
+                      <div className="flex items-center gap-1.5">
+                        <Img
+                          src="img_instagram.svg"
+                          width={14}
+                          height={14}
+                          alt="instagram"
+                          className="h-[14px] w-[14px]"
+                        />
+                        <Text as="p">148</Text>
+                      </div>
+                    </div>
+                    <div className="flex items-center p-1.5">
+                      <Text as="p">Share</Text>
+                      <Img
+                        src="img_question.svg"
+                        width={14}
+                        height={14}
+                        alt="question"
+                        className="h-[14px] w-[14px]"
+                      />
                     </div>
                   </div>
                 </div>
-              </a>
+              </div>
+
               <div className="flex flex-col items-center justify-center gap-[30px] rounded-[12px] bg-white-A700 p-[23px] sm:p-5">
                 <div className="mt-[7px] flex flex-col gap-[31px] self-stretch">
                   <div className="flex items-center justify-between gap-5 pr-2.5">
@@ -455,7 +611,10 @@ export default function Home1Page() {
                                 alt="camera"
                                 className="h-[14px] w-[14px]"
                               />
-                              <Text as="p" className="!font-sfprodisplay !text-white-A700">
+                              <Text
+                                as="p"
+                                className="!font-sfprodisplay !text-white-A700"
+                              >
                                 17
                               </Text>
                             </div>
@@ -467,7 +626,13 @@ export default function Home1Page() {
                 </div>
                 <div className="mb-3 flex w-[90%] justify-between gap-5 md:w-full">
                   <div className="flex flex-wrap items-center">
-                    <Img src="img_favorite.svg" width={14} height={14} alt="favorite" className="h-[14px] w-[14px]" />
+                    <Img
+                      src="img_favorite.svg"
+                      width={14}
+                      height={14}
+                      alt="favorite"
+                      className="h-[14px] w-[14px]"
+                    />
                     <Text as="p" className="ml-[5px]">
                       326
                     </Text>
@@ -484,14 +649,22 @@ export default function Home1Page() {
                   </div>
                   <div className="flex items-center">
                     <Text as="p">Share</Text>
-                    <Img src="img_question.svg" width={14} height={14} alt="question" className="h-[14px] w-[14px]" />
+                    <Img
+                      src="img_question.svg"
+                      width={14}
+                      height={14}
+                      alt="question"
+                      className="h-[14px] w-[14px]"
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex w-[36%] items-center justify-center gap-2.5 overflow-auto pl-[5px] md:w-full sm:flex-col">
+
+        {/* unused portion */}
+        {/* <div className="flex w-[36%] items-center justify-center gap-2.5 overflow-auto pl-[5px] md:w-full sm:flex-col">
           <Img
             src="img_indicator_gray_500.svg"
             width={5}
@@ -499,10 +672,14 @@ export default function Home1Page() {
             alt="indicator"
             className="h-[128px] w-[5px] rounded-sm sm:w-full"
           />
-          <div className="flex w-full items-start justify-center sm:w-full">
-            <div className="flex flex-1 flex-col items-center gap-[46px] rounded-bl-[32px] rounded-tl-[32px] bg-gray-900 p-[30px] sm:p-5">
+           <div className="flex w-full items-start justify-center sm:w-full">
+             <div className="flex flex-1 flex-col items-center gap-[46px] rounded-bl-[32px] rounded-tl-[32px] bg-gray-900 p-[30px] sm:p-5">
               <div className="mr-2.5 mt-[15px] flex gap-5 self-end md:mr-0">
-                <Button size="6xl" shape="round" className="min-w-[48px] font-sfprodisplay font-bold">
+                <Button
+                  size="6xl"
+                  shape="round"
+                  className="min-w-[48px] font-sfprodisplay font-bold"
+                >
                   1
                 </Button>
                 <Img
@@ -513,9 +690,12 @@ export default function Home1Page() {
                   className="h-[48px] w-[48px] rounded-[12px] object-cover"
                 />
               </div>
-              <div className="flex flex-col gap-[60px] self-stretch sm:gap-[30px]">
+               <div className="flex flex-col gap-[60px] self-stretch sm:gap-[30px]">
                 <div className="flex flex-col items-start gap-[41px]">
-                  <a href="https://www.youtube.com/embed/bv8Fxk0sz7I" target="_blank">
+                  <a
+                    href="https://www.youtube.com/embed/bv8Fxk0sz7I"
+                    target="_blank"
+                  >
                     <Heading size="xl" as="h2">
                       Featured Stories
                     </Heading>
@@ -559,7 +739,11 @@ export default function Home1Page() {
                         </div>
                       </div>
                       <Button className="w-[28px] self-end rounded-lg">
-                        <Img src="img_settings_white_a700.svg" width={28} height={28} />
+                        <Img
+                          src="img_settings_white_a700.svg"
+                          width={28}
+                          height={28}
+                        />
                       </Button>
                     </div>
                     <div className="flex flex-1 items-center justify-between gap-5">
@@ -579,7 +763,11 @@ export default function Home1Page() {
                         </div>
                       </div>
                       <Button className="w-[28px] self-end rounded-lg">
-                        <Img src="img_settings_white_a700.svg" width={28} height={28} />
+                        <Img
+                          src="img_settings_white_a700.svg"
+                          width={28}
+                          height={28}
+                        />
                       </Button>
                     </div>
                     <div className="flex flex-1 items-center">
@@ -597,7 +785,11 @@ export default function Home1Page() {
                         </Text>
                       </div>
                       <Button className="ml-[30px] w-[28px] self-end rounded-lg">
-                        <Img src="img_settings_white_a700.svg" width={28} height={28} />
+                        <Img
+                          src="img_settings_white_a700.svg"
+                          width={28}
+                          height={28}
+                        />
                       </Button>
                     </div>
                   </div>
@@ -624,9 +816,16 @@ export default function Home1Page() {
                   </Heading>
                   <div className="flex flex-col gap-[30px] self-stretch">
                     {data1.map((d, index) => (
-                      <div key={"listusername" + index} className="flex flex-1 items-center justify-between gap-5">
+                      <div
+                        key={"listusername" + index}
+                        className="flex flex-1 items-center justify-between gap-5"
+                      >
                         <div className="flex items-center gap-2.5">
-                          <Button size="2xl" shape="round" className="min-w-[38px] font-sfprodisplay font-bold">
+                          <Button
+                            size="2xl"
+                            shape="round"
+                            className="min-w-[38px] font-sfprodisplay font-bold"
+                          >
                             {d.one}
                           </Button>
                           <Text as="p" className="!text-white-A700">
@@ -634,14 +833,18 @@ export default function Home1Page() {
                           </Text>
                         </div>
                         <Button className="w-[28px] rounded-lg">
-                          <Img src="img_checkmark_white_a700.svg" width={28} height={28} />
+                          <Img
+                            src="img_checkmark_white_a700.svg"
+                            width={28}
+                            height={28}
+                          />
                         </Button>
                       </div>
                     ))}
                   </div>
                 </div>
-              </div>
-            </div>
+              </div> 
+            </div> 
             <div className="relative ml-[-15px] mt-52 flex flex-col">
               <div className="blue_A700_light_blue_200_border flex flex-col items-center justify-center rounded-[12px] border-2 border-solid">
                 <Img
@@ -653,8 +856,8 @@ export default function Home1Page() {
                 />
               </div>
             </div>
-          </div>
-        </div>
+          </div> 
+        </div> */}
       </div>
     </div>
   );
