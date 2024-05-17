@@ -6,7 +6,31 @@ import Link from "next/link";
 // calling navbar
 import Navbar from "../../components/Nav/Navbar";
 // icons
+
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
+
+import { FaHome, FaUserFriends } from "react-icons/fa";
+import { FaCircleUser, FaFilter } from "react-icons/fa6";
+import { BsSendFill } from "react-icons/bs";
+import { IoIosNotifications, IoIosSettings, IoIosLogOut } from "react-icons/io";
+
+// data for navbar
+export const navData = [
+  { name: "Home", path: "/home1", icon: <FaHome /> },
+  { name: "Profile", path: "/myprofile", icon: <FaCircleUser /> },
+  { name: "Friends", path: "/myfriends", icon: <FaUserFriends /> },
+  { name: "Messages", path: "/messages", icon: <BsSendFill /> },
+  {
+    name: "Notifications",
+    path: "/notifications",
+    icon: <IoIosNotifications />,
+  },
+];
+export const navData1 = [
+  { name: "Settings", path: "/settings", icon: <IoIosSettings /> },
+  { name: "Logout", path: "/", icon: <IoIosLogOut /> },
+];
+
 
 export default function Home1Page() {
   const [collapsed, setCollapsed] = React.useState(false);
@@ -34,6 +58,7 @@ export default function Home1Page() {
   }, []);
 
   return (
+
     <div className="flex w-full items-start justify-between gap-5 bg-[#dadada] ">
       {/* Nav bar */}
       <Navbar open={open} setOpen={setOpen} />
@@ -57,6 +82,18 @@ export default function Home1Page() {
         <div className="mt-7  flex flex-1 flex-col gap-10 ">
           {/* search bar */}
           <div className="flex items-center justify-center gap-[13px] h-10 lg:h-12  rounded-[12px] bg-[#cdcdcd] p-3">
+
+    <div className="flex w-full items-start justify-between gap-5 bg-[#dadada] md:flex-col">
+      {/* Nav bar */}
+
+      <Navbar />
+
+      {/* main screen */}
+      <div className="flex w-[100%] items-start justify-center gap-[30px] self-end md:w-full md:flex-col mr-5 ">
+        <div className="mt-10 flex flex-1 flex-col gap-10 md:self-stretch">
+          {/* search bar */}
+          <div className="flex items-center justify-center gap-[13px] rounded-[12px] bg-[#cdcdcd] p-3 md:flex-col">
+
             <Input
               size="sm"
               shape="square"
@@ -68,10 +105,16 @@ export default function Home1Page() {
                   width={18}
                   height={18}
                   alt="rewind"
+
                   className="h-[18px] w-[18px] cursor-pointer"
                 />
               }
-              className="flex-grow gap-[15px] md:p-5 "
+
+                  className="h-[18px] w-[18px]"
+                />
+              }
+              className="flex-grow gap-[15px] md:p-5 sm:pr-5"
+
             />
             <Heading size="s" as="h1" className="text-[1.5rem] !text-gray-500">
               <Link href="\">
@@ -94,10 +137,14 @@ export default function Home1Page() {
             </Heading>
           </div>
 
+
           {/* Posts */}
 
           <div className="flex flex-col lg:flex-row items-start gap-[30px]  mb-10">
             {/* left column */}
+
+          <div className="flex items-start gap-[30px] md:flex-col mb-10">
+
             <div className="flex w-full flex-col gap-[30px]">
               <div className="flex flex-col w-full  gap-[7px] rounded-[12px] bg-white-A700  p-5">
                 <div className="flex items-start gap-[5px]">
@@ -213,8 +260,13 @@ export default function Home1Page() {
                       <Text as="p">148</Text>
                     </div>
                   </div>
+
                   <div className="flex items-center  cursor-pointer">
                     {/* <Text as="p">Share</Text> */}
+
+                  <div className="flex items-center p-1.5">
+                    <Text as="p">Share</Text>
+
                     <Img
                       src="img_question.svg"
                       width={14}
@@ -346,11 +398,62 @@ export default function Home1Page() {
                 </div>
               </div>
             </div>
+
             {/* right column */}
             <div className="flex w-full flex-col gap-[30px]">
               <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-5">
                 <div className="flex items-center justify-between gap-5 pr-2.5">
                   <div className="flex w-[68%] items-center  gap-2.5">
+
+            <div className="flex w-full flex-col gap-[30px]">
+              <div className="flex flex-col gap-[7px] rounded-[12px] bg-white-A700 p-[30px] sm:p-5">
+                <div className="flex items-start gap-[5px]">
+                  <Img
+                    src="img_avatar.png"
+                    width={38}
+                    height={38}
+                    alt="avatar"
+                    className="h-[38px] w-[38px] rounded-[12px] object-cover"
+                  />
+                  <div className="flex flex-1 justify-center rounded-[19px] bg-white-A700 p-2.5">
+                    <Text as="p" className="mb-[52px] !text-gray-500">
+                      What are you thinking?{" "}
+                    </Text>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-5">
+                  <div className="flex gap-2.5 self-end">
+                    <Button className="w-[28px] rounded-lg">
+                      <Img src="img_camera.svg" width={28} height={28} />
+                    </Button>
+                    <Button className="w-[28px] rounded-lg">
+                      <Img src="img_upload.svg" width={28} height={28} />
+                    </Button>
+                    <Button className="w-[28px] rounded-lg">
+                      <Img src="img_plus.svg" width={28} height={28} />
+                    </Button>
+                  </div>
+                  <Button
+                    size="xl"
+                    rightIcon={
+                      <Img
+                        src="img_arrowright.svg"
+                        width={14}
+                        height={14}
+                        alt="arrow_right"
+                        className="h-[14px] w-[14px]"
+                      />
+                    }
+                    className="min-w-[75px] rounded font-medium"
+                  >
+                    Share
+                  </Button>
+                </div>
+              </div>
+              <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-[30px] sm:p-5">
+                <div className="flex items-center justify-between gap-5 pr-2.5">
+                  <div className="flex w-[68%] items-center justify-center gap-2.5">
+
                     <Img
                       src="img_image_48x48.png"
                       width={48}
@@ -434,8 +537,13 @@ export default function Home1Page() {
                         <Text as="p">148</Text>
                       </div>
                     </div>
+
                     <div className="flex items-center p-1.5 cursor-pointer">
                       {/* <Text as="p">Share</Text> */}
+
+                    <div className="flex items-center p-1.5">
+                      <Text as="p">Share</Text>
+
                       <Img
                         src="img_question.svg"
                         width={14}
@@ -448,7 +556,11 @@ export default function Home1Page() {
                 </div>
               </div>
 
+
               <div className="flex flex-col items-center justify-center gap-[30px] rounded-[12px] bg-white-A700 p-5">
+
+              <div className="flex flex-col items-center justify-center gap-[30px] rounded-[12px] bg-white-A700 p-[23px] sm:p-5">
+
                 <div className="mt-[7px] flex flex-col gap-[31px] self-stretch">
                   <div className="flex items-center justify-between gap-5 pr-2.5">
                     <div className="flex items-center gap-2.5">
@@ -549,8 +661,13 @@ export default function Home1Page() {
                       148
                     </Text>
                   </div>
+
                   <div className="flex items-center cursor-pointer">
                     {/* <Text as="p">Share</Text> */}
+
+                  <div className="flex items-center">
+                    <Text as="p">Share</Text>
+
                     <Img
                       src="img_question.svg"
                       width={14}
