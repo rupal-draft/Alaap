@@ -1,9 +1,13 @@
 module.exports = {
   mode: "jit",
-  content: ["./src/**/**/*.{js,ts,jsx,tsx,html,mdx}", "./src/**/*.{js,ts,jsx,tsx,html,mdx}"],
+
+  content: [
+    "./src/**/**/*.{js,ts,jsx,tsx,html,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,html,mdx}",
+  ],
   darkMode: "class",
   theme: {
-    screens: { md: { max: "1050px" }, sm: { max: "550px" } },
+    // screens: { md: { max: "1050px" }, sm: { max: "550px" } },
     extend: {
       colors: {
         gray: {
@@ -23,7 +27,9 @@ module.exports = {
       },
       boxShadow: {},
       fontFamily: { inter: "Inter", sfprodisplay: "SF Pro Display" },
-      backgroundImage: { gradient: "linear-gradient(180deg, #1e1f2000,#1e1f20cc)" },
+      backgroundImage: {
+        gradient: "linear-gradient(180deg, #1e1f2000,#1e1f20cc)",
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],

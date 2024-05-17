@@ -1,11 +1,14 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Img, Button, Text, Heading, Input } from "../../components";
 import Link from "next/link";
 
 // calling navbar
 import Navbar from "../../components/Nav/Navbar";
 // icons
+
+import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
+
 import { FaHome, FaUserFriends } from "react-icons/fa";
 import { FaCircleUser, FaFilter } from "react-icons/fa6";
 import { BsSendFill } from "react-icons/bs";
@@ -28,14 +31,58 @@ export const navData1 = [
   { name: "Logout", path: "/", icon: <IoIosLogOut /> },
 ];
 
+
 export default function Home1Page() {
   const [collapsed, setCollapsed] = React.useState(false);
 
-  //use this function to collapse/expand the sidebar
-  //function collapseSidebar() {
-  //    setCollapsed(!collapsed)
-  //}
+  const [open, setOpen] = useState(true);
+
+  // for mobile screen navbar
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        setOpen(true);
+      } else {
+        setOpen(false);
+      }
+    };
+
+    // Set initial state based on screen size
+    handleResize();
+
+    // Update state on resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
+
+    <div className="flex w-full items-start justify-between gap-5 bg-[#dadada] ">
+      {/* Nav bar */}
+      <Navbar open={open} setOpen={setOpen} />
+      <div
+        className={`md:hidden fixed z-50 bottom-0 transition-all duration-700 ${
+          open ? "left-[4.5rem] px-2 py-1" : "left-0 p-1"
+        }`}
+      >
+        <h1
+          className="text-2xl bg-gray-50 p-2 rounded-xl font-semibold transition-transform duration-700"
+          onClick={() => {
+            setOpen(!open);
+          }}
+        >
+          {open ? <RiMenuUnfold2Line /> : <RiMenuFold2Line />}
+        </h1>
+      </div>
+
+      {/* main screen */}
+      <div className="flex w-[100%] items-start justify-center gap-[30px] self-end md:w-full md:flex-col mr-5 ">
+        <div className="mt-7  flex flex-1 flex-col gap-10 ">
+          {/* search bar */}
+          <div className="flex items-center justify-center gap-[13px] h-10 lg:h-12  rounded-[12px] bg-[#cdcdcd] p-3">
+
     <div className="flex w-full items-start justify-between gap-5 bg-[#dadada] md:flex-col">
       {/* Nav bar */}
 
@@ -46,6 +93,7 @@ export default function Home1Page() {
         <div className="mt-10 flex flex-1 flex-col gap-10 md:self-stretch">
           {/* search bar */}
           <div className="flex items-center justify-center gap-[13px] rounded-[12px] bg-[#cdcdcd] p-3 md:flex-col">
+
             <Input
               size="sm"
               shape="square"
@@ -57,10 +105,16 @@ export default function Home1Page() {
                   width={18}
                   height={18}
                   alt="rewind"
+
+                  className="h-[18px] w-[18px] cursor-pointer"
+                />
+              }
+
                   className="h-[18px] w-[18px]"
                 />
               }
               className="flex-grow gap-[15px] md:p-5 sm:pr-5"
+
             />
             <Heading size="s" as="h1" className="text-[1.5rem] !text-gray-500">
               <Link href="\">
@@ -83,24 +137,35 @@ export default function Home1Page() {
             </Heading>
           </div>
 
+
+          {/* Posts */}
+
+          <div className="flex flex-col lg:flex-row items-start gap-[30px]  mb-10">
+            {/* left column */}
+
           <div className="flex items-start gap-[30px] md:flex-col mb-10">
+
             <div className="flex w-full flex-col gap-[30px]">
-              <div className="flex flex-col gap-[7px] rounded-[12px] bg-white-A700 p-[30px] sm:p-5">
+              <div className="flex flex-col w-full  gap-[7px] rounded-[12px] bg-white-A700  p-5">
                 <div className="flex items-start gap-[5px]">
-                  <Img
-                    src="img_avatar.png"
-                    width={38}
-                    height={38}
-                    alt="avatar"
-                    className="h-[38px] w-[38px] rounded-[12px] object-cover"
-                  />
-                  <div className="flex flex-1 justify-center rounded-[19px] bg-white-A700 p-2.5">
-                    <Text as="p" className="mb-[52px] !text-gray-500">
-                      What are you thinking?{" "}
-                    </Text>
+                  <Link href="/myprofile">
+                    <Img
+                      src="img_avatar.png"
+                      width={80}
+                      height={80}
+                      alt="avatar"
+                      className="md:h-[80px] h-[50px] w-[50px] md:w-[80px] cursor-pointer rounded-[12px] object-cover"
+                    />
+                  </Link>
+
+                  <div className="flex flex-1 rounded-[19px] bg-white-A700 ">
+                    <textarea
+                      placeholder={`What are you thinking…`}
+                      className=" !text-gray-500 text-sm md:text-base w-full h-[100px] md:h-[150px] pt-1 pl-1 border-x rounded-lg border-gray-500 focus:border-gray-500  outline-none  transition-all resize-none"
+                    />
                   </div>
                 </div>
-                <div className="flex items-center justify-between gap-5">
+                <div className="flex items-center justify-between gap-x-10">
                   <div className="flex gap-2.5 self-end">
                     <Button className="w-[28px] rounded-lg">
                       <Img src="img_camera.svg" width={28} height={28} />
@@ -112,26 +177,21 @@ export default function Home1Page() {
                       <Img src="img_plus.svg" width={28} height={28} />
                     </Button>
                   </div>
-                  <Button
-                    size="xl"
-                    rightIcon={
-                      <Img
-                        src="img_arrowright.svg"
-                        width={14}
-                        height={14}
-                        alt="arrow_right"
-                        className="h-[14px] w-[14px]"
-                      />
-                    }
-                    className="min-w-[75px] rounded font-medium"
-                  >
-                    Share
-                  </Button>
+                  <div className="flex items-center  cursor-pointer">
+                    {/* <Text as="p">Share</Text> */}
+                    <Img
+                      src="img_question.svg"
+                      width={14}
+                      height={14}
+                      alt="question"
+                      className="h-[14px] w-[14px]"
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="flex flex-col items-center gap-[26px] rounded-[12px] bg-white-A700 p-2">
-                <div className="mt-[22px] flex w-[88%] items-center justify-between gap-5 pr-2.5 md:w-full">
-                  <div className="flex w-[51%] items-center justify-center gap-2.5">
+              <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-5">
+                <div className="flex  items-center justify-between gap-5 pr-2.5 w-full">
+                  <div className="flex w-[51%] items-center  gap-2.5">
                     <Img
                       src="img_image.png"
                       width={48}
@@ -156,7 +216,7 @@ export default function Home1Page() {
                     className="h-[18px] w-[18px]"
                   />
                 </div>
-                <div className="flex w-[88%] flex-col justify-center gap-5 md:w-full">
+                <div className="flex flex-col justify-center gap-5 w-full">
                   <Text as="p" className="!text-gray-500">
                     Tourism Is Back In Full Swing In Cancun Mexico
                   </Text>
@@ -175,7 +235,7 @@ export default function Home1Page() {
                     </div> */}
                   </div>
                 </div>
-                <div className="flex w-[88%] justify-between gap-5 md:w-full">
+                <div className="flex  justify-between gap-5 w-full">
                   <div className="flex gap-2.5">
                     <div className="flex items-center p-1.5">
                       <Img
@@ -200,8 +260,13 @@ export default function Home1Page() {
                       <Text as="p">148</Text>
                     </div>
                   </div>
+
+                  <div className="flex items-center  cursor-pointer">
+                    {/* <Text as="p">Share</Text> */}
+
                   <div className="flex items-center p-1.5">
                     <Text as="p">Share</Text>
+
                     <Img
                       src="img_question.svg"
                       width={14}
@@ -211,7 +276,7 @@ export default function Home1Page() {
                     />
                   </div>
                 </div>
-                <div className="flex w-[88%] items-center justify-center gap-[15px] rounded border-2 border-solid border-gray-500_33 p-[11px] md:w-full">
+                <div className="flex  items-center justify-center gap-[15px] rounded border-2 border-solid border-gray-500_33 p-[11px] w-full">
                   <Input
                     size="xs"
                     shape="square"
@@ -236,7 +301,7 @@ export default function Home1Page() {
                     className="h-[14px] w-[14px]"
                   />
                 </div>
-                <div className="flex w-[88%] flex-col gap-2.5 md:w-full">
+                <div className="flex flex-col gap-2.5 w-full">
                   <div className="flex items-center justify-between gap-5">
                     <div className="flex items-center gap-[5px]">
                       <Img
@@ -286,7 +351,7 @@ export default function Home1Page() {
                     </div>
                   </div>
                 </div>
-                <div className="flex w-[88%] flex-col gap-[33px] md:w-full">
+                <div className="flex flex-col gap-[33px] w-full">
                   <div className="flex flex-col gap-[13px]">
                     <div className="flex items-center justify-between gap-5">
                       <div className="flex items-center gap-[5px]">
@@ -333,6 +398,12 @@ export default function Home1Page() {
                 </div>
               </div>
             </div>
+
+            {/* right column */}
+            <div className="flex w-full flex-col gap-[30px]">
+              <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-5">
+                <div className="flex items-center justify-between gap-5 pr-2.5">
+                  <div className="flex w-[68%] items-center  gap-2.5">
 
             <div className="flex w-full flex-col gap-[30px]">
               <div className="flex flex-col gap-[7px] rounded-[12px] bg-white-A700 p-[30px] sm:p-5">
@@ -382,6 +453,7 @@ export default function Home1Page() {
               <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-[30px] sm:p-5">
                 <div className="flex items-center justify-between gap-5 pr-2.5">
                   <div className="flex w-[68%] items-center justify-center gap-2.5">
+
                     <Img
                       src="img_image_48x48.png"
                       width={48}
@@ -465,8 +537,13 @@ export default function Home1Page() {
                         <Text as="p">148</Text>
                       </div>
                     </div>
+
+                    <div className="flex items-center p-1.5 cursor-pointer">
+                      {/* <Text as="p">Share</Text> */}
+
                     <div className="flex items-center p-1.5">
                       <Text as="p">Share</Text>
+
                       <Img
                         src="img_question.svg"
                         width={14}
@@ -479,7 +556,11 @@ export default function Home1Page() {
                 </div>
               </div>
 
+
+              <div className="flex flex-col items-center justify-center gap-[30px] rounded-[12px] bg-white-A700 p-5">
+
               <div className="flex flex-col items-center justify-center gap-[30px] rounded-[12px] bg-white-A700 p-[23px] sm:p-5">
+
                 <div className="mt-[7px] flex flex-col gap-[31px] self-stretch">
                   <div className="flex items-center justify-between gap-5 pr-2.5">
                     <div className="flex items-center gap-2.5">
@@ -580,8 +661,13 @@ export default function Home1Page() {
                       148
                     </Text>
                   </div>
+
+                  <div className="flex items-center cursor-pointer">
+                    {/* <Text as="p">Share</Text> */}
+
                   <div className="flex items-center">
                     <Text as="p">Share</Text>
+
                     <Img
                       src="img_question.svg"
                       width={14}
