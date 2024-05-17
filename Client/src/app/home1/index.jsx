@@ -8,28 +8,6 @@ import Navbar from "../../components/Nav/Navbar";
 // icons
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
 
-import { FaHome, FaUserFriends } from "react-icons/fa";
-import { FaCircleUser, FaFilter } from "react-icons/fa6";
-import { BsSendFill, BsArrowLeftShort } from "react-icons/bs";
-import { IoIosNotifications, IoIosSettings, IoIosLogOut } from "react-icons/io";
-
-// data for navbar
-export const navData = [
-  { name: "Home", path: "/home1", icon: <FaHome /> },
-  { name: "Profile", path: "/myprofile", icon: <FaCircleUser /> },
-  { name: "Friends", path: "/myfriends", icon: <FaUserFriends /> },
-  { name: "Messages", path: "/messages", icon: <BsSendFill /> },
-  {
-    name: "Notifications",
-    path: "/notifications",
-    icon: <IoIosNotifications />,
-  },
-];
-export const navData1 = [
-  { name: "Settings", path: "/settings", icon: <IoIosSettings /> },
-  { name: "Logout", path: "/", icon: <IoIosLogOut /> },
-];
-
 export default function Home1Page() {
   const [collapsed, setCollapsed] = React.useState(false);
 
