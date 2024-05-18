@@ -3,7 +3,7 @@ import React from "react";
 import { Button, Img, Text, Input, Heading } from "../../components";
 import Link from "next/link";
 
-export default function SignupPage() {
+export default function LoginPage() {
   return (
     <div className="w-full bg-gray-100">
       <div className="flex flex-col md:flex-row">
@@ -14,19 +14,19 @@ export default function SignupPage() {
             </Heading>
             <div className="mt-[20px]">
               <Text as="p" className="!text-gray-300">
-                Already have an account?
+                Do not have an account?
               </Text>
               <Button
                 size="3xl"
                 className="w-full !text-gray-300 font-bold px-5"
-                onClick={() => console.log("Go to login")}
+                onClick={() => console.log("Go to sign")}
               >
-                Login
+                Signup Now
               </Button>
             </div>
           </div>
         </div>
-        <div className="flex w-full p-4 my-20 items-center gap-2.5 lg:m-0 lg:w-[40%] lg:p-5">
+        <div className="flex w-full p-6 my-32 items-center gap-2.5 lg:my-14 lg:w-[40%]">
           <div className="flex flex-1 flex-col items-center rounded-[32px] bg-white-A700 lg:p-12">
             <div className="flex flex-col items-center w-full p-8 lg:p-0 lg:mt-[32px] lg:w-[75%]">
               <Img
@@ -39,29 +39,14 @@ export default function SignupPage() {
               <div className="mt-[50px] flex flex-col items-center gap-3.5">
                 <Link href="#">
                   <Heading size="xl" as="h2" className="!text-gray-900">
-                    Create an account
+                    Login to your account
                   </Heading>
                 </Link>
                 <Text as="p" className="!text-gray-500">
-                  Sign up to continue{" "}
+                  Sign in to continue{" "}
                 </Text>
               </div>
               <div className="mt-[50px] flex flex-col gap-5 self-stretch">
-                <div className="flex flex-col items-start justify-center gap-3">
-                  <Heading
-                    size="s"
-                    as="h3"
-                    className="uppercase tracking-[1.00px] !text-gray-900"
-                  >
-                    name
-                  </Heading>
-                  <Input
-                    shape="round"
-                    name="name"
-                    placeholder="Ex:- John Williamson"
-                    className="self-stretch ring-1 ring-inset ring-indigo-200"
-                  />
-                </div>
                 <div className="flex flex-col items-start justify-center gap-3">
                   <Heading
                     size="s"
@@ -104,7 +89,7 @@ export default function SignupPage() {
                 onClick={() => console.log("Hiii")}
                 className="mt-10 mb-10 bg-indigo-300 w-full rounded-[29px] font-bold px-5 md:px-1"
               >
-                Create an account
+                Login to your account
               </Button>
             </div>
           </div>

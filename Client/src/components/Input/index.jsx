@@ -12,7 +12,7 @@ const variants = {
     white_A700: "bg-white-A700 text-gray-500",
   },
   outline: {
-    gray_500_33: "border-gray-500_33 border border-solid text-gray-500",
+    gray_500_33: "border-1 border-indigo-400 border-solid text-gray-500",
   },
 };
 const sizes = {
