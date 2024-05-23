@@ -2,6 +2,9 @@ import React from "react";
 import "@/styles/tailwind.css";
 import "../styles/index.css";
 import "../styles/font.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import StoreProvider from "./StoreProvider";
 
 function RootLayout({ children }) {
   return (
@@ -13,7 +16,12 @@ function RootLayout({ children }) {
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body>{children}</body>
+      <body>
+        <StoreProvider>
+          <ToastContainer />
+          {children}
+        </StoreProvider>
+      </body>
     </html>
   );
 }
