@@ -32,11 +32,6 @@ export const navData1 = [
 
 export default function Home1Page() {
   const [collapsed, setCollapsed] = React.useState(false);
-
-  //use this function to collapse/expand the sidebar
-  //function collapseSidebar() {
-  //    setCollapsed(!collapsed)
-  //}
   const [open, setOpen] = useState(true);
   useEffect(() => {
     const handleResize = () => {
@@ -46,14 +41,8 @@ export default function Home1Page() {
         setOpen(false);
       }
     };
-
-    // Set initial state based on screen size
     handleResize();
-
-    // Update state on resize
     window.addEventListener("resize", handleResize);
-
-    // Cleanup event listener on component unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 

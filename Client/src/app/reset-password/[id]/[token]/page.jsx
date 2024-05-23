@@ -1,28 +1,24 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Img, Text, Input, Heading } from "../../components";
+import { Button, Img, Text, Input, Heading } from "../../../../components";
 import Link from "next/link";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { SyncOutlined } from "@ant-design/icons";
 import api from "@/utils/axios";
 
-export default function SignupPage() {
+export default function ResetPasswordPage({ params }) {
+  const { id, token } = params;
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
       const { data } = await api.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/register`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/reset-password/${id}/${token}`,
         {
-          name,
-          email,
           password,
         }
       );
@@ -31,19 +27,16 @@ export default function SignupPage() {
         toast.error(data.error);
         setLoading(false);
       } else {
-        setName("");
-        setEmail("");
         setPassword("");
         setLoading(false);
-        toast.success("Successfully registered!!");
+        toast.success("Password Reset Successful");
         router.push("/login");
       }
     } catch (err) {
-      toast.error(err.response.data);
       setLoading(false);
+      toast.error(err.response);
     }
   };
-
   return (
     <div className="w-full bg-gray-100">
       <div className="flex flex-col md:flex-row">
@@ -79,11 +72,11 @@ export default function SignupPage() {
               <div className="mt-[50px] flex flex-col items-center gap-3.5">
                 <Link href="#">
                   <Heading size="xl" as="h2" className="!text-gray-900">
-                    Create an account
+                    Reset Your Password
                   </Heading>
                 </Link>
                 <Text as="p" className="!text-gray-500">
-                  Sign up to continue
+                  Kindly fill up with the new password!!
                 </Text>
               </div>
               <form
@@ -93,41 +86,7 @@ export default function SignupPage() {
                 <div className="flex flex-col items-start justify-center gap-3">
                   <Heading
                     size="s"
-                    as="h3"
-                    className="uppercase tracking-[1.00px] !text-gray-900"
-                  >
-                    Name
-                  </Heading>
-
-                  <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter name"
-                  />
-                </div>
-                <div className="flex flex-col items-start justify-center gap-3">
-                  <Heading
-                    size="s"
                     as="h4"
-                    className="uppercase tracking-[1.00px] !text-gray-900"
-                  >
-                    Email
-                  </Heading>
-
-                  <input
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter name"
-                  />
-                </div>
-                <div className="flex flex-col items-start justify-center gap-3">
-                  <Heading
-                    size="s"
-                    as="h5"
                     className="uppercase tracking-[1.00px] !text-gray-900"
                   >
                     Password
@@ -136,22 +95,17 @@ export default function SignupPage() {
                   <input
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    type="text"
+                    type="password"
                     className="form-control"
-                    placeholder="Enter name"
+                    placeholder="******"
                   />
                 </div>
                 <Button
                   size="8xl"
                   type="submit"
                   className="mt-10 mb-10 bg-indigo-300 w-full rounded-[29px] font-bold px-5 md:px-1"
-                  disabled={loading}
                 >
-                  {loading ? (
-                    <SyncOutlined spin className="py-1" />
-                  ) : (
-                    "Create an account"
-                  )}
+                  {loading ? <SyncOutlined spin className="py-1" /> : "Reset"}
                 </Button>
               </form>
             </div>

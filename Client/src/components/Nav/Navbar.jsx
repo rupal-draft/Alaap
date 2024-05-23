@@ -6,13 +6,13 @@ import { Img, Button, Text, Heading, Input } from "../../components";
 import Link from "next/link";
 import { Sidebar, sidebarClasses } from "react-pro-sidebar";
 
-// icons
 import { FaHome, FaUserFriends } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
 import { BsSendFill, BsArrowLeftShort } from "react-icons/bs";
 import { IoIosNotifications, IoIosSettings, IoIosLogOut } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { logout } from "@/Context/Slices/authSlice";
 
-// data for navbar
 export const navData = [
   { name: "Home", path: "/home1", icon: <FaHome /> },
   { name: "Profile", path: "/myprofile", icon: <FaCircleUser /> },
@@ -26,15 +26,15 @@ export const navData = [
 ];
 export const navData1 = [
   { name: "Settings", path: "/settings", icon: <IoIosSettings /> },
-  { name: "Logout", path: "/", icon: <IoIosLogOut /> },
+  { name: "Logout", path: "/login", icon: <IoIosLogOut />, action: "logout" },
 ];
 
 const Navbar = ({ open, setOpen }) => {
   const [collapsed, setCollapsed] = React.useState(false);
-  //use this function to collapse/expand the sidebar
-  //function collapseSidebar() {
-  //    setCollapsed(!collapsed)
-  //}
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <div
@@ -73,7 +73,10 @@ const Navbar = ({ open, setOpen }) => {
           <div className="flex flex-col gap-8 items-center justify-center">
             {navData1.map((link, index) => (
               <Link href={link.path} key={index} className="mx-2">
-                <div className="flex flex-col items-center justify-center relative group w-full">
+                <div
+                  className="flex flex-col items-center justify-center relative group w-full"
+                  onClick={link.action === "logout" ? handleLogout : undefined}
+                >
                   <div className="absolute top-[-32px] hidden group-hover:flex">
                     <div className="bg-[#000] relative flex text-[#fff] items-center p-[6px] rounded-[3px]">
                       <div className="text-[12px] leading-none font-semibold capitalize flex-grow text-center relative">
