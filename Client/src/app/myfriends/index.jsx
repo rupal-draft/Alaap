@@ -1,7 +1,9 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button, Img, Text, Heading, Input } from "../../components";
 import { MenuItem, Menu, Sidebar, sidebarClasses } from "react-pro-sidebar";
+import Navbar from "@/components/Nav/Navbar";
+import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
 
 const data = [
   { billygreenone: "img_avatar_41.png" },
@@ -17,114 +19,26 @@ const data = [
 
 export default function MyFriendsPage() {
   const [collapsed, setCollapsed] = React.useState(false);
-
-  //use this function to collapse/expand the sidebar
-  //function collapseSidebar() {
-  //    setCollapsed(!collapsed)
-  //}
+  const [open, setOpen] = useState(true);
   return (
     <div className="w-full bg-gray-100">
-      <div className="flex justify-between gap-5 md:flex-col">
-        <Sidebar
-          width="167px !important"
-          collapsedWidth="80px !important"
-          collapsed={collapsed}
-          rootStyles={{ [`.${sidebarClasses.container}`]: { gap: 101 } }}
-          className="!sticky top-0 flex h-screen flex-col gap-[101px] overflow-auto bg-indigo-A200 p-[45px] md:hidden md:gap-[75px] md:p-5 sm:gap-[50px]"
+      <div className="flex justify-between gap-5">
+        <Navbar open={open} setOpen={setOpen} />
+        <div
+          className={`md:hidden fixed z-50 bottom-0 transition-all duration-700 ${
+            open ? "left-[4.5rem] px-2 py-1" : "left-0 p-1"
+          }`}
         >
-          <Img
-            src="img_sidebar_logo.svg"
-            width={48}
-            height={48}
-            alt="sidebarlogo"
-            className="h-[48px] w-[48px] object-contain"
-          />
-          <Menu
-            menuItemStyles={{
-              button: {
-                padding: "12px",
-                backgroundColor: "#ffffff33",
-                borderRadius: "12px",
-                [`&:hover, &.ps-active`]: {
-                  backgroundColor: "#ffffff !important",
-                },
-              },
+          <h1
+            className="text-2xl bg-gray-50 p-2 rounded-xl font-semibold transition-transform duration-700"
+            onClick={() => {
+              setOpen(!open);
             }}
-            rootStyles={{ ["&>ul"]: { gap: "322px" } }}
-            className="mb-[15px] flex w-full flex-col"
           >
-            <div className="flex flex-col gap-10">
-              <MenuItem
-                icon={
-                  <Img
-                    src="img_home_indigo_a200.svg"
-                    width={24}
-                    height={24}
-                    alt="home"
-                    className="h-[24px] w-[24px]"
-                  />
-                }
-              />
-              <MenuItem
-                icon={
-                  <Img
-                    src="img_calendar_white_a700.svg"
-                    width={24}
-                    height={24}
-                    alt="calendar"
-                    className="h-[24px] w-[24px]"
-                  />
-                }
-              />
-              <MenuItem
-                icon={
-                  <Img
-                    src="img_lock_white_a700_24x24.svg"
-                    width={24}
-                    height={24}
-                    alt="lock"
-                    className="h-[24px] w-[24px]"
-                  />
-                }
-              />
-              <MenuItem
-                icon={
-                  <Img
-                    src="img_lock_white_a700.svg"
-                    width={24}
-                    height={24}
-                    alt="lock"
-                    className="h-[24px] w-[24px]"
-                  />
-                }
-              />
-              <MenuItem
-                icon={
-                  <Img
-                    src="img_search_white_a700.svg"
-                    width={24}
-                    height={24}
-                    alt="search"
-                    className="h-[24px] w-[24px]"
-                  />
-                }
-              />
-            </div>
-            <div className="flex flex-col">
-              <MenuItem
-                icon={
-                  <Img
-                    src="img_arrow_left_white_a700.svg"
-                    width={24}
-                    height={24}
-                    alt="arrowleft"
-                    className="h-[24px] w-[24px]"
-                  />
-                }
-              />
-            </div>
-          </Menu>
-        </Sidebar>
+            {open ? <RiMenuUnfold2Line /> : <RiMenuFold2Line />}
+          </h1>
+        </div>
+
         <div className="flex w-[84%] items-center justify-center gap-[30px] md:w-full md:flex-col md:p-10">
           <div className="flex flex-1 flex-col gap-[60px] md:self-stretch sm:gap-[30px]">
             <div className="flex flex-col items-center justify-center gap-[13px] rounded-[12px] bg-white-A700 p-3 md:flex-row">
@@ -148,7 +62,7 @@ export default function MyFriendsPage() {
             </div>
             <div className="flex flex-col gap-10">
               <div className="flex items-start justify-between gap-5 pr-[9px]">
-                <Heading size="2xl" as="h2" className="text-black">
+                <Heading size="2xl" as="h2" className="!text-black">
                   My Friends
                 </Heading>
               </div>
