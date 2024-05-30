@@ -1,15 +1,43 @@
 "use client";
-import {React, useState} from "react";
-import { Input, Img, Text, Heading, Button } from "../../components";
+import { React, useEffect, useState } from "react";
+import { Input, Img, Text, Heading, Button } from "./../../../components";
 import Link from "next/link";
 import Navbar from "@/components/Nav/Navbar";
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
+import api from "@/utils/axios";
+import Avatar from "react-avatar";
+import ReactPlayer from "react-player";
 
-export default function SinglePostPage() {
-
+export default function SinglePostPage({ params }) {
+  const [post, setPost] = useState({});
   const [open, setOpen] = useState(true);
+  const { id } = params;
+  useEffect(() => {
+    loadPost();
+  }, []);
+  const loadPost = async () => {
+    const { data } = await api.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/user-post/${id}`
+    );
+    setPost(data);
+  };
+  function formatDateTime(isoString) {
+    const date = new Date(isoString);
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    }).format(date);
+  }
+  const formattedDate = post.createdAt ? formatDateTime(post.createdAt) : "";
+
   return (
     <div className="w-full bg-gray-100">
+      {/* {JSON.stringify(post, null, 4)} */}
       <div className="flex gap-[15px]">
         <Navbar open={open} setOpen={setOpen} />
         <div
@@ -33,17 +61,26 @@ export default function SinglePostPage() {
             <div className="mt-10 flex w-[60%] md:w-full flex-col gap-10">
               <div className="flex flex-col items-center justify-between gap-5 sm:flex-row">
                 <div className="flex items-center gap-2.5 pr-[5px]">
-                  <Img
-                    src="img_avatar.png"
-                    width={48}
-                    height={48}
-                    alt="avatar"
-                    className="h-[48px] w-[48px] rounded-[12px] object-cover"
-                  />
+                  {post.postedBy?.photo ? (
+                    <img
+                      src={post.postedBy.photo}
+                      width={48}
+                      height={48}
+                      alt="avatar"
+                      className="h-[48px] w-[48px] rounded-[12px] object-cover"
+                    />
+                  ) : (
+                    <Avatar
+                      name={post.postedBy?.name || ""}
+                      size="48"
+                      round="12px"
+                      textSizeRatio={2}
+                    />
+                  )}
                   <div className="flex flex-col items-start gap-[5px]">
-                    <Text as="p">Katherine Cole</Text>
+                    <Text as="p">{post.postedBy?.name || ""}</Text>
                     <Text size="s" as="p" className="!text-gray-500">
-                      5min ago
+                      {formattedDate}
                     </Text>
                   </div>
                 </div>
@@ -56,7 +93,7 @@ export default function SinglePostPage() {
                       alt="favorite"
                       className="h-[14px] w-[14px]"
                     />
-                    <Text as="p">326</Text>
+                    <Text as="p">{post?.likes?.length}</Text>
                   </div>
                   <div className="ml-[27px] flex items-center gap-1.5 p-[5px]">
                     <Img
@@ -66,17 +103,7 @@ export default function SinglePostPage() {
                       alt="instagram"
                       className="h-[14px] w-[14px]"
                     />
-                    <Text as="p">148</Text>
-                  </div>
-                  <div className="ml-[17px] flex items-center self-start p-1.5">
-                    <Img
-                      src="img_question.svg"
-                      width={14}
-                      height={14}
-                      alt="question"
-                      className="h-[14px] w-[14px]"
-                    />
-                    <Text as="p">Share</Text>
+                    <Text as="p">{post?.comments?.length}</Text>
                   </div>
                   <Img
                     src="img_notification.svg"
@@ -88,50 +115,37 @@ export default function SinglePostPage() {
                 </div>
               </div>
               <div className="flex flex-col gap-10">
-                <Img
-                  src="img_image_150x290.png"
-                  width={635}
-                  height={330}
-                  alt="image"
-                  className="h-[330px] w-full rounded-lg object-cover"
-                />
+                {post && post.image && post.image.url && (
+                  <div className="mt-3">
+                    <img
+                      src={post.image.url}
+                      width={290}
+                      height={150}
+                      alt="post image"
+                      className="h-[150px] w-full rounded-lg object-cover md:h-auto"
+                    />
+                  </div>
+                )}
+
+                {post && post.video_link && post.video_link.Location && (
+                  <div className="mt-3">
+                    <ReactPlayer
+                      url={post.video_link.Location}
+                      width="100%"
+                      height="100%"
+                      className="rounded-lg"
+                      controls
+                    />
+                  </div>
+                )}
                 <div className="flex flex-col gap-6">
                   <Heading
                     size="2xl"
                     as="h1"
                     className="leading-9 !text-gray-900"
                   >
-                    The Best Fashion Instagrams of the Week: Céline Dion, Lizzo,
-                    and More
+                    {post?.content}
                   </Heading>
-                  <Text
-                    as="p"
-                    className="!font-normal leading-[22px] !text-gray-500"
-                  >
-                    <>
-                      f you are looking for a break from the cold, take a cue
-                      from Lizzo: This week, the singer headed to Disneyland in
-                      warm and sunny California. She dressed up for the occasion
-                      in pure Minnie Mouse style perfection, including a cartoon
-                      merch sweatshirt from the artist Shelby Swain, cycling
-                      shorts, and adorable pulled-up polka dot socks. All the
-                      way over in Montreal, Céline Dion also had quite the
-                      wardrobe moment. For a concert, the singer wore a pair of
-                      fringed, XXL-flared cowboy jeans by Ukrainian label Ksenia
-                      Schnaider. The Kiev-based designer is responsible for
-                      other viral denim creations, like her asymmetrical jeans
-                      that launched earlier this year. Fun fact: The daring Dion
-                      has worn a pair of those, too!
-                      <br />
-                      <br />
-                      Of course, back in New York, there was Marc Jacobs. The
-                      designer has been having quite the year when it comes to
-                      flexing his fashion muscles on the ’gram. This week, he
-                      channeled The Wizard Of Oz with a full-green look that
-                      included some shimmery Sies Marjan pants, and a pair of
-                      platform boots to anchor the ensemble.
-                    </>
-                  </Text>
                 </div>
               </div>
             </div>

@@ -198,7 +198,6 @@ export const removeComment = async (req, res) => {
 export const newsFeed = async (req, res) => {
   try {
     const user = await User.findById(req.userID);
-    console.log(user);
     let following = user.following;
     following.push(req.userID);
 
