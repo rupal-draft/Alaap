@@ -1,266 +1,11 @@
-// import React, { useEffect, useState } from "react";
-// // import axios from "axios";
-
-// const PostsSection = () => {
-//   const [posts, setPosts] = useState([]);
-
-//   useEffect(() => {
-//     // Replace with your backend endpoint
-//     axios
-//       .get("/api/posts")
-//       .then((response) => {
-//         setPosts(response.data);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching posts:", error);
-//       });
-//   }, []);
-
-//   return (
-//     <div className="posts-section">
-//       {posts.map((post) => (
-//         <Post key={post.id} post={post} />
-//       ))}
-//     </div>
-//   );
-// };
-
-// const Post = ({ post }) => {
-//   return (
-//     <div className="post bg-white p-4 rounded-lg shadow-md mb-4">
-//       <div className="post-header flex items-center mb-2">
-//         <img
-//           src={post.user.avatar}
-//           alt={post.user.name}
-//           className="w-10 h-10 rounded-full mr-2"
-//         />
-//         <div>
-//           <h2 className="font-bold">{post.user.name}</h2>
-//           <p className="text-sm text-gray-500">@{post.user.username}</p>
-//         </div>
-//       </div>
-//       <div className="post-content mb-2">
-//         <p>{post.content}</p>
-//       </div>
-//       {post.image && (
-//         <img src={post.image} alt="Post image" className="w-full rounded-lg" />
-//       )}
-//       <div className="post-footer flex justify-between mt-2">
-//         <button className="text-blue-500">Like</button>
-//         <button className="text-blue-500">Comment</button>
-//         <button className="text-blue-500">Share</button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default PostsSection;
-
-// left col
-
-{
-  /* <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-5">
-          <div className="flex w-[88%] items-center justify-between gap-5 pr-2.5 md:w-full">
-            <div className="flex w-[51%] items-center  gap-2.5">
-              <Img
-                src="img_image.png"
-                width={48}
-                height={48}
-                alt="image"
-                className="h-[48px] w-[48px] rounded-[12px] object-cover"
-              />
-              <div className="flex flex-col items-start gap-1">
-                <Heading as="h2" className="!text-gray-900">
-                  Edward Ford
-                </Heading>
-                <Text size="s" as="p" className="!text-gray-500">
-                  5min ago
-                </Text>
-              </div>
-            </div>
-            <Img
-              src="img_notification.svg"
-              width={18}
-              height={18}
-              alt="notification"
-              className="h-[18px] w-[18px]"
-            />
-          </div>
-          <div className="flex w-[88%] flex-col justify-center gap-5 md:w-full">
-            <Text as="p" className="!text-gray-500">
-              Tourism Is Back In Full Swing In Cancun Mexico
-            </Text>
-            <div className="relative h-[180px] md:h-auto">
-              <Img
-                src="img_image_180x320.png"
-                width={320}
-                height={180}
-                alt="image"
-                className="h-[180px] w-full rounded-lg object-cover"
-              />
-            </div>
-          </div>
-          <div className="flex w-[88%] justify-between gap-5 md:w-full">
-            <div className="flex gap-2.5">
-              <div className="flex items-center p-1.5">
-                <Img
-                  src="img_favorite.svg"
-                  width={14}
-                  height={14}
-                  alt="favorite"
-                  className="h-[14px] w-[14px]"
-                />
-                <Text as="p" className="ml-[5px]">
-                  326
-                </Text>
-              </div>
-              <div className="flex items-center gap-1.5 p-[5px]">
-                <Img
-                  src="img_instagram.svg"
-                  width={14}
-                  height={14}
-                  alt="instagram"
-                  className="h-[14px] w-[14px]"
-                />
-                <Text as="p">148</Text>
-              </div>
-            </div>
-            <div className="flex items-center  cursor-pointer">
-              <Img
-                src="img_question.svg"
-                width={14}
-                height={14}
-                alt="question"
-                className="h-[14px] w-[14px]"
-              />
-            </div>
-          </div>
-          <div className="flex w-[88%] items-center justify-center gap-[15px] rounded border-2 border-solid border-gray-500_33 p-[11px] md:w-full">
-            <Input
-              size="xs"
-              shape="square"
-              name="comment"
-              placeholder={`Write a comment…`}
-              suffix={
-                <Img
-                  src="img_settings.svg"
-                  width={14}
-                  height={14}
-                  alt="settings"
-                  className="h-[14px] w-[14px]"
-                />
-              }
-              className="flex-grow gap-3"
-            />
-            <Img
-              src="img_save.svg"
-              width={14}
-              height={14}
-              alt="save"
-              className="h-[14px] w-[14px]"
-            />
-          </div>
-          <div className="flex w-[88%] flex-col gap-2.5 md:w-full">
-            <div className="flex items-center justify-between gap-5">
-              <div className="flex items-center gap-[5px]">
-                <Img
-                  src="img_avatar_28x28.png"
-                  width={28}
-                  height={28}
-                  alt="avatar"
-                  className="h-[28px] w-[28px] rounded-lg object-cover"
-                />
-                <Text as="p" className="self-end">
-                  Billy Green
-                </Text>
-              </div>
-              <Text
-                size="s"
-                as="p"
-                className="mb-[5px] self-end !text-gray-500"
-              >
-                20min ago
-              </Text>
-            </div>
-            <div>
-              <div className="flex flex-col gap-2.5">
-                <Text
-                  as="p"
-                  className="!font-normal leading-[22px] !text-gray-500"
-                >
-                  Awesome Edward, remeber that five tips for low cost holidays I
-                  sent you?
-                </Text>
-                <div className="flex gap-[15px]">
-                  <Img
-                    src="img_favorite_red_a200.svg"
-                    width={14}
-                    height={14}
-                    alt="favorite"
-                    className="h-[14px] w-[14px]"
-                  />
-                  <Img
-                    src="img_instagram.svg"
-                    width={14}
-                    height={14}
-                    alt="instagram"
-                    className="h-[14px] w-[14px]"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-[88%] flex-col gap-[33px] md:w-full">
-            <div className="flex flex-col gap-[13px]">
-              <div className="flex items-center justify-between gap-5">
-                <div className="flex items-center gap-[5px]">
-                  <Img
-                    src="img_avatar_28x28.png"
-                    width={28}
-                    height={28}
-                    alt="avatar"
-                    className="h-[28px] w-[28px] rounded-lg object-cover"
-                  />
-                  <Text as="p" className="self-end">
-                    Billy Green
-                  </Text>
-                </div>
-                <Text
-                  size="s"
-                  as="p"
-                  className="mb-[5px] self-end !text-gray-500"
-                >
-                  20min ago
-                </Text>
-              </div>
-              <Text as="p" className="!font-normal !text-gray-500">
-                Awesome Edward, remeber that five tips for low cost holidays I
-                sent you?
-              </Text>
-            </div>
-            <div className="flex gap-[15px]">
-              <Img
-                src="img_favorite_red_a200.svg"
-                width={14}
-                height={14}
-                alt="favorite"
-                className="h-[14px] w-[14px]"
-              />
-              <Img
-                src="img_instagram.svg"
-                width={14}
-                height={14}
-                alt="instagram"
-                className="h-[14px] w-[14px]"
-              />
-            </div>
-          </div>
-        </div> */
-}
-
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Img, Button, Text, Heading } from "../../components";
+import api from "@/utils/axios";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import Avatar from "react-avatar";
+import ReactPlayer from "react-player";
 
 export const postData = [
   {
@@ -290,36 +35,127 @@ export const postData = [
     image: "post2.jpg",
   },
 
-  // {
-  //   id: 3,
-  //   name: "Sattiwikee Ghosh",
-  //   username: "sattiwikee-ghosh",
-  //   avatar: "sattiwikee.jpg",
-  //   postTime: "100 years ago",
-  //   caption: "Amar 10 ta bor",
-  //   description:
-  //     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam neque ipsum ad? Adipisci, repudiandae eligendi expedita veritatis iste quod cupiditate.",
-  //   likeCount: "200",
-  //   commentCount: "248",
-  //   image: "post3.jpg",
-  // },
+  {
+    id: 3,
+    name: "Sattiwikee Ghosh",
+    username: "sattiwikee-ghosh",
+    avatar: "sattiwikee.jpg",
+    postTime: "100 years ago",
+    caption: "Amar 10 ta bor",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam neque ipsum ad? Adipisci, repudiandae eligendi expedita veritatis iste quod cupiditate.",
+    likeCount: "200",
+    commentCount: "248",
+    image: "post3.jpg",
+  },
 
-  // {
-  //   id: 4,
-  //   name: "Sattiwikee Ghosh",
-  //   username: "sattiwikee-ghosh",
-  //   avatar: "sattiwikee.jpg",
-  //   postTime: "100 years ago",
-  //   caption: "Amar 10 ta bor",
-  //   description:
-  //     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam neque ipsum ad? Adipisci, repudiandae eligendi expedita veritatis iste quod cupiditate.",
-  //   likeCount: "200",
-  //   commentCount: "248",
-  //   image: "post3.jpg",
-  // },
+  {
+    id: 4,
+    name: "Sattiwikee Ghosh",
+    username: "sattiwikee-ghosh",
+    avatar: "sattiwikee.jpg",
+    postTime: "100 years ago",
+    caption: "Amar 10 ta bor",
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam neque ipsum ad? Adipisci, repudiandae eligendi expedita veritatis iste quod cupiditate.",
+    likeCount: "200",
+    commentCount: "248",
+    image: "post3.jpg",
+  },
 ];
 
 const Posts = () => {
+  const [image, setImage] = useState({});
+  const [video, setVideo] = useState({});
+  const [content, setContent] = useState("");
+  const [posts, setPosts] = useState([]);
+  const [isImageSelected, setIsImageSelected] = useState(false);
+  const [isVideoSelected, setIsVideoSelected] = useState(false);
+  const imageInputRef = useRef(null);
+  const videoInputRef = useRef(null);
+  const { user } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (user) {
+      loadPosts();
+    }
+  }, [user]);
+  const loadPosts = async () => {
+    const { data } = await api.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/news-feed`
+    );
+    // console.log(data);
+    setPosts(data);
+  };
+
+  const handleImageChange = async (event) => {
+    if (event.target.files.length > 0) {
+      setIsImageSelected(true);
+      setIsVideoSelected(false);
+      await handleImage(event);
+    }
+  };
+
+  const handleVideoChange = async (event) => {
+    if (event.target.files.length > 0) {
+      setIsVideoSelected(true);
+      setIsImageSelected(false);
+      await handleVideo(event);
+    }
+  };
+  const handleImage = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const { data } = await api.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/upload-image`,
+        formData
+      );
+      setImage(data);
+    } catch (e) {
+      console.error(e);
+      toast.error("Image upload failed!");
+    }
+  };
+  const handleVideo = async (e) => {
+    try {
+      const file = e.target.files[0];
+      const videoData = new FormData();
+      videoData.append("video", file);
+      const { data } = await api.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/video-upload`,
+        videoData
+      );
+
+      setVideo(data);
+    } catch (err) {
+      console.log(err);
+      toast.error("Video upload failed!");
+    }
+  };
+  const createPost = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await api.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/create-post`,
+        { content, image, video }
+      );
+      setContent("");
+      setImage({});
+      setVideo({});
+      imageInputRef.current.value = "";
+      videoInputRef.current.value = "";
+      setIsImageSelected(false);
+      setIsVideoSelected(false);
+      toast.success("Posted!!🖖🖖");
+      loadPosts();
+    } catch (err) {
+      console.log(err);
+      toast.error("Post creation failed");
+    }
+  };
   return (
     <div className="grid md:grid-cols-2 gap-[30px]">
       <div className="flex flex-col gap-[30px]">
@@ -335,101 +171,152 @@ const Posts = () => {
                 className="h-[80px] w-[80px] cursor-pointer rounded-[12px] object-cover"
               />
             </Link>
-            <div className="flex flex-1 rounded-[19px] bg-white-A700">
-              <textarea
-                placeholder={`What are you thinking…`}
-                className="!text-gray-500 text-base w-full h-[150px] pt-1 pl-1 border-x rounded-lg border-gray-500 focus:border-gray-500 outline-none transition-all resize-none"
-              />
-            </div>
+            <div className="flex flex-1 rounded-[19px] bg-white-A700"></div>
           </div>
           <div className="flex items-center justify-between gap-x-10">
-            <div className="flex gap-2.5 self-end">
-              <Button className="w-[28px] rounded-lg">
-                <Img src="img_camera.svg" width={28} height={28} />
-              </Button>
-              <Button className="w-[28px] rounded-lg">
-                <Img src="img_upload.svg" width={28} height={28} />
-              </Button>
-              <Button className="w-[28px] rounded-lg">
-                <Img src="img_plus.svg" width={28} height={28} />
-              </Button>
-            </div>
-            <div className="flex items-center cursor-pointer">
-              <Img
-                src="img_question.svg"
-                width={14}
-                height={14}
-                alt="question"
-                className="h-[14px] w-[14px]"
+            <form className="flex gap-2.5 self-end" onSubmit={createPost}>
+              <textarea
+                placeholder="What are you thinking…"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="!text-gray-500 text-base w-full h-[150px] pt-1 pl-1 border-x rounded-lg border-gray-500 focus:border-gray-500 outline-none transition-all resize-none"
               />
-            </div>
+              <input
+                onChange={handleImageChange}
+                type="file"
+                accept="images/*"
+                id="image"
+                name="image"
+                required
+                disabled={isVideoSelected}
+                ref={imageInputRef}
+                className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-200 text-sm sm:leading-6"
+              />
+              <input
+                onChange={handleVideoChange}
+                type="file"
+                accept="video/*"
+                disabled={isImageSelected}
+                ref={videoInputRef}
+                className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-200 text-sm sm:leading-6"
+              />
+              <button
+                className="flex items-center cursor-pointer"
+                onClick={createPost}
+              >
+                <Img
+                  src="img_question.svg"
+                  width={14}
+                  height={14}
+                  alt="question"
+                  className="h-[14px] w-[14px]"
+                />
+              </button>
+            </form>
           </div>
         </div>
 
         {/* Left Column Posts */}
-        {postData
-          .filter((_, index) => index % 2 === 0)
-          .map((content, index) => (
-            <Post content={content} key={index} />
-          ))}
+        {posts &&
+          posts
+            .filter((_, index) => index % 2 === 0)
+            .map((post, index) => <Post post={post} key={index} />)}
       </div>
 
       <div className="flex flex-col gap-[30px]">
         {/* Right Column Posts */}
-        {postData
-          .filter((_, index) => index % 2 !== 0)
-          .map((content, index) => (
-            <Post content={content} key={index} />
-          ))}
+        {posts &&
+          posts
+            .filter((_, index) => index % 2 !== 0)
+            .map((post, index) => <Post post={post} key={index} />)}
       </div>
     </div>
   );
 };
 
-const Post = ({ content }) => {
+const Post = ({ post }) => {
+  function formatDateTime(isoString) {
+    const date = new Date(isoString);
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    }).format(date);
+  }
+  const formattedDate = formatDateTime(post.createdAt);
+
   return (
     <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-5">
       <div className="flex items-center justify-between gap-5 pr-2.5">
         <div className="flex w-[68%] items-center gap-2.5">
-          <Img
-            src={content.avatar}
-            width={48}
-            height={48}
-            alt="avatar"
-            className="h-[48px] w-[48px] rounded-[12px] object-cover"
-          />
+          {post.postedBy.photo ? (
+            <img
+              src={post.postedBy.photo}
+              width={48}
+              height={48}
+              alt="avatar"
+              className="h-[48px] w-[48px] rounded-[12px] object-cover"
+            />
+          ) : (
+            <Avatar
+              name={post.postedBy.name}
+              size="48"
+              round="12px"
+              textSizeRatio={2}
+            />
+          )}
           <div className="flex flex-col items-start gap-[5px]">
             <Heading as="h3" className="!text-gray-900">
-              {content.name}
+              {post.postedBy.name}
             </Heading>
             <Text size="s" as="p" className="!text-gray-500">
-              {content.postTime}
+              {formattedDate}
             </Text>
           </div>
         </div>
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col items-start justify-center">
-          <Img
-            src={content.image}
-            width={290}
-            height={150}
-            alt="post image"
-            className="h-[150px] w-full rounded-lg object-cover md:h-auto"
-          />
+          {post && post.image && post.image.url && (
+            <div className="mt-3">
+              <img
+                src={post.image.url}
+                width={290}
+                height={150}
+                alt="post image"
+                className="h-[150px] w-full rounded-lg object-cover md:h-auto"
+              />
+            </div>
+          )}
+
+          {post && post.video_link && post.video_link.Location && (
+            <div className="mt-3">
+              <ReactPlayer
+                url={post.video_link.Location}
+                width="100%"
+                height="100%"
+                className="rounded-lg"
+                controls
+              />
+            </div>
+          )}
           <div className="mt-5 flex flex-col gap-[15px] self-stretch">
-            <Heading
+            {/* <Heading
               size="lg"
               as="h4"
               className="leading-[22px] !text-gray-900"
             >
               {content.caption}
-            </Heading>
+            </Heading> */}
             <Text as="p" className="leading-5 !text-gray-500">
-              {content.description}
+              {post.content}
             </Text>
           </div>
-          <Link href="#" className="mt-[11px]">
+          <Link href={`/singlepost/${post._id}`} className="mt-[11px]">
             <Heading
               size="s"
               as="h5"
@@ -450,7 +337,7 @@ const Post = ({ content }) => {
                 className="h-[14px] w-[14px]"
               />
               <Text as="p" className="ml-[5px]">
-                {content.likeCount}
+                {post.likes.length}
               </Text>
             </div>
             <div className="flex items-center gap-1.5">
@@ -461,7 +348,7 @@ const Post = ({ content }) => {
                 alt="instagram"
                 className="h-[14px] w-[14px]"
               />
-              <Text as="p">{content.commentCount}</Text>
+              <Text as="p">{post.comments.length}</Text>
             </div>
           </div>
           <div className="flex items-center p-1.5 cursor-pointer">
