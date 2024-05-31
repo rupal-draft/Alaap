@@ -10,6 +10,7 @@ import {
   deletePost,
   likePost,
   newsFeed,
+  posts,
   postsByUser,
   removeComment,
   unlikePost,
@@ -33,5 +34,6 @@ router.put("/unlike-post", requireSignin, unlikePost);
 router.put("/add-comment", requireSignin, addComment);
 router.put("/remove-comment", requireSignin, removeComment);
 router.get("/news-feed", requireSignin, newsFeed);
+router.get("/posts", requireSignin, posts);
 
 export default router;
