@@ -6,63 +6,12 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import Avatar from "react-avatar";
 import ReactPlayer from "react-player";
+import { io } from "socket.io-client";
+import { DeleteOutlined } from "@ant-design/icons";
 
-export const postData = [
-  {
-    id: 1,
-    name: "Pratik Biswas",
-    username: "pratik-biswas",
-    avatar: "pratik.jpg",
-    postTime: "5 years ago",
-    caption: "I need a peaceful life",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam neque ipsum ad? Adipisci, repudiandae eligendi expedita veritatis iste quod cupiditate.",
-    likeCount: "500",
-    commentCount: "148",
-    image: "post1.jpg",
-  },
-  {
-    id: 2,
-    name: "Rupal Paul",
-    username: "rupal-paul",
-    avatar: "rupal.jpg",
-    postTime: "10 years ago",
-    caption: "Ami Borolok",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam neque ipsum ad? Adipisci, repudiandae eligendi expedita veritatis iste quod cupiditate.",
-    likeCount: "500",
-    commentCount: "148",
-    image: "post2.jpg",
-  },
-
-  {
-    id: 3,
-    name: "Sattiwikee Ghosh",
-    username: "sattiwikee-ghosh",
-    avatar: "sattiwikee.jpg",
-    postTime: "100 years ago",
-    caption: "Amar 10 ta bor",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam neque ipsum ad? Adipisci, repudiandae eligendi expedita veritatis iste quod cupiditate.",
-    likeCount: "200",
-    commentCount: "248",
-    image: "post3.jpg",
-  },
-
-  {
-    id: 4,
-    name: "Sattiwikee Ghosh",
-    username: "sattiwikee-ghosh",
-    avatar: "sattiwikee.jpg",
-    postTime: "100 years ago",
-    caption: "Amar 10 ta bor",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam neque ipsum ad? Adipisci, repudiandae eligendi expedita veritatis iste quod cupiditate.",
-    likeCount: "200",
-    commentCount: "248",
-    image: "post3.jpg",
-  },
-];
+const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
+  reconnection: true,
+});
 
 const Posts = () => {
   const [image, setImage] = useState({});
@@ -78,13 +27,18 @@ const Posts = () => {
   useEffect(() => {
     if (user) {
       loadPosts();
+      socket.on("new-post", (newPost) => {
+        setPosts((prevPosts) => [newPost, ...prevPosts]);
+      });
+      return () => {
+        socket.off("new-post");
+      };
     }
   }, [user]);
   const loadPosts = async () => {
     const { data } = await api.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/news-feed`
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/posts`
     );
-    // console.log(data);
     setPosts(data);
   };
 
@@ -151,11 +105,13 @@ const Posts = () => {
       setIsVideoSelected(false);
       toast.success("Posted!!🖖🖖");
       loadPosts();
+      socket.emit("new-post", data);
     } catch (err) {
       console.log(err);
       toast.error("Post creation failed");
     }
   };
+
   return (
     <div className="grid md:grid-cols-2 gap-[30px]">
       <div className="flex flex-col gap-[30px]">
@@ -187,7 +143,6 @@ const Posts = () => {
                 accept="images/*"
                 id="image"
                 name="image"
-                required
                 disabled={isVideoSelected}
                 ref={imageInputRef}
                 className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-200 text-sm sm:leading-6"
@@ -220,7 +175,9 @@ const Posts = () => {
         {posts &&
           posts
             .filter((_, index) => index % 2 === 0)
-            .map((post, index) => <Post post={post} key={index} />)}
+            .map((post, index) => (
+              <Post post={post} key={index} loadPosts={loadPosts} />
+            ))}
       </div>
 
       <div className="flex flex-col gap-[30px]">
@@ -228,13 +185,15 @@ const Posts = () => {
         {posts &&
           posts
             .filter((_, index) => index % 2 !== 0)
-            .map((post, index) => <Post post={post} key={index} />)}
+            .map((post, index) => (
+              <Post post={post} key={index} loadPosts={loadPosts} />
+            ))}
       </div>
     </div>
   );
 };
 
-const Post = ({ post }) => {
+const Post = ({ post, loadPosts }) => {
   function formatDateTime(isoString) {
     const date = new Date(isoString);
     return new Intl.DateTimeFormat("en-US", {
@@ -248,6 +207,18 @@ const Post = ({ post }) => {
     }).format(date);
   }
   const formattedDate = formatDateTime(post.createdAt);
+
+  const handleDelete = async () => {
+    try {
+      const answer = window.confirm("Are you sure?");
+      if (!answer) return;
+      const { data } = await api.delete(`/delete-post/${post._id}`);
+      toast.error("Post deleted");
+      loadPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-5">
@@ -278,6 +249,10 @@ const Post = ({ post }) => {
             </Text>
           </div>
         </div>
+        <DeleteOutlined
+          className="text-red-500 cursor-pointer"
+          onClick={handleDelete}
+        />
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col items-start justify-center">
@@ -305,13 +280,6 @@ const Post = ({ post }) => {
             </div>
           )}
           <div className="mt-5 flex flex-col gap-[15px] self-stretch">
-            {/* <Heading
-              size="lg"
-              as="h4"
-              className="leading-[22px] !text-gray-900"
-            >
-              {content.caption}
-            </Heading> */}
             <Text as="p" className="leading-5 !text-gray-500">
               {post.content}
             </Text>

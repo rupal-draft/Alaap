@@ -50,6 +50,7 @@ const port = process.env.PORT || 8000;
 io.on("connect", (socket) => {
   socket.on("new-post", (newPost) => {
     socket.broadcast.emit("new-post", newPost);
+    // console.log("Server received new post:", newPost);
   });
 });
 

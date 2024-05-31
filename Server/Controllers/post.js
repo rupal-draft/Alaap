@@ -29,7 +29,7 @@ export const createPost = async (req, res) => {
       video_link: video,
       postedBy: req.userID,
     });
-    post.save();
+    await post.save();
     const postWithUser = await Post.findById(post._id).populate(
       "postedBy",
       "-password"
@@ -206,6 +206,18 @@ export const newsFeed = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(10);
 
+    res.json(posts);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const posts = async (req, res) => {
+  try {
+    const posts = await Post.find()
+      .populate("postedBy", "_id name photo")
+      .populate("comments.postedBy", "_id name photo")
+      .sort({ createdAt: -1 });
     res.json(posts);
   } catch (err) {
     console.log(err);
