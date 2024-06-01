@@ -10,6 +10,10 @@ module.exports = {
     // screens: { md: { max: "1050px" }, sm: { max: "550px" } },
     extend: {
       colors: {
+        background: "#222831",
+        shadow: "#31363F",
+        highlight: "#76ABAE",
+        primary_text: "#EEEEEE",
         gray: {
           100: "#f7f7f7",
           500: "#8f92a1",

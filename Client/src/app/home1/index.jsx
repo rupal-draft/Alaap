@@ -1,7 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Img, Button, Text, Heading, Input } from "../../components";
-import Link from "next/link";
 
 // calling navbar
 import Navbar from "../../components/Nav/Navbar";
@@ -9,15 +7,7 @@ import Posts from "@/components/Postcard/Posts";
 // icons
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
 
-import { FaFilter } from "react-icons/fa6";
-
 export default function Home1Page() {
-  const [collapsed, setCollapsed] = React.useState(false);
-
-  //use this function to collapse/expand the sidebar
-  //function collapseSidebar() {
-  //    setCollapsed(!collapsed)
-  //}
   const [open, setOpen] = useState(true);
   useEffect(() => {
     const handleResize = () => {
@@ -39,7 +29,7 @@ export default function Home1Page() {
   }, []);
 
   return (
-    <div className="flex w-full items-start justify-between gap-5 bg-[#dadada] ">
+    <div className="flex w-full items-start justify-between gap-5 bg-background ">
       {/* Nav bar */}
       <Navbar open={open} setOpen={setOpen} />
 
@@ -59,8 +49,8 @@ export default function Home1Page() {
       </div>
 
       {/* main screen */}
-      <div className="flex w-[100%] items-start justify-center gap-[30px] self-end md:w-full md:flex-col mr-5 ">
-        <div className="mt-7  flex flex-1 flex-col gap-10 ">
+      <div className="flex w-[100%] items-start justify-center gap-[30px] md:w-full md:flex-col ">
+        <div className="mt-5  flex flex-1 flex-col gap-10 ">
           {/* search bar */}
           {/* <div className="flex items-center justify-center gap-[13px] h-10 lg:h-12  rounded-[12px] bg-[#cdcdcd] p-3">
             <Input
