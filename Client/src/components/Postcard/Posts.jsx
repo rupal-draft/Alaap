@@ -370,30 +370,30 @@ const Post = ({ post, loadPosts, toggleLike }) => {
         />
       </div>
       <div className="flex flex-col items-center justify-center gap-y-5">
-        {post && post.image && post.image.url && (
-          <div className="mt-3 flex items-center justify-center">
-            <img
-              src={post.image.url}
-              width={640}
-              alt="post image"
-              // className="max-w-full h-auto rounded-lg object-cover"
-              className="w-[640px] max-w-full rounded-lg h-auto block m-auto"
-            />
-          </div>
-        )}
+        <div className="mt-3 flex items-center justify-center w-[640px] h-[640px]  bg-black rounded-lg overflow-hidden">
+          {post && post.image && post.image.url && (
+            <div className="flex items-center justify-center w-full h-full">
+              <img
+                src={post.image.url}
+                alt="post image"
+                className="block max-w-full max-h-full m-auto object-contain"
+              />
+            </div>
+          )}
 
-        {post && post.video_link && post.video_link.Location && (
-          <div className="mt-3 flex justify-center">
-            <ReactPlayer
-              url={post.video_link.Location}
-              width={500}
-              height="auto"
-              // className="max-w-full rounded-lg"
-              className=" max-w-full rounded-lg h-auto block m-auto"
-              controls
-            />
-          </div>
-        )}
+          {post && post.video_link && post.video_link.Location && (
+            <div className="flex items-center justify-center w-full h-full">
+              <ReactPlayer
+                url={post.video_link.Location}
+                width="100%"
+                height="100%"
+                className="max-w-full max-h-full m-auto"
+                controls
+              />
+            </div>
+          )}
+        </div>
+
         <div className="flex flex-col self-stretch">
           <Text
             as="p"
