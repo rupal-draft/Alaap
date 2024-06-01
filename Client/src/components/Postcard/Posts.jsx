@@ -8,14 +8,17 @@ import Avatar from "react-avatar";
 import ReactPlayer from "react-player";
 import { io } from "socket.io-client";
 import { DeleteOutlined } from "@ant-design/icons";
+import { CloseCircleOutlined } from "@ant-design/icons"; // Import the close icon
+import { IoIosShareAlt } from "react-icons/io";
+import { FaRegCommentAlt, FaRegHeart, FaHeart } from "react-icons/fa";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
 });
 
 const Posts = () => {
-  const [image, setImage] = useState({});
-  const [video, setVideo] = useState({});
+  const [image, setImage] = useState(null);
+  const [video, setVideo] = useState(null);
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState([]);
   const [isImageSelected, setIsImageSelected] = useState(false);
@@ -35,6 +38,7 @@ const Posts = () => {
       };
     }
   }, [user]);
+
   const loadPosts = async () => {
     const { data } = await api.get(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/posts`
@@ -46,7 +50,9 @@ const Posts = () => {
     if (event.target.files.length > 0) {
       setIsImageSelected(true);
       setIsVideoSelected(false);
-      await handleImage(event);
+      const file = event.target.files[0];
+      const imageUrl = URL.createObjectURL(file);
+      setImage(imageUrl);
     }
   };
 
@@ -54,11 +60,13 @@ const Posts = () => {
     if (event.target.files.length > 0) {
       setIsVideoSelected(true);
       setIsImageSelected(false);
-      await handleVideo(event);
+      const file = event.target.files[0];
+      const videoUrl = URL.createObjectURL(file);
+      setVideo(videoUrl);
     }
   };
-  const handleImage = async (e) => {
-    const file = e.target.files[0];
+
+  const handleImageUpload = async (file) => {
     const formData = new FormData();
     formData.append("image", file);
 
@@ -67,15 +75,15 @@ const Posts = () => {
         `${process.env.NEXT_PUBLIC_SERVER_URL}/upload-image`,
         formData
       );
-      setImage(data);
+      return data;
     } catch (e) {
       console.error(e);
       toast.error("Image upload failed!");
     }
   };
-  const handleVideo = async (e) => {
+
+  const handleVideoUpload = async (file) => {
     try {
-      const file = e.target.files[0];
       const videoData = new FormData();
       videoData.append("video", file);
       const { data } = await api.post(
@@ -83,22 +91,35 @@ const Posts = () => {
         videoData
       );
 
-      setVideo(data);
+      return data;
     } catch (err) {
       console.log(err);
       toast.error("Video upload failed!");
     }
   };
+
   const createPost = async (e) => {
     e.preventDefault();
     try {
+      let uploadedImage = null;
+      let uploadedVideo = null;
+
+      if (isImageSelected && imageInputRef.current.files[0]) {
+        uploadedImage = await handleImageUpload(imageInputRef.current.files[0]);
+      }
+
+      if (isVideoSelected && videoInputRef.current.files[0]) {
+        uploadedVideo = await handleVideoUpload(videoInputRef.current.files[0]);
+      }
+
       const { data } = await api.post(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/create-post`,
-        { content, image, video }
+        { content, image: uploadedImage, video: uploadedVideo }
       );
+
       setContent("");
-      setImage({});
-      setVideo({});
+      setImage(null);
+      setVideo(null);
       imageInputRef.current.value = "";
       videoInputRef.current.value = "";
       setIsImageSelected(false);
@@ -112,63 +133,142 @@ const Posts = () => {
     }
   };
 
+  const clearImage = () => {
+    setImage(null);
+    setIsImageSelected(false);
+    imageInputRef.current.value = "";
+  };
+
+  const clearVideo = () => {
+    setVideo(null);
+    setIsVideoSelected(false);
+    videoInputRef.current.value = "";
+  };
+
+  const toggleLike = async (postId) => {
+    const updatedPosts = posts.map((post) => {
+      if (post._id === postId) {
+        return { ...post, liked: !post.liked };
+      }
+      return post;
+    });
+
+    setPosts(updatedPosts);
+
+    try {
+      await api.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/toggle-like`, {
+        postId,
+      });
+      loadPosts();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to toggle like");
+    }
+  };
+
   return (
     <div className="grid md:grid-cols-2 gap-[30px]">
       <div className="flex flex-col gap-[30px]">
         {/* Create Post Section */}
-        <div className="flex flex-col w-full gap-[7px] rounded-[12px] bg-white-A700 p-5">
-          <div className="flex items-start gap-[5px]">
-            <Link href="/myprofile">
-              <Img
-                src="img_avatar.png"
-                width={80}
-                height={80}
-                alt="avatar"
-                className="h-[80px] w-[80px] cursor-pointer rounded-[12px] object-cover"
-              />
-            </Link>
-            <div className="flex flex-1 rounded-[19px] bg-white-A700"></div>
-          </div>
-          <div className="flex items-center justify-between gap-x-10">
-            <form className="flex gap-2.5 self-end" onSubmit={createPost}>
+        <div className="flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
+          <form className="flex gap-2.5 w-full" onSubmit={createPost}>
+            <div className="flex items-start">
+              <Link href="/myprofile">
+                <Img
+                  src="pratik.jpg"
+                  width={80}
+                  height={80}
+                  alt="avatar"
+                  className="cursor-pointer rounded-full object-cover"
+                />
+              </Link>
+            </div>
+            <div className="flex flex-col w-full gap-y-2">
               <textarea
                 placeholder="What are you thinking…"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="!text-gray-500 text-base w-full h-[150px] pt-1 pl-1 border-x rounded-lg border-gray-500 focus:border-gray-500 outline-none transition-all resize-none"
+                className="flex-grow !text-primary_text w-full text-[1rem] pt-1 pl-1 border rounded-lg border-highlight focus:border-gray-500 outline-none transition-all resize-none h-[70px] "
               />
-              <input
-                onChange={handleImageChange}
-                type="file"
-                accept="images/*"
-                id="image"
-                name="image"
-                disabled={isVideoSelected}
-                ref={imageInputRef}
-                className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-200 text-sm sm:leading-6"
-              />
-              <input
-                onChange={handleVideoChange}
-                type="file"
-                accept="video/*"
-                disabled={isImageSelected}
-                ref={videoInputRef}
-                className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-200 text-sm sm:leading-6"
-              />
-              <button
-                className="flex items-center cursor-pointer"
-                onClick={createPost}
-              >
-                <Img
-                  src="img_question.svg"
-                  width={14}
-                  height={14}
-                  alt="question"
-                  className="h-[14px] w-[14px]"
+              <div className="flex gap-2 w-full">
+                <input
+                  onChange={handleImageChange}
+                  type="file"
+                  accept="image/*"
+                  id="image"
+                  name="image"
+                  ref={imageInputRef}
+                  className="hidden"
                 />
-              </button>
-            </form>
-          </div>
+                <input
+                  onChange={handleVideoChange}
+                  type="file"
+                  accept="video/*"
+                  ref={videoInputRef}
+                  className="hidden"
+                />
+                <Button
+                  type="button"
+                  onClick={() => imageInputRef.current.click()}
+                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text ${
+                    isVideoSelected ? "cursor-not-allowed" : ""
+                  }`}
+                  disabled={isVideoSelected}
+                >
+                  Upload Image
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => videoInputRef.current.click()}
+                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text ${
+                    isImageSelected ? "cursor-not-allowed" : ""
+                  }`}
+                  disabled={isImageSelected}
+                >
+                  Upload Video
+                </Button>
+                <button
+                  type="submit"
+                  className="flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text"
+                >
+                  Post
+                </button>
+              </div>
+            </div>
+          </form>
+
+          {/* Preview Section */}
+          {isImageSelected && image && (
+            <div className="relative mt-3">
+              <img
+                src={image}
+                width={290}
+                height={150}
+                alt="preview image"
+                className="h-[150px] w-full rounded-lg object-cover md:h-auto"
+              />
+              <CloseCircleOutlined
+                className="absolute top-2 right-2 text-xl text-red-600 cursor-pointer"
+                onClick={clearImage}
+              />
+            </div>
+          )}
+
+          {isVideoSelected && video && (
+            <div className="relative mt-3">
+              <ReactPlayer
+                url={video}
+                width="100%"
+                height="100%"
+                className="rounded-lg"
+                controls
+              />
+              <CloseCircleOutlined
+                className="absolute top-2 right-2 text-xl text-red-600 cursor-pointer"
+                onClick={clearVideo}
+              />
+            </div>
+          )}
         </div>
 
         {/* Left Column Posts */}
@@ -176,7 +276,12 @@ const Posts = () => {
           posts
             .filter((_, index) => index % 2 === 0)
             .map((post, index) => (
-              <Post post={post} key={index} loadPosts={loadPosts} />
+              <Post
+                post={post}
+                key={index}
+                loadPosts={loadPosts}
+                toggleLike={toggleLike}
+              />
             ))}
       </div>
 
@@ -186,14 +291,19 @@ const Posts = () => {
           posts
             .filter((_, index) => index % 2 !== 0)
             .map((post, index) => (
-              <Post post={post} key={index} loadPosts={loadPosts} />
+              <Post
+                post={post}
+                key={index}
+                loadPosts={loadPosts}
+                toggleLike={toggleLike}
+              />
             ))}
       </div>
     </div>
   );
 };
 
-const Post = ({ post, loadPosts }) => {
+const Post = ({ post, loadPosts, toggleLike }) => {
   function formatDateTime(isoString) {
     const date = new Date(isoString);
     return new Intl.DateTimeFormat("en-US", {
@@ -221,112 +331,127 @@ const Post = ({ post, loadPosts }) => {
   };
 
   return (
-    <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-5">
-      <div className="flex items-center justify-between gap-5 pr-2.5">
+    <div className="flex w-full flex-col gap-[15px] rounded-[12px] bg-shadow p-5 ">
+      <div className="flex items-center justify-between gap-5 ">
         <div className="flex w-[68%] items-center gap-2.5">
           {post.postedBy.photo ? (
             <img
               src={post.postedBy.photo}
-              width={48}
-              height={48}
+              width={50}
+              height={50}
               alt="avatar"
-              className="h-[48px] w-[48px] rounded-[12px] object-cover"
+              className="rounded-full object-cover"
             />
           ) : (
             <Avatar
               name={post.postedBy.name}
-              size="48"
-              round="12px"
+              size="50"
+              round="100px"
               textSizeRatio={2}
+              color="#222831"
+              className="border"
             />
           )}
           <div className="flex flex-col items-start gap-[5px]">
-            <Heading as="h3" className="!text-gray-900">
+            <Heading
+              as="h3"
+              className="!text-primary_text font-serif text-[1.6rem]"
+            >
               {post.postedBy.name}
             </Heading>
-            <Text size="s" as="p" className="!text-gray-500">
+            <Text size="s" as="p" className="!text-highlight font-semibold">
               {formattedDate}
             </Text>
           </div>
         </div>
         <DeleteOutlined
-          className="text-red-500 cursor-pointer"
+          className="text-red-500 cursor-pointer text-2xl"
           onClick={handleDelete}
         />
       </div>
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col items-start justify-center">
-          {post && post.image && post.image.url && (
-            <div className="mt-3">
-              <img
-                src={post.image.url}
-                width={290}
-                height={150}
-                alt="post image"
-                className="h-[150px] w-full rounded-lg object-cover md:h-auto"
-              />
-            </div>
-          )}
-
-          {post && post.video_link && post.video_link.Location && (
-            <div className="mt-3">
-              <ReactPlayer
-                url={post.video_link.Location}
-                width="100%"
-                height="100%"
-                className="rounded-lg"
-                controls
-              />
-            </div>
-          )}
-          <div className="mt-5 flex flex-col gap-[15px] self-stretch">
-            <Text as="p" className="leading-5 !text-gray-500">
-              {post.content}
-            </Text>
+      <div className="flex flex-col items-center justify-center gap-y-5">
+        {post && post.image && post.image.url && (
+          <div className="mt-3 flex items-center justify-center">
+            <img
+              src={post.image.url}
+              width={640}
+              alt="post image"
+              // className="max-w-full h-auto rounded-lg object-cover"
+              className="w-[640px] max-w-full rounded-lg h-auto block m-auto"
+            />
           </div>
-          <Link href={`/singlepost/${post._id}`} className="mt-[11px]">
-            <Heading
-              size="s"
-              as="h5"
-              className="uppercase tracking-[1.00px] !text-indigo-A200"
-            >
-              Read More
-            </Heading>
-          </Link>
+        )}
+
+        {post && post.video_link && post.video_link.Location && (
+          <div className="mt-3 flex justify-center">
+            <ReactPlayer
+              url={post.video_link.Location}
+              width={500}
+              height="auto"
+              // className="max-w-full rounded-lg"
+              className=" max-w-full rounded-lg h-auto block m-auto"
+              controls
+            />
+          </div>
+        )}
+        <div className="flex flex-col self-stretch">
+          <Text
+            as="p"
+            className="leading-5 !text-primary_text text-base max-w-full w-[640px]"
+          >
+            {post.content}
+          </Text>
         </div>
-        <div className="flex justify-between gap-5">
-          <div className="flex items-center gap-[15px]">
-            <div className="flex items-center p-1.5">
-              <Img
-                src="img_favorite.svg"
-                width={14}
-                height={14}
-                alt="favorite"
-                className="h-[14px] w-[14px]"
-              />
-              <Text as="p" className="ml-[5px]">
+        <Link
+          href={`/singlepost/${post._id}`}
+          className="flex flex-col self-stretch"
+        >
+          <Heading
+            size="s"
+            as="h5"
+            className="uppercase tracking-[1.00px] !text-highlight"
+          >
+            Read More
+          </Heading>
+        </Link>
+        <div className="flex self-stretch justify-between gap-y-5 ">
+          <div className="flex items-center justify-between gap-[15px]">
+            <div
+              className="flex items-center cursor-pointer"
+              onClick={() => toggleLike(post._id)}
+            >
+              {post.liked ? (
+                <FaHeart className="text-red-600" />
+              ) : (
+                <FaRegHeart className="text-primary_text" />
+              )}
+              <Text as="p" className="ml-[5px] text-primary_text text-[1rem]">
                 {post.likes.length}
               </Text>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Img
+            <div className="flex items-center justify-center gap-x-2 ">
+              {/* <Img
                 src="img_instagram.svg"
                 width={14}
                 height={14}
                 alt="instagram"
-                className="h-[14px] w-[14px]"
-              />
-              <Text as="p">{post.comments.length}</Text>
+                className="h-[14px] w-[14px] "
+              /> */}
+              <FaRegCommentAlt className="text-primary_text " />
+              <Text as="p" className="text-primary_text text-[1rem]">
+                {post.comments.length}
+              </Text>
             </div>
           </div>
-          <div className="flex items-center p-1.5 cursor-pointer">
-            <Img
+          <div className="flex items-center text-primary_text cursor-pointer">
+            {/* <Img
               src="img_question.svg"
-              width={14}
-              height={14}
+              width={20}
+              height={20}
               alt="question"
-              className="h-[14px] w-[14px]"
-            />
+              className="h-[14px] w-[14px] text-primary_text"
+            /> */}
+            <IoIosShareAlt className="text-xl" />
           </div>
         </div>
       </div>
