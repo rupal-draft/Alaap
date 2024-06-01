@@ -9,6 +9,7 @@ import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
 import { FaFilter } from "react-icons/fa6";
 
 import Navbar from "@/components/Nav/Navbar";
+import Posts, { Post } from "@/components/Postcard/Posts";
 
 const data = [
   {
@@ -330,8 +331,8 @@ export default function MyProfilePage() {
                 </div>
               </div>
             </div>
-
-            <div className="flex w-full flex-col gap-[30px] bg-yellow-600 rounded-xl md:p-5">
+            <Post />
+            {/* <div className="flex w-full flex-col gap-[30px] bg-yellow-600 rounded-xl md:p-5">
               <div className="flex flex-col gap-[30px] rounded-[12px] bg-white-A700 p-5">
                 <div className="flex w-[88%] items-center justify-between gap-5 pr-2.5 md:w-full">
                   <div className="flex w-[51%] items-center  gap-2.5">
@@ -371,11 +372,7 @@ export default function MyProfilePage() {
                       alt="image"
                       className="h-[180px] w-full rounded-lg object-cover"
                     />
-                    {/* <div className="absolute bottom-0 left-0 right-0 top-0 m-auto flex h-max w-full justify-center rounded-lg bg-gray-900_66 px-14 py-[71px] md:p-5">
-                      <Button size="3xl" shape="round" className="w-[38px]">
-                        <Img src="img_contrast.svg" width={38} height={38} />
-                      </Button>
-                    </div> */}
+                    
                   </div>
                 </div>
                 <div className="flex w-[88%] justify-between gap-5 md:w-full">
@@ -404,7 +401,6 @@ export default function MyProfilePage() {
                     </div>
                   </div>
                   <div className="flex items-center  cursor-pointer">
-                    {/* <Text as="p">Share</Text> */}
                     <Img
                       src="img_question.svg"
                       width={14}
@@ -623,7 +619,6 @@ export default function MyProfilePage() {
                       </div>
                     </div>
                     <div className="flex items-center p-1.5 cursor-pointer">
-                      {/* <Text as="p">Share</Text> */}
                       <Img
                         src="img_question.svg"
                         width={14}
@@ -635,7 +630,7 @@ export default function MyProfilePage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

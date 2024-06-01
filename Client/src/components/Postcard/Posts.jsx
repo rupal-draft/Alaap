@@ -303,7 +303,7 @@ const Posts = () => {
   );
 };
 
-const Post = ({ post, loadPosts, toggleLike }) => {
+export const Post = ({ post, loadPosts, toggleLike }) => {
   function formatDateTime(isoString) {
     const date = new Date(isoString);
     return new Intl.DateTimeFormat("en-US", {
