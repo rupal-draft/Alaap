@@ -35,7 +35,8 @@ export default function LoginPage() {
       } else {
         setEmail("");
         setPassword("");
-        dispatch(setCredentials(data));
+        dispatch(setCredentials(data.user));
+        window.localStorage.setItem("token", data.token);
         toast.success("Welcome Back!!");
         router.push("/home1");
       }

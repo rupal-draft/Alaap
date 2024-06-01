@@ -50,8 +50,14 @@ const port = process.env.PORT || 8000;
 io.on("connect", (socket) => {
   socket.on("new-post", (newPost) => {
     socket.broadcast.emit("new-post", newPost);
-    // console.log("Server received new post:", newPost);
+  });
+
+  socket.on("new-follower", (newFollowerData) => {
+    socket.broadcast.emit("new-follower", newFollowerData);
+  });
+
+  socket.on("new-following", (newFollowingData) => {
+    socket.broadcast.emit("new-following", newFollowingData);
   });
 });
-
 http.listen(port, () => console.log(`Server running on port ${port}`));
