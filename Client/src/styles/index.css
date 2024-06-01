@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   padding: 0;
@@ -44,7 +48,7 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #6b6b6b;
+  background: #31363F;
   border-radius: 10px;
 }
 

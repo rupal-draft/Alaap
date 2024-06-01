@@ -167,7 +167,7 @@ const Posts = () => {
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-[30px]">
+    <div className="grid xl:grid-cols-2 gap-[30px] w-full">
       <div className="flex flex-col gap-[30px]">
         {/* Create Post Section */}
         <div className="flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
@@ -188,7 +188,7 @@ const Posts = () => {
                 placeholder="What are you thinking…"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="flex-grow !text-primary_text w-full text-[1rem] pt-1 pl-1 border rounded-lg border-highlight focus:border-gray-500 outline-none transition-all resize-none h-[70px] "
+                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] pt-1 pl-1 border rounded-lg border-highlight focus:border-gray-500 outline-none transition-all resize-none h-[70px] "
               />
               <div className="flex gap-2 w-full">
                 <input
@@ -210,7 +210,7 @@ const Posts = () => {
                 <Button
                   type="button"
                   onClick={() => imageInputRef.current.click()}
-                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text ${
+                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] ${
                     isVideoSelected ? "cursor-not-allowed" : ""
                   }`}
                   disabled={isVideoSelected}
@@ -220,7 +220,7 @@ const Posts = () => {
                 <Button
                   type="button"
                   onClick={() => videoInputRef.current.click()}
-                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text ${
+                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] ${
                     isImageSelected ? "cursor-not-allowed" : ""
                   }`}
                   disabled={isImageSelected}
@@ -229,7 +229,7 @@ const Posts = () => {
                 </Button>
                 <button
                   type="submit"
-                  className="flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text"
+                  className="flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] px-2"
                 >
                   Post
                 </button>
@@ -303,6 +303,8 @@ const Posts = () => {
   );
 };
 
+// Posts
+
 const Post = ({ post, loadPosts, toggleLike }) => {
   function formatDateTime(isoString) {
     const date = new Date(isoString);
@@ -330,10 +332,18 @@ const Post = ({ post, loadPosts, toggleLike }) => {
     }
   };
 
+  const truncateText = (text, wordLimit) => {
+    const words = text.split(" ");
+    if (words.length <= wordLimit) return text;
+    return words.slice(0, wordLimit).join(" ") + " ";
+  };
+
+  const truncatedContent = truncateText(post.content, 20);
+
   return (
     <div className="flex w-full flex-col gap-[15px] rounded-[12px] bg-shadow p-5 ">
       <div className="flex items-center justify-between gap-5 ">
-        <div className="flex w-[68%] items-center gap-2.5">
+        <div className="flex w-[100%] items-center gap-2.5">
           {post.postedBy.photo ? (
             <img
               src={post.postedBy.photo}
@@ -352,25 +362,41 @@ const Post = ({ post, loadPosts, toggleLike }) => {
               className="border"
             />
           )}
-          <div className="flex flex-col items-start gap-[5px]">
+          <div className="flex flex-col items-start gap-[2px]">
             <Heading
               as="h3"
-              className="!text-primary_text font-serif text-[1.6rem]"
+              className="!text-primary_text font-serif text-[17px] sm:text-[1.6rem]"
             >
               {post.postedBy.name}
             </Heading>
-            <Text size="s" as="p" className="!text-highlight font-semibold">
+            <Text
+              size="s"
+              as="p"
+              className="!text-highlight text-[10px] md:text-sm font-semibold"
+            >
               {formattedDate}
             </Text>
           </div>
         </div>
         <DeleteOutlined
-          className="text-red-500 cursor-pointer text-2xl"
+          className="text-red-500 cursor-pointer text-xl sm:text-2xl"
           onClick={handleDelete}
         />
       </div>
-      <div className="flex flex-col items-center justify-center gap-y-5">
-        <div className="mt-3 flex items-center justify-center w-[640px] h-[640px]  bg-black rounded-lg overflow-hidden">
+      <div
+        className="flex flex-col items-center justify-center gap-y-5
+       max-w-full"
+      >
+        <div
+          className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
+          w-[240px] h-[240px]
+          min-[360px]:w-[300px] min-[360px]:h-[300px]
+          sm:w-[570px] sm:h-[500px]
+          md:w-[700px] 
+          lg:w-[870px] lg:h-[550px]
+          xl:w-[530px] xl:h-[500px]
+          2xl:w-[655px] 2xl:h-[655px] "
+        >
           {post && post.image && post.image.url && (
             <div className="flex items-center justify-center w-full h-full">
               <img
@@ -397,23 +423,18 @@ const Post = ({ post, loadPosts, toggleLike }) => {
         <div className="flex flex-col self-stretch">
           <Text
             as="p"
-            className="leading-5 !text-primary_text text-base max-w-full w-[640px]"
+            className="leading-5 !text-primary_text text-xs sm:text-base"
           >
-            {post.content}
+            {truncatedContent}
+            <Link
+              href={`/singlepost/${post._id}`}
+              className="inline-block text-highlight"
+            >
+              ... Read More
+            </Link>
           </Text>
         </div>
-        <Link
-          href={`/singlepost/${post._id}`}
-          className="flex flex-col self-stretch"
-        >
-          <Heading
-            size="s"
-            as="h5"
-            className="uppercase tracking-[1.00px] !text-highlight"
-          >
-            Read More
-          </Heading>
-        </Link>
+
         <div className="flex self-stretch justify-between gap-y-5 ">
           <div className="flex items-center justify-between gap-[15px]">
             <div
@@ -430,13 +451,6 @@ const Post = ({ post, loadPosts, toggleLike }) => {
               </Text>
             </div>
             <div className="flex items-center justify-center gap-x-2 ">
-              {/* <Img
-                src="img_instagram.svg"
-                width={14}
-                height={14}
-                alt="instagram"
-                className="h-[14px] w-[14px] "
-              /> */}
               <FaRegCommentAlt className="text-primary_text " />
               <Text as="p" className="text-primary_text text-[1rem]">
                 {post.comments.length}
@@ -444,13 +458,6 @@ const Post = ({ post, loadPosts, toggleLike }) => {
             </div>
           </div>
           <div className="flex items-center text-primary_text cursor-pointer">
-            {/* <Img
-              src="img_question.svg"
-              width={20}
-              height={20}
-              alt="question"
-              className="h-[14px] w-[14px] text-primary_text"
-            /> */}
             <IoIosShareAlt className="text-xl" />
           </div>
         </div>
