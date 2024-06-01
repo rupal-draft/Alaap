@@ -1,25 +1,130 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Img, Text, Heading, Input } from "../../components";
 import { MenuItem, Menu, Sidebar, sidebarClasses } from "react-pro-sidebar";
 import Navbar from "@/components/Nav/Navbar";
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client";
+import api from "@/utils/axios";
+import Avatar from "react-avatar";
+import { UserAddOutlined } from "@ant-design/icons";
+import { Tooltip } from "antd";
+import { setCredentials } from "@/Context/Slices/authSlice";
+import { toast } from "react-toastify";
 
-const data = [
-  { billygreenone: "img_avatar_41.png" },
-  { billygreenone: "img_avatar_42.png" },
-  { billygreenone: "img_avatar_43.png" },
-  { billygreenone: "img_avatar_44.png" },
-  { billygreenone: "img_avatar_45.png" },
-  { billygreenone: "img_avatar_46.png" },
-  { billygreenone: "img_avatar_47.png" },
-  { billygreenone: "img_avatar_48.png" },
-  { billygreenone: "img_avatar_49.png" },
-];
+const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
+  reconnection: true,
+});
 
 export default function MyFriendsPage() {
   const [collapsed, setCollapsed] = React.useState(false);
   const [open, setOpen] = useState(true);
+  const [following, setFollowing] = useState([]);
+  const [follower, setFollower] = useState([]);
+  const [unfollowing, setUnFollowing] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [query, setQuery] = useState("");
+  const [result, setResult] = useState([]);
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+  useEffect(() => {
+    if (user) {
+      loadFollowings();
+      socket.on("new-following", (newFollowingData) => {
+        setFollowing((prevfollowings) => [newFollowingData, ...prevfollowings]);
+      });
+      return () => {
+        socket.off("new-following");
+      };
+    }
+  }, [user]);
+  const loadFollowings = async () => {
+    const { data } = await api.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/get/user-followings`
+    );
+    setFollowing(data);
+  };
+
+  useEffect(() => {
+    if (user) {
+      loadFollowers();
+      socket.on("new-follower", (newFollowerData) => {
+        setFollower((prevfollowers) => [newFollowerData, ...prevfollowers]);
+      });
+      return () => {
+        socket.off("new-follower");
+      };
+    }
+  }, [user]);
+  const loadFollowers = async () => {
+    const { data } = await api.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/get/user-followers`
+    );
+    setFollower(data);
+  };
+
+  useEffect(() => {
+    if (user) {
+      loadUnFollowers();
+    }
+  }, [user]);
+  const loadUnFollowers = async () => {
+    const { data } = await api.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/find-people`
+    );
+    setUnFollowing(data);
+  };
+
+  const searchUser = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await api.get(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/search-user/${query}`
+      );
+      setResult(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleFollow = async (unfollower) => {
+    try {
+      const { data } = await api.put(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/user-follow`,
+        {
+          _id: unfollower._id,
+        }
+      );
+      dispatch(setCredentials({ user: data.user }));
+      socket.emit("new-follower", data.follower);
+      let filtered = unfollowing.filter((p) => p._id !== unfollower._id);
+      setUnFollowing(filtered);
+      setIsFollowing(true);
+      loadFollowings();
+      toast.success(`Following ${unfollower.name}`);
+    } catch (err) {
+      console.log(err);
+      toast.error("Error while adding!!");
+    }
+  };
+
+  const handleUnfollow = async (fan) => {
+    try {
+      const { data } = await api.put(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/user-unfollow`,
+        { _id: fan._id }
+      );
+      dispatch(setCredentials({ user: data }));
+      let filtered = unfollowing.filter((p) => p._id !== fan._id);
+      setUnFollowing(filtered);
+      setIsFollowing(false);
+      loadFollowings();
+      toast.error(`Unfollowed ${fan.name}`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="w-full bg-gray-100">
       <div className="flex justify-between gap-5">
@@ -41,8 +146,11 @@ export default function MyFriendsPage() {
 
         <div className="flex w-[84%] items-center justify-center gap-[30px] md:w-full md:flex-col md:p-10">
           <div className="flex flex-1 flex-col gap-[60px] md:self-stretch sm:gap-[30px]">
-            <div className="flex flex-col items-center justify-center gap-[13px] rounded-[12px] bg-white-A700 p-3 md:flex-row">
-              <Input
+            <form
+              className="flex flex-col items-center justify-center gap-[13px] rounded-[12px] bg-white-A700 p-3 md:flex-row"
+              onSubmit={searchUser}
+            >
+              <input
                 size="sm"
                 shape="square"
                 name="search"
@@ -57,32 +165,156 @@ export default function MyFriendsPage() {
                   />
                 }
                 className="flex-grow gap-[15px] md:p-5 sm:pr-5"
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setResult([]);
+                }}
               />
-              <Button className="hover:font-semibold">Search</Button>
+              <button className="hover:font-semibold" type="submit">
+                Search
+              </button>
+            </form>
+            {result.length > 0 && (
+              <>
+                <div className="flex flex-col gap-10">
+                  <div className="flex items-start justify-between gap-5 pr-[9px]">
+                    <Heading size="2xl" as="h2" className="!text-black">
+                      Search Result
+                    </Heading>
+                  </div>
+                  <div className="grid grid-cols-2 justify-center gap-[30px] md:grid-cols-4">
+                    {result.map((search, index) => (
+                      <div
+                        key={"myfriends" + index}
+                        className="flex w-full flex-col items-center justify-center rounded-[12px] bg-white-A700 p-[37px] sm:p-5"
+                      >
+                        {search.photo ? (
+                          <img
+                            src={search.photo}
+                            width={58}
+                            height={58}
+                            alt="user"
+                            className="h-[58px] w-[58px] rounded-[18px] object-cover"
+                          />
+                        ) : (
+                          <Avatar
+                            name={search.name}
+                            size="58"
+                            round="18px"
+                            className="h-[58px] w-[58px] object-cover"
+                          />
+                        )}
+                        <Heading as="p" className="!text-black">
+                          {search && search.name}
+                        </Heading>
+                        <Button
+                          size="xl"
+                          leftIcon={
+                            <Img
+                              src="img_checkmark_white_a700.svg"
+                              width={14}
+                              height={14}
+                              alt="checkmark"
+                              className="h-[14px] w-[14px]"
+                            />
+                          }
+                          className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 !text-white-A700 rounded font-medium"
+                          onClick={() => handleFollow(search)}
+                        >
+                          {isFollowing ? "Following" : "Follow Back!!"}
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className="flex flex-col gap-10">
+              <div className="flex items-start justify-between gap-5 pr-[9px]">
+                <Heading size="2xl" as="h2" className="!text-black">
+                  My Followers
+                </Heading>
+              </div>
+              <div className="grid grid-cols-2 justify-center gap-[30px] md:grid-cols-4">
+                {follower &&
+                  follower.map((follow, index) => (
+                    <div
+                      key={"myfriends" + index}
+                      className="flex w-full flex-col items-center justify-center rounded-[12px] bg-white-A700 p-[37px] sm:p-5"
+                    >
+                      {follow.photo ? (
+                        <img
+                          src={follow.photo}
+                          width={58}
+                          height={58}
+                          alt="user"
+                          className="h-[58px] w-[58px] rounded-[18px] object-cover"
+                        />
+                      ) : (
+                        <Avatar
+                          name={follow.name}
+                          size="58"
+                          round="18px"
+                          className="h-[58px] w-[58px] object-cover"
+                        />
+                      )}
+                      <Heading as="p" className="!text-black">
+                        {follow && follow.name}
+                      </Heading>
+                      <Button
+                        size="xl"
+                        leftIcon={
+                          <Img
+                            src="img_checkmark_white_a700.svg"
+                            width={14}
+                            height={14}
+                            alt="checkmark"
+                            className="h-[14px] w-[14px]"
+                          />
+                        }
+                        className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 !text-white-A700 rounded font-medium"
+                        onClick={() => handleFollow(follow)}
+                      >
+                        {isFollowing ? "Following" : "Follow Back!!"}
+                      </Button>
+                    </div>
+                  ))}
+              </div>
             </div>
             <div className="flex flex-col gap-10">
               <div className="flex items-start justify-between gap-5 pr-[9px]">
                 <Heading size="2xl" as="h2" className="!text-black">
-                  My Friends
+                  My Following
                 </Heading>
               </div>
               <div className="grid grid-cols-2 justify-center gap-[30px] md:grid-cols-4">
-                {data.map((d, index) => (
+                {following.map((fan, index) => (
                   <div
                     key={"myfriends" + index}
                     className="flex w-full flex-col items-center justify-center rounded-[12px] bg-white-A700 p-[37px] sm:p-5"
                   >
-                    <Img
-                      src={d.billygreenone}
-                      width={58}
-                      height={58}
-                      alt="billy_green"
-                      className="h-[58px] w-[58px] rounded-[18px] object-cover"
-                    />
-                    <Heading size="lg" as="h3" className="mt-3">
-                      Billy Green
-                    </Heading>
-                    <Text as="p">@BillyGreen</Text>
+                    {fan.photo ? (
+                      <img
+                        src={fan.photo}
+                        width={58}
+                        height={58}
+                        alt="billy_green"
+                        className="h-[58px] w-[58px] rounded-[18px] object-cover"
+                      />
+                    ) : (
+                      <Avatar
+                        name={fan.name}
+                        size="58"
+                        round="18px"
+                        className="h-[58px] w-[58px] object-cover"
+                      />
+                    )}
+                    {fan && fan.name && (
+                      <Heading as="p" className="!text-black">
+                        {fan.name}
+                      </Heading>
+                    )}
                     <Button
                       size="xl"
                       leftIcon={
@@ -95,8 +327,9 @@ export default function MyFriendsPage() {
                         />
                       }
                       className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 !text-white-A700 rounded font-medium"
+                      onClick={() => handleUnfollow(fan)}
                     >
-                      Freinds
+                      Unfollow
                     </Button>
                   </div>
                 ))}
@@ -106,41 +339,54 @@ export default function MyFriendsPage() {
 
           {/**Who to follow section **/}
           <div className="flex flex-col w-full">
-            <Heading size="2xl" as="h2" className="text-black pb-4">
+            <Heading size="2xl" as="h2" className="!text-black">
               Who to follow
             </Heading>
             <div className="grid grid-cols-2 justify-center gap-[30px] md:grid-cols-4">
-              {data.map((d, index) => (
-                <div
-                  key={"myfriends" + index}
-                  className="flex w-full flex-row items-center justify-between rounded-[12px] bg-white-A700  sm:p-5"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Img
-                      src={d.billygreenone}
-                      width={38}
-                      height={38}
-                      alt="avatar"
-                      className="h-[38px] w-[38px] rounded-[12px] object-cover"
-                    />
-                    <div className="flex flex-col items-start gap-[3px]">
-                      <Heading as="p" className="!text-black">
-                        Cammy Hedling
-                      </Heading>
-                      <Text as="p" className="!text-black">
-                        Los Angeles, CA
-                      </Text>
+              {unfollowing &&
+                unfollowing.map((unfollower, index) => (
+                  <div
+                    key={"myfriends" + index}
+                    className="flex w-full flex-row items-center justify-between rounded-[12px] bg-white-A700  sm:p-5"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      {unfollower.photo ? (
+                        <img
+                          src={unfollower.photo}
+                          width={38}
+                          height={38}
+                          alt="avatar"
+                          className="h-[38px] w-[38px] rounded-[12px] object-cover"
+                        />
+                      ) : (
+                        <Avatar
+                          name={unfollower.name}
+                          size="38"
+                          round="12px"
+                          className="h-[38px] w-[38px] object-cover"
+                        />
+                      )}
+                      <div className="flex flex-col items-start gap-[3px]">
+                        <Heading as="p" className="!text-black">
+                          {unfollower && unfollower.name}
+                        </Heading>
+                        {unfollower.about && (
+                          <Text as="p" className="!text-black">
+                            {unfollower.about}
+                          </Text>
+                        )}
+                      </div>
                     </div>
+                    <Tooltip title="Follow">
+                      <Button
+                        className="w-[28px] self-end rounded-lg bg-indigo-400"
+                        onClick={() => handleFollow(unfollower)}
+                      >
+                        <UserAddOutlined />
+                      </Button>
+                    </Tooltip>
                   </div>
-                  <Button className="w-[28px] self-end rounded-lg bg-indigo-400">
-                    <Img
-                      src="img_settings_white_a700_28x28.svg"
-                      width={28}
-                      height={28}
-                    />
-                  </Button>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>

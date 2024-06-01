@@ -1,6 +1,6 @@
 // src/utils/axios.js
 import { logout } from "@/Context/Slices/authSlice";
-import store from "@/Context/store";
+
 import axios from "axios";
 
 const api = axios.create({
@@ -9,8 +9,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const state = store.getState();
-    const token = state?.user?.user?.token;
+    const token = window.localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

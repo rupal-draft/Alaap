@@ -56,7 +56,7 @@ export const findPeople = async (req, res) => {
 export const addFollower = async (req, res, next) => {
   try {
     const user = await User.findByIdAndUpdate(
-      req.body.id,
+      req.body._id,
       {
         $addToSet: { followers: req.userID },
       },
@@ -73,14 +73,17 @@ export const userFollow = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       req.userID,
       {
-        $addToSet: { following: req.body.id },
+        $addToSet: { following: req.body._id },
       },
       { new: true }
     ).select("-password");
-    // console.log(user);
-    res.json(user);
+
+    const follower = await User.findById(req.body._id).select("-password");
+
+    res.json({ user, follower });
   } catch (err) {
     console.log(err);
+    res.status(500).json({ error: "Server error" });
   }
 };
 
@@ -108,7 +111,7 @@ export const userFollower = async (req, res) => {
 /// middleware
 export const removeFollower = async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(req.body.id, {
+    const user = await User.findByIdAndUpdate(req.body._id, {
       $pull: { followers: req.userID },
     });
     next();
@@ -122,7 +125,7 @@ export const userUnfollow = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       req.userID,
       {
-        $pull: { following: req.body.id },
+        $pull: { following: req.body._id },
       },
       { new: true }
     );
@@ -136,12 +139,18 @@ export const searchUser = async (req, res) => {
   const { query } = req.params;
   if (!query) return;
   try {
-    const user = await User.find({
-      name: { $regex: query, $options: "i" },
-    }).select("-password ");
-    res.json(user);
+    const users = await User.find(
+      {
+        _id: { $ne: req.userID },
+        name: { $regex: query, $options: "i" },
+      },
+      { password: 0 }
+    ).select("name photo _id");
+
+    res.json(users);
   } catch (err) {
     console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
