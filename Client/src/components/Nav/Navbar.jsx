@@ -39,7 +39,7 @@ const Navbar = ({ open, setOpen }) => {
   return (
     <div
       className={`fixed lg:!sticky top-0 h-screen overflow-auto bg-background pt-0 flex flex-col items-center transition-width duration-700 border-r-[2px] border-[#31363F] ${
-        open ? "w-[75px]" : "w-[0px]"
+        open ? "w-[100px]" : "w-[0px]"
       }`}
     >
       {/*  */}
