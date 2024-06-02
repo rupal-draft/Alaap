@@ -62,6 +62,28 @@ export default function MyProfilePage() {
     );
     setCurrentUser(data);
   };
+
+  const toggleLike = async (postId) => {
+    const updatedPosts = posts.map((post) => {
+      if (post._id === postId) {
+        return { ...post, liked: !post.liked };
+      }
+      return post;
+    });
+
+    setPosts(updatedPosts);
+
+    try {
+      await api.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/toggle-like`, {
+        postId,
+      });
+      loadPosts();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to toggle like");
+    }
+  };
+
   return (
     <div className="flex items-start justify-center gap-5 bg-[#dadada] ">
       {/* Nav bar */}
@@ -221,7 +243,12 @@ export default function MyProfilePage() {
             </div>
             {posts &&
               posts.map((post, index) => (
-                <Post post={post} key={index} loadPosts={loadUserPosts} />
+                <Post
+                  post={post}
+                  key={index}
+                  loadPosts={loadUserPosts}
+                  toggleLike={toggleLike}
+                />
               ))}
           </div>
         </div>

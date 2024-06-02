@@ -29,7 +29,7 @@ export default function Home1Page() {
   }, []);
 
   return (
-    <div className="flex w-full items-start justify-between gap-5 bg-background ">
+    <div className="flex w-full h-full min-h-screen bg-background">
       {/* Nav bar */}
       <Navbar open={open} setOpen={setOpen} />
 
@@ -39,7 +39,7 @@ export default function Home1Page() {
         }`}
       >
         <h1
-          className="text-2xl bg-gray-50 p-2 rounded-xl font-semibold transition-transform duration-700"
+          className="text-2xl bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
           onClick={() => {
             setOpen(!open);
           }}
@@ -49,8 +49,8 @@ export default function Home1Page() {
       </div>
 
       {/* main screen */}
-      <div className="flex w-[100%] items-start justify-center gap-[30px] md:w-full md:flex-col ">
-        <div className="mt-5  flex flex-1 flex-col gap-10 ">
+      <div className="flex flex-col flex-1 items-center justify-start gap-[30px]">
+        <div className="my-5 flex flex-col flex-1 gap-10 w-full px-5">
           {/* search bar */}
           {/* <div className="flex items-center justify-center gap-[13px] h-10 lg:h-12  rounded-[12px] bg-[#cdcdcd] p-3">
             <Input

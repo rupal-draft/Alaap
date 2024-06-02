@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import Logo from "../../../public/images/sociofy_tempLogo.webp";
+import Logo from "../../../public/images/sociofyLogoTemp.png";
 import { Img, Button, Text, Heading, Input } from "../../components";
 import Link from "next/link";
 import { Sidebar, sidebarClasses } from "react-pro-sidebar";
@@ -38,18 +38,18 @@ const Navbar = ({ open, setOpen }) => {
 
   return (
     <div
-      className={`!sticky top-0 h-screen overflow-auto bg-background pt-0 flex flex-col items-center transition-width duration-700 ${
-        open ? "w-[110px]" : "w-[0px]"
+      className={`fixed lg:!sticky top-0 h-screen overflow-auto bg-background pt-0 flex flex-col items-center transition-width duration-700 border-r-[2px] border-[#31363F] ${
+        open ? "w-[100px]" : "w-[0px]"
       }`}
     >
       {/*  */}
 
-      <div className="flex flex-col items-center justify-center pt-5 gap-[50px]">
-        <div className="w-[60px] lg:w-[70px] ">
-          <Image src={Logo} alt="Meow" className="rounded-xl" />
+      <div className="flex flex-col items-center justify-center  gap-[50px]">
+        <div className="w-[60px] pt-5 lg:w-[70px] ">
+          <Image src={Logo} alt="Meow" className="rounded-full" />
         </div>
 
-        <div className="mb-[15px] justify-center items-center flex flex-col gap-80">
+        <div className="mb-[15px] justify-center items-center flex flex-col gap-80 xl:gap-[25rem]">
           <div className="flex flex-col gap-8 items-center justify-center">
             {navData.map((link, index) => (
               <Link href={link.path} key={index} className="mx-2">
