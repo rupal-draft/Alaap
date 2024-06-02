@@ -140,6 +140,20 @@ export const likePost = async (req, res) => {
       },
       { new: true }
     );
+    const user = await User.findById(req.userID);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const notificationMessage = `${user.name} liked your post`;
+    await User.findByIdAndUpdate(post.postedBy, {
+      $push: {
+        notifications: {
+          text: notificationMessage,
+          user: req.userID,
+          post: req.body.id,
+        },
+      },
+    });
     res.json(post);
   } catch (err) {
     console.log(err);
@@ -173,6 +187,20 @@ export const addComment = async (req, res) => {
     )
       .populate("postedBy", "_id name photo")
       .populate("comments.postedBy", "_id name photo");
+    const user = await User.findById(req.userID);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const notificationMessage = `${user.name} commented on your post`;
+    await User.findByIdAndUpdate(post.postedBy, {
+      $push: {
+        notifications: {
+          text: notificationMessage,
+          user: req.userID,
+          post: postId,
+        },
+      },
+    });
     res.json(post);
   } catch (err) {
     console.log(err);

@@ -62,7 +62,15 @@ export const addFollower = async (req, res, next) => {
       },
       { new: true }
     );
-    // console.log(user);
+    const follower = await User.findById(req.userID);
+    if (!follower) {
+      return res.status(404).json({ error: "Follower user not found" });
+    }
+    const notificationMessage = `${follower.name} started following you`;
+    await User.findByIdAndUpdate(req.body._id, {
+      $push: { notifications: { text: notificationMessage, user: req.userID } },
+    });
+    req.notificationMessage = notificationMessage;
     next();
   } catch (err) {
     console.log(err);
@@ -79,8 +87,11 @@ export const userFollow = async (req, res) => {
     ).select("-password");
 
     const follower = await User.findById(req.body._id).select("-password");
-
-    res.json({ user, follower });
+    res.json({
+      user,
+      follower,
+      notificationMessage: req.notificationMessage,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Server error" });
@@ -162,5 +173,27 @@ export const getUser = async (req, res) => {
     res.json(user);
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const getUserNotifications = async (req, res) => {
+  try {
+    const user = await User.findById(req.userID)
+      .populate({
+        path: "notifications.user",
+        select: "photo",
+      })
+      .select("-password");
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user.notifications);
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ error: "Server error while fetching notifications" });
   }
 };

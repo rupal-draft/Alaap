@@ -4,6 +4,7 @@ import {
   addFollower,
   findPeople,
   getUser,
+  getUserNotifications,
   profileUpdate,
   removeFollower,
   searchUser,
@@ -21,7 +22,8 @@ router.put("/user-follow", requireSignin, addFollower, userFollow);
 router.put("/user-unfollow", requireSignin, removeFollower, userUnfollow);
 router.get("/get/user-followings", requireSignin, userFollowing);
 router.get("/get/user-followers", requireSignin, userFollower);
-router.get("/search-user/:query",requireSignin, searchUser);
+router.get("/search-user/:query", requireSignin, searchUser);
 router.get("/user/:name", getUser);
+router.get("/notifications", requireSignin, getUserNotifications);
 
 export default router;
