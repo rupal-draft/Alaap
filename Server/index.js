@@ -4,6 +4,7 @@ import cloudinary from "cloudinary";
 import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import postRoutes from "./routes/post.js";
+import storyRoutes from "./routes/story.js";
 import userRoutes from "./routes/user.js";
 import morgan from "morgan";
 import "dotenv/config";
@@ -43,6 +44,7 @@ app.use(morgan("dev"));
 
 app.use("/api", authRoutes);
 app.use("/api", postRoutes);
+app.use("/api", storyRoutes);
 app.use("/api", userRoutes);
 
 const port = process.env.PORT || 8000;

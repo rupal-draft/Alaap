@@ -24,6 +24,19 @@ const userSchema = new Schema(
     photo: String,
     following: [{ type: Schema.ObjectId, ref: "User" }],
     followers: [{ type: Schema.ObjectId, ref: "User" }],
+    notifications: [
+      {
+        post: {
+          type: Schema.ObjectId,
+          ref: "Post",
+        },
+        user: {
+          type: Schema.ObjectId,
+          ref: "User",
+        },
+        text: String,
+      },
+    ],
   },
   { timestamps: true }
 );
