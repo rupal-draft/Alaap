@@ -114,9 +114,9 @@ export default function MyProfilePage() {
                 <div className="flex flex-row items-start justify-center self-stretch gap-5">
                   <div className="flex w-2/3 flex-col items-center justify-center self-stretch ">
                     <div className="w-[60px] lg:w-[8rem]">
-                      {currentUser?.user?.photo ? (
+                      {currentUser?.user?.photo?.url ? (
                         <img
-                          src={currentUser.user.photo}
+                          src={currentUser.user.photo.url}
                           alt="Meow"
                           className="rounded-xl"
                         />
@@ -179,9 +179,9 @@ export default function MyProfilePage() {
                           key={"listavatarone" + index}
                           className="flex gap-[25px]"
                         >
-                          {follower.photo ? (
+                          {follower.photo && follower.photo.url ? (
                             <img
-                              src={follower.photo}
+                              src={follower.photo.url}
                               width={110}
                               height={110}
                               alt="Meow"
