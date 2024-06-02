@@ -1,9 +1,14 @@
 import User from "./../Model/user.js";
-import { hashPassword } from "./../Helpers/auth.js";
+import { comparePassword, hashPassword } from "./../Helpers/auth.js";
+import cloudinary from "cloudinary";
 
 export const profileUpdate = async (req, res) => {
   try {
     const data = {};
+    const user = await User.findById(req.userID);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
     if (req.body.email) {
       data.email = req.body.username;
@@ -14,27 +19,56 @@ export const profileUpdate = async (req, res) => {
     if (req.body.name) {
       data.name = req.body.name;
     }
-    if (req.body.password) {
-      if (req.body.password.length < 6) {
+    if (req.body.currentPassword) {
+      const match = await comparePassword(
+        req.body.currentPassword,
+        user.password
+      );
+      if (!match) {
         return res.json({
-          error: "Password is required and should be min 6 characters long",
+          error: "Password doesn't match!!",
         });
       } else {
-        data.password = await hashPassword(req.body.password);
+        if (req.body.password.length < 6) {
+          return res.json({
+            error: "Password is required and should be min 6 characters long",
+          });
+        } else {
+          data.password = await hashPassword(req.body.password);
+        }
       }
     }
     if (req.body.photo) {
+      if (user.photo && user.photo.public_id) {
+        await cloudinary.uploader.destroy(user.photo.public_id);
+      }
       data.photo = req.body.photo;
     }
-    let user = await User.findByIdAndUpdate(req.userID, data, { new: true });
+    if (req.body.coverphoto) {
+      if (user.coverphoto && user.coverphoto.public_id) {
+        await cloudinary.uploader.destroy(user.coverphoto.public_id);
+      }
+      data.coverphoto = req.body.coverphoto;
+    }
 
-    user.password = undefined;
-    res.json(user);
+    let updatedUser = await User.findByIdAndUpdate(req.userID, data, {
+      new: true,
+    });
+
+    updatedUser.password = undefined;
+    res.json({
+      success: true,
+      user: {
+        photo: updatedUser.photo,
+        coverphoto: updatedUser.coverphoto,
+      },
+    });
   } catch (err) {
     if (err.code == 11000) {
       return res.json({ error: "Duplicate username" });
     }
     console.log(err);
+    res.status(500).json({ error: "An error occurred" });
   }
 };
 

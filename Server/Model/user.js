@@ -21,7 +21,14 @@ const userSchema = new Schema(
       max: 64,
     },
     about: {},
-    photo: String,
+    photo: {
+      url: String,
+      public_id: String,
+    },
+    coverphoto: {
+      url: String,
+      public_id: String,
+    },
     following: [{ type: Schema.ObjectId, ref: "User" }],
     followers: [{ type: Schema.ObjectId, ref: "User" }],
     notifications: [
