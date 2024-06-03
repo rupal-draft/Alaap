@@ -16,14 +16,14 @@ body {
   margin: unset;
 }
 
-input {
+/* input {
   background-color: transparent;
   width: 100%;
 }
 
 input:focus {
   outline: none;
-}
+} */
 
 a {
   text-decoration: none;
@@ -39,7 +39,7 @@ a {
 }
 
 ::-webkit-scrollbar {
-  width: 1px;
+  width: 0.2px;
   height: 4px;
   background: transparent;
 }
@@ -118,4 +118,16 @@ a {
 
 .ps-sidebar-container::-webkit-scrollbar {
   width: 2px;
+}
+
+@keyframes dropTop {
+  0% {
+    transform: translateX(-70%) scale(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0%) scale(1);
+    opacity: 1;
+  }
 }

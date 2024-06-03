@@ -12,7 +12,9 @@ module.exports = {
         background: "#222831",
         shadow: "#31363F",
         highlight: "#76ABAE",
+        hover_highlight: "#537e80",
         primary_text: "#EEEEEE",
+        secondary_text: "#b3b3b3",
         gray: {
           100: "#f7f7f7",
           500: "#8f92a1",

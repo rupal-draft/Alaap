@@ -1,126 +1,116 @@
 import React from "react";
-import { Img, Button, Text, Heading, Input } from "../../components";
+import { Img } from "../../components";
+import Link from "next/link";
+import { IoSend } from "react-icons/io5";
+
+export const commentData = {
+  totalComments: "148",
+  comments: [
+    {
+      userImage: "pratik.jpg",
+      userName: "Pratik Biswas",
+      commentTime: "20 mins ago",
+      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
+    },
+    {
+      userImage: "rupal.jpg",
+      userName: "Rupal Paul",
+      commentTime: "20 mins ago",
+      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
+    },
+    {
+      userImage: "pratik.jpg",
+      userName: "Purnendu Sekhar Singha Roy",
+      commentTime: "20 mins ago",
+      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
+    },
+    {
+      userImage: "sattiwikee.jpg",
+      userName: "Sattwikee Ghosh",
+      commentTime: "20 mins ago",
+      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
+    },
+    {
+      userImage: "pratik.jpg",
+      userName: "Virat Kohli",
+      commentTime: "20 mins ago",
+      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
+    },
+    {
+      userImage: "pratik.jpg",
+      userName: "Virat Kohli",
+      commentTime: "20 mins ago",
+      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
+    },
+    {
+      userImage: "pratik.jpg",
+      userName: "Virat Kohli",
+      commentTime: "20 mins ago",
+      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
+    },
+  ],
+};
 
 const CommentBody = () => {
   return (
-    <div className="flex flex-col items-start gap-y-5">
-      <h1 className="!text-primary_text font-bold">Comments (148)</h1>
+    <div className="flex flex-col items-start gap-y-3">
+      <h1 className="!text-primary_text text-[17px] sm:text-[1.2rem] xl:text-[1.5rem] font-bold">
+        Comments ({commentData.totalComments})
+      </h1>
       <div className="flex flex-col gap-8 self-stretch">
         <div className="flex flex-col items-center justify-center gap-y-3">
-          <div className="flex  flex-col gap-2.5 w-full">
-            <div className="flex items-center justify-between gap-5">
-              <div className="flex items-center gap-[5px]">
-                <Img
-                  src="img_avatar_28x28.png"
-                  width={28}
-                  height={28}
-                  alt="avatar"
-                  className="h-[28px] w-[28px] rounded-lg object-cover"
-                />
-                <Text as="p" className="self-end">
-                  Billy Green
-                </Text>
-              </div>
-              <Text
-                size="s"
-                as="p"
-                className="mb-[5px] self-end !text-gray-500"
-              >
-                20min ago
-              </Text>
-            </div>
-            <div>
-              <div className="flex flex-col gap-2.5">
-                <Text
-                  as="p"
-                  className="!font-normal leading-[22px] !text-gray-500"
-                >
-                  Awesome Edward, remeber that five tips for low cost holidays I
-                  sent you?
-                </Text>
-                <div className="flex gap-[15px]">
+          <form className="w-full self-stretch relative">
+            <textarea
+              name="comment"
+              placeholder={`Write a comment…`}
+              className=" border  border-highlight bg-transparent rounded-lg text-primary_text w-full leading-none"
+            />
+            <button
+              type="submit"
+              className="absolute right-2 top-2 text-highlight p-1"
+            >
+              <IoSend />
+            </button>
+          </form>
+
+          {commentData.comments.map((content, ind) => (
+            <div
+              key={ind}
+              className="flex flex-col gap-y-2 w-full px-1 py-2 border-b border-secondary_text  "
+            >
+              <div className="flex items-center justify-between gap-5">
+                <div className="flex items-center justify-center gap-x-[5px]">
                   <Img
-                    src="img_favorite_red_a200.svg"
-                    width={14}
-                    height={14}
-                    alt="favorite"
-                    className="h-[14px] w-[14px]"
+                    src={content.userImage}
+                    width={35}
+                    height={35}
+                    alt="avatar"
+                    className="rounded-full object-cover"
                   />
-                  <Img
-                    src="img_instagram.svg"
-                    width={14}
-                    height={14}
-                    alt="instagram"
-                    className="h-[14px] w-[14px]"
-                  />
+                  <div className="flex flex-col ">
+                    <p className="text-sm sm:text-md text-primary_text font-serif font-bold">
+                      {content.userName}
+                    </p>
+                    <Link
+                      href="/myprofile"
+                      className="text-xs text-left text-highlight font-medium hover:underline cursor-pointer "
+                    >
+                      View my profile
+                    </Link>
+                  </div>
                 </div>
+                <p className=" text-xs text-right text-highlight">
+                  {content.commentTime}
+                </p>
+              </div>
+
+              <div className="flex flex-col">
+                <p className="!font-normal text-sm !text-primary_text">
+                  {content.theComment}
+                </p>
               </div>
             </div>
-          </div>
-          <div className="flex  flex-col gap-2.5 w-full">
-            <div className="flex items-center justify-between gap-5">
-              <div className="flex items-center gap-[5px]">
-                <Img
-                  src="img_avatar_28x28.png"
-                  width={28}
-                  height={28}
-                  alt="avatar"
-                  className="h-[28px] w-[28px] rounded-lg object-cover"
-                />
-                <Text as="p" className="self-end">
-                  Billy Green
-                </Text>
-              </div>
-              <Text
-                size="s"
-                as="p"
-                className="mb-[5px] self-end !text-gray-500"
-              >
-                20min ago
-              </Text>
-            </div>
-            <div>
-              <div className="flex flex-col gap-2.5">
-                <Text
-                  as="p"
-                  className="!font-normal leading-[22px] !text-gray-500"
-                >
-                  Awesome Edward, remeber that five tips for low cost holidays I
-                  sent you?
-                </Text>
-                <div className="flex gap-[15px]">
-                  <Img
-                    src="img_favorite_red_a200.svg"
-                    width={14}
-                    height={14}
-                    alt="favorite"
-                    className="h-[14px] w-[14px]"
-                  />
-                  <Img
-                    src="img_instagram.svg"
-                    width={14}
-                    height={14}
-                    alt="instagram"
-                    className="h-[14px] w-[14px]"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <input
-            name="comment"
-            placeholder={`Write a comment…`}
-            suffix={
-              <Img
-                src="img_save.svg"
-                width={14}
-                height={14}
-                alt="save"
-                className="h-[17px] w-[17px] text-indigo-700"
-              />
-            }
-            className=" border-2 gap-[35px] rounded pr-5"
-          />
+          ))}
         </div>
       </div>
     </div>

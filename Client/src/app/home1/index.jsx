@@ -35,7 +35,7 @@ export default function Home1Page() {
 
       <div
         className={`lg:hidden fixed z-50 bottom-0 transition-all duration-700 ${
-          open ? "left-[4.5rem] px-2 py-1" : "left-0 p-1"
+          open ? "left-[6rem] px-2 py-1" : "left-0 p-1"
         }`}
       >
         <h1
