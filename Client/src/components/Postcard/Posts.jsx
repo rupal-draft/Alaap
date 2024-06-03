@@ -24,81 +24,22 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
 });
 
-export const storiesData = [
-  {
-    userName: "Pratik Biswas",
-    userImg: "pratik.jpg",
-  },
-
-  {
-    userName: "Rupal Paul",
-    userImg: "rupal.jpg",
-  },
-
-  {
-    userName: "Sattiwikee Ghosh",
-    userImg: "sattiwikee.jpg",
-  },
-  {
-    userName: "post1.jpg",
-    userImg: "post1.jpg",
-  },
-
-  {
-    userName: "post2.jpg",
-    userImg: "post2.jpg",
-  },
-
-  {
-    userName: "post3.jpg",
-    userImg: "post3.jpg",
-  },
-  {
-    userName: "post1.jpg",
-    userImg: "post1.jpg",
-  },
-
-  {
-    userName: "post2.jpg",
-    userImg: "post2.jpg",
-  },
-
-  {
-    userName: "post3.jpg",
-    userImg: "post3.jpg",
-  },
-
-  {
-    userName: "post2.jpg",
-    userImg: "post2.jpg",
-  },
-
-  {
-    userName: "post3.jpg",
-    userImg: "post3.jpg",
-  },
-
-  {
-    userName: "post2.jpg",
-    userImg: "post2.jpg",
-  },
-
-  {
-    userName: "post3.jpg",
-    userImg: "post3.jpg",
-  },
-];
-
 const Posts = () => {
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState([]);
+  const [stories, setStories] = useState([]);
   const [isImageSelected, setIsImageSelected] = useState(false);
   const [isVideoSelected, setIsVideoSelected] = useState(false);
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
   const { user } = useSelector((state) => state.user);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const sliderRef = useRef(null);
 
@@ -127,6 +68,29 @@ const Posts = () => {
       `${process.env.NEXT_PUBLIC_SERVER_URL}/posts`
     );
     setPosts(data);
+  };
+  useEffect(() => {
+    if (user) {
+      loadStories();
+      socket.on("new-story", (newStory) => {
+        setStories((prevStories) => [newStory, ...prevStories]);
+      });
+      return () => {
+        socket.off("new-story");
+      };
+    }
+  }, [user]);
+
+  const loadStories = async () => {
+    const { data } = await api.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/story-feed`
+    );
+    const sortedStories = data.sort((a, b) => {
+      if (a.postedBy?._id === user?._id) return -1;
+      if (b.postedBy?._id === user?._id) return 1;
+      return 0;
+    });
+    setStories(sortedStories);
   };
 
   const handleImageChange = async (event) => {
@@ -215,7 +179,94 @@ const Posts = () => {
       toast.error("Post creation failed");
     }
   };
+  const createStory = async (event) => {
+    event.preventDefault();
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
 
+    try {
+      const { data } = await api.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/upload-image`,
+        formData
+      );
+      const res = await api.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/create-story`,
+        { image: data }
+      );
+      loadStories();
+      imageInputRef.current.value = "";
+      socket.emit("new-story", res);
+      toast.success("Story uploaded💓💓");
+    } catch (e) {
+      console.error(e);
+      toast.error("Image upload failed!");
+    }
+  };
+  const userHasPostedStories = stories.some(
+    (story) => story.postedBy?._id === user?._id
+  );
+  const showPlusSign = !userHasPostedStories;
+
+  const deleteStory = async (storyId) => {
+    try {
+      await api.delete(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/delete-story/${storyId}`
+      );
+      loadStories();
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to delete story");
+    }
+  };
+
+  const handleLike = async (_id) => {
+    try {
+      const { data } = await api.put(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/like-post`,
+        { _id }
+      );
+      socket.emit("new-notification", data);
+      loadPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleUnlike = async (_id) => {
+    try {
+      const { data } = await api.put(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/unlike-post`,
+        { _id }
+      );
+      loadPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const StoryLike = async (_id) => {
+    try {
+      const { data } = await api.put(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/like-story`,
+        { _id }
+      );
+      socket.emit("new-notification", data);
+      loadPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const StoryUnlike = async (_id) => {
+    try {
+      const { data } = await api.put(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/unlike-story`,
+        { _id }
+      );
+      loadPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const clearImage = () => {
     setImage(null);
     setIsImageSelected(false);
@@ -226,27 +277,6 @@ const Posts = () => {
     setVideo(null);
     setIsVideoSelected(false);
     videoInputRef.current.value = "";
-  };
-
-  const toggleLike = async (postId) => {
-    const updatedPosts = posts.map((post) => {
-      if (post._id === postId) {
-        return { ...post, liked: !post.liked };
-      }
-      return post;
-    });
-
-    setPosts(updatedPosts);
-
-    try {
-      await api.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/toggle-like`, {
-        postId,
-      });
-      loadPosts();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to toggle like");
-    }
   };
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -261,15 +291,26 @@ const Posts = () => {
         <div className="order-2 xl:order-1 flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
           <form className="flex gap-2.5 w-full" onSubmit={createPost}>
             <div className="flex items-start">
-              <Link href="/myprofile">
-                <Img
-                  src="pratik.jpg"
-                  width={80}
-                  height={80}
-                  alt="avatar"
-                  className="cursor-pointer rounded-full object-cover"
-                />
-              </Link>
+              {isClient && user?.photo?.url ? (
+                <Link href="/myprofile">
+                  <img
+                    src={user.photo.url}
+                    width={80}
+                    height={80}
+                    alt="avatar"
+                    className="cursor-pointer rounded-full object-cover"
+                  />
+                </Link>
+              ) : (
+                <Link href="/myProfile">
+                  <Avatar
+                    name={user?.name || "User"}
+                    size="80"
+                    round
+                    className="cursor-pointer"
+                  />
+                </Link>
+              )}
             </div>
             <div className="flex flex-col w-full gap-y-2">
               <textarea
@@ -387,28 +428,54 @@ const Posts = () => {
           "
             >
               <div
-                onClick={togglePopup}
                 ref={sliderRef}
-                className="flex overflow-x-auto gap-[2rem] cursor-pointer "
+                className="flex overflow-x-auto gap-[2rem] cursor-pointer"
               >
+                {showPlusSign && (
+                  <div className="flex-shrink-0 flex items-center justify-center w-[80px] h-[80px] bg-gray-200 border-2 border-gray-300 rounded-full cursor-pointer">
+                    <label
+                      htmlFor="fileInput"
+                      className="flex items-center justify-center w-full h-full"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <input
+                        type="file"
+                        accept="image/*"
+                        id="fileInput"
+                        name="image"
+                        onChange={createStory}
+                        ref={imageInputRef}
+                        className="hidden"
+                      />
+                      <span className="text-3xl">+</span>
+                    </label>
+                  </div>
+                )}
                 <div className="flex-shrink-0 flex gap-x-2">
-                  {storiesData.map((content, index) => (
+                  {stories.map((story, index) => (
                     <div
                       key={index}
                       className="flex flex-col items-center justify-between gap-y-1 w-[80px]"
+                      onClick={togglePopup}
                     >
-                      <div className="flex items-center justify-center w-full">
-                        <Img
-                          src={content.userImg}
+                      <div className="flex items-center justify-center w-full relative">
+                        <img
+                          src={story.image?.url}
                           width={65}
                           height={65}
                           alt="sidebarlogo"
-                          className="w-full h-auto border-2 border-[#00ffff] rounded-full"
+                          className="w-full h-auto border-2 border-[#00ffff] rounded-full relative"
                         />
+                        {story.postedBy?._id === user?._id && (
+                          <DeleteOutlined
+                            className="absolute top-0 left-0 cursor-pointer text-red-500"
+                            onClick={() => deleteStory(story._id)}
+                          />
+                        )}
                       </div>
                       <div className="flex items-center justify-center w-full">
                         <p className="text-secondary_text text-sm max-w-[80px] overflow-hidden whitespace-nowrap overflow-ellipsis">
-                          {content.userName}
+                          {story.postedBy?.name}
                         </p>
                       </div>
                     </div>
@@ -428,19 +495,36 @@ const Posts = () => {
               post={post}
               key={index}
               loadPosts={loadPosts}
-              toggleLike={toggleLike}
+              handleLike={handleLike}
+              handleUnlike={handleUnlike}
+              user={user}
+              isClient={isClient}
             />
           ))}
       </div>
 
-      {isPopupOpen && <PopupStories onClose={togglePopup} content={posts} />}
+      {isPopupOpen && (
+        <PopupStories
+          onClose={togglePopup}
+          content={stories}
+          StoryLike={StoryLike}
+          StoryUnlike={StoryUnlike}
+        />
+      )}
     </div>
   );
 };
 
 // Post
 
-const Post = ({ post, loadPosts, toggleLike }) => {
+export const Post = ({
+  post,
+  loadPosts,
+  handleLike,
+  handleUnlike,
+  user,
+  isClient,
+}) => {
   function formatDateTime(isoString) {
     const date = new Date(isoString);
     return new Intl.DateTimeFormat("en-US", {
@@ -479,14 +563,13 @@ const Post = ({ post, loadPosts, toggleLike }) => {
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
   };
-
   return (
     <div className="flex w-full flex-col gap-[15px] rounded-[12px] bg-shadow p-5 ">
       <div className="flex items-center justify-between gap-5 ">
         <div className="flex w-[100%] items-center gap-2.5">
-          {post.postedBy.photo ? (
+          {post?.postedBy?.photo ? (
             <img
-              src={post.postedBy.photo}
+              src={post.postedBy.photo.url}
               width={50}
               height={50}
               alt="avatar"
@@ -494,7 +577,7 @@ const Post = ({ post, loadPosts, toggleLike }) => {
             />
           ) : (
             <Avatar
-              name={post.postedBy.name}
+              name={post?.postedBy?.name}
               size="50"
               round="100px"
               textSizeRatio={2}
@@ -579,14 +662,21 @@ const Post = ({ post, loadPosts, toggleLike }) => {
 
         <div className="flex self-stretch justify-between gap-y-5 ">
           <div className="flex items-center justify-between gap-[15px]">
-            <div
-              className="flex items-center cursor-pointer"
-              onClick={() => toggleLike(post._id)}
-            >
-              {post.liked ? (
-                <FaHeart className="text-red-500" />
+            <div className="flex items-center cursor-pointer">
+              {isClient && post.likes?.includes(user?._id) ? (
+                <FaHeart
+                  className="text-red-500"
+                  onClick={() => {
+                    handleUnlike(post._id);
+                  }}
+                />
               ) : (
-                <FaRegHeart className="text-primary_text" />
+                <FaRegHeart
+                  className="text-primary_text"
+                  onClick={() => {
+                    handleLike(post._id);
+                  }}
+                />
               )}
               <Text as="p" className="ml-[5px] text-primary_text text-[1rem]">
                 {post.likes.length}
@@ -604,14 +694,32 @@ const Post = ({ post, loadPosts, toggleLike }) => {
           </div>
         </div>
       </div>
-      {isPopupOpen && <Popup onClose={togglePopup} post={post} />}
+      {isPopupOpen && (
+        <Popup
+          onClose={togglePopup}
+          post={post}
+          user={user}
+          handleLike={handleLike}
+          handleUnlike={handleUnlike}
+          isClient={isClient}
+          loadPosts={loadPosts}
+        />
+      )}
     </div>
   );
 };
 
 // Popup for posts
 
-const Popup = ({ onClose, post }) => {
+const Popup = ({
+  onClose,
+  post,
+  user,
+  isClient,
+  handleLike,
+  handleUnlike,
+  loadPosts,
+}) => {
   const [showFullContent, setShowFullContent] = useState(false);
 
   function formatDateTime(isoString) {
@@ -713,9 +821,9 @@ const Popup = ({ onClose, post }) => {
             >
               {/* who posted */}
               <div className="flex items-center gap-2.5 bg-background fixed">
-                {post.postedBy.photo ? (
+                {post.postedBy?.photo ? (
                   <img
-                    src={post.postedBy.photo}
+                    src={post.postedBy?.photo.url}
                     width={50}
                     height={50}
                     alt="avatar"
@@ -723,7 +831,7 @@ const Popup = ({ onClose, post }) => {
                   />
                 ) : (
                   <Avatar
-                    name={post.postedBy.name}
+                    name={post.postedBy?.name}
                     size="50"
                     round="100px"
                     textSizeRatio={2}
@@ -736,7 +844,7 @@ const Popup = ({ onClose, post }) => {
                     as="h3"
                     className="!text-primary_text font-serif text-[17px] sm:text-[1.6rem]"
                   >
-                    {post.postedBy.name}
+                    {post.postedBy?.name}
                   </Heading>
                   <p className="!text-secondary_text text-[10px] lg:text-xs xl:text-sm font-semibold">
                     {formattedDate}
@@ -764,10 +872,20 @@ const Popup = ({ onClose, post }) => {
                       className="flex items-center cursor-pointer"
                       // onClick={() => toggleLike(post._id)}
                     >
-                      {post.liked ? (
-                        <FaHeart className="text-red-500" />
+                      {isClient && post.likes?.includes(user?._id) ? (
+                        <FaHeart
+                          className="text-red-500"
+                          onClick={() => {
+                            handleUnlike(post._id);
+                          }}
+                        />
                       ) : (
-                        <FaRegHeart className="text-primary_text" />
+                        <FaRegHeart
+                          className="text-primary_text"
+                          onClick={() => {
+                            handleLike(post._id);
+                          }}
+                        />
                       )}
                       <Text
                         as="p"
@@ -789,7 +907,11 @@ const Popup = ({ onClose, post }) => {
                 </div>
 
                 {/* comments */}
-                <CommentBody />
+                <CommentBody
+                  postID={post._id}
+                  loadPosts={loadPosts}
+                  user={user}
+                />
               </div>
             </div>
           </div>
@@ -801,7 +923,7 @@ const Popup = ({ onClose, post }) => {
 
 // Popup for stories
 
-const PopupStories = ({ onClose, content }) => {
+const PopupStories = ({ onClose, content, StoryLike, StoryUnlike }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-filter backdrop-blur-lg">
       <div>
@@ -816,34 +938,39 @@ const PopupStories = ({ onClose, content }) => {
 
         <div className="flex items-center bg-shadow rounded-lg max-w-[20rem] md:max-w-full">
           <div className="flex flex-col md:flex-row w-full items-start justify-between gap-x-5 p-5">
-            <div className="flex w-full flex-col">
-              <div className="flex flex-col items-center">
-                <div
-                  className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
-                  w-[270px] h-[240px]
-                  min-[360px]:w-[280px] min-[360px]:h-[250px]
-                  sm:w-[280px] sm:h-[250px]
-                  md:w-[350px] md:h-[420px]
-                  lg:w-[450px] lg:h-[420px]
-                  xl:w-[550px] xl:h-[550px]
-                  2xl:w-[650px] 2xl:h-[640px]"
-                >
-                  {/* <h1 className="text-4xl text-primary_text">Pratik Biswas</h1> */}
-
-                  <div className="flex flex-col items-center justify-between gap-y-1 w-[80px]">
-                    <div className="flex items-center justify-center w-full">
-                      <Img
-                        src={content.userImg}
-                        width={65}
-                        height={65}
-                        alt="sidebarlogo"
-                        className="w-full h-auto border-2 border-[#00ffff] rounded-full"
-                      />
+            {content?.map((story, index) => (
+              <div key={index} className="flex w-full flex-col">
+                <div className="flex flex-col items-center">
+                  <div
+                    className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
+                    w-[270px] h-[240px]
+                    min-[360px]:w-[280px] min-[360px]:h-[250px]
+                    sm:w-[280px] sm:h-[250px]
+                    md:w-[350px] md:h-[420px]
+                    lg:w-[450px] lg:h-[420px]
+                    xl:w-[550px] xl:h-[550px]
+                    2xl:w-[650px] 2xl:h-[640px]"
+                  >
+                    <div className="flex flex-col items-center justify-between gap-y-1 w-[80px]">
+                      <div className="flex items-center justify-center w-full">
+                        <img
+                          src={story.image?.url}
+                          width={65}
+                          height={65}
+                          alt="User"
+                          className="w-full h-auto border-2 border-[#00ffff] rounded-full"
+                        />
+                      </div>
+                      <div className="flex items-center justify-center w-full">
+                        <p className="text-secondary_text text-sm max-w-[80px] overflow-hidden whitespace-nowrap overflow-ellipsis">
+                          {story.postedBy?.name}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

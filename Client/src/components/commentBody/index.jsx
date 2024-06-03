@@ -1,69 +1,66 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Img } from "../../components";
 import Link from "next/link";
 import { IoSend } from "react-icons/io5";
+import { formatDistanceToNow } from "date-fns";
+import api from "@/utils/axios";
+import { io } from "socket.io-client";
+import { DeleteFilled } from "@ant-design/icons";
 
-export const commentData = {
-  totalComments: "148",
-  comments: [
-    {
-      userImage: "pratik.jpg",
-      userName: "Pratik Biswas",
-      commentTime: "20 mins ago",
-      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
-    },
-    {
-      userImage: "rupal.jpg",
-      userName: "Rupal Paul",
-      commentTime: "20 mins ago",
-      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
-    },
-    {
-      userImage: "pratik.jpg",
-      userName: "Purnendu Sekhar Singha Roy",
-      commentTime: "20 mins ago",
-      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
-    },
-    {
-      userImage: "sattiwikee.jpg",
-      userName: "Sattwikee Ghosh",
-      commentTime: "20 mins ago",
-      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
-    },
-    {
-      userImage: "pratik.jpg",
-      userName: "Virat Kohli",
-      commentTime: "20 mins ago",
-      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
-    },
-    {
-      userImage: "pratik.jpg",
-      userName: "Virat Kohli",
-      commentTime: "20 mins ago",
-      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
-    },
-    {
-      userImage: "pratik.jpg",
-      userName: "Virat Kohli",
-      commentTime: "20 mins ago",
-      theComment: `Awesome Edward, remember that five tips for low cost holidays I sent you?`,
-    },
-  ],
-};
+const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
+  reconnection: true,
+});
 
-const CommentBody = () => {
+const CommentBody = ({ postID, loadPosts, user }) => {
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
+  useEffect(() => {
+    loadComments();
+  }, []);
+  const loadComments = async () => {
+    const { data } = await api.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/all-comments`,
+      { params: { postId: postID } }
+    );
+    setComments(data);
+  };
+  const addComment = async (e) => {
+    e.preventDefault();
+    const { data } = await api.put(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/add-comment`,
+      { postId: postID, comment }
+    );
+    socket.emit("new-notification", data);
+    loadComments();
+    setComment("");
+    loadPosts();
+  };
+  const deleteComment = async (id) => {
+    try {
+      await api.put(`${process.env.NEXT_PUBLIC_SERVER_URL}/remove-comment`, {
+        postId: postID,
+        commentId: id,
+      });
+      loadComments();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  // console.log(user);
   return (
     <div className="flex flex-col items-start gap-y-3">
       <h1 className="!text-primary_text text-[17px] sm:text-[1.2rem] xl:text-[1.5rem] font-bold">
-        Comments ({commentData.totalComments})
+        Comments ({comments?.length})
       </h1>
       <div className="flex flex-col gap-8 self-stretch">
         <div className="flex flex-col items-center justify-center gap-y-3">
-          <form className="w-full self-stretch relative">
+          <form className="w-full self-stretch relative" onSubmit={addComment}>
             <textarea
               name="comment"
               placeholder={`Write a comment…`}
               className=" border  border-highlight bg-transparent rounded-lg text-primary_text w-full leading-none"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
             />
             <button
               type="submit"
@@ -73,44 +70,54 @@ const CommentBody = () => {
             </button>
           </form>
 
-          {commentData.comments.map((content, ind) => (
-            <div
-              key={ind}
-              className="flex flex-col gap-y-2 w-full px-1 py-2 border-b border-secondary_text  "
-            >
-              <div className="flex items-center justify-between gap-5">
-                <div className="flex items-center justify-center gap-x-[5px]">
-                  <Img
-                    src={content.userImage}
-                    width={35}
-                    height={35}
-                    alt="avatar"
-                    className="rounded-full object-cover"
-                  />
-                  <div className="flex flex-col ">
-                    <p className="text-sm sm:text-md text-primary_text font-serif font-bold">
-                      {content.userName}
-                    </p>
-                    <Link
-                      href="/myprofile"
-                      className="text-xs text-left text-highlight font-medium hover:underline cursor-pointer "
-                    >
-                      View my profile
-                    </Link>
+          {comments?.map((content, ind) => {
+            return (
+              <div
+                key={ind}
+                className="flex flex-col gap-y-2 w-full px-1 py-2 border-b border-secondary_text"
+              >
+                <div className="flex items-center justify-between gap-5">
+                  <div className="flex items-center justify-center gap-x-[5px]">
+                    <img
+                      src={content.postedBy?.photo?.url}
+                      width={35}
+                      height={35}
+                      alt="avatar"
+                      className="rounded-full object-cover"
+                    />
+                    <div className="flex flex-col">
+                      <p className="text-sm sm:text-md text-primary_text font-serif font-bold">
+                        {content.postedBy?.name}
+                      </p>
+                      <Link
+                        href="/myprofile"
+                        className="text-xs text-left text-highlight font-medium hover:underline cursor-pointer"
+                      >
+                        View my profile
+                      </Link>
+                    </div>
                   </div>
+                  <p className="text-xs text-right text-highlight">
+                    {formatDistanceToNow(new Date(content.created), {
+                      addSuffix: true,
+                    })}
+                  </p>
+                  {content.postedBy?._id === user?._id && (
+                    <DeleteFilled
+                      onClick={() => deleteComment(content._id)}
+                      className="text-xs text-right hover:underline cursor-pointer text-red-500"
+                    />
+                  )}
                 </div>
-                <p className=" text-xs text-right text-highlight">
-                  {content.commentTime}
-                </p>
-              </div>
 
-              <div className="flex flex-col">
-                <p className="!font-normal text-sm !text-primary_text">
-                  {content.theComment}
-                </p>
+                <div className="flex flex-col">
+                  <p className="!font-normal text-sm !text-primary_text">
+                    {content.text}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

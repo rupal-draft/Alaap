@@ -1,48 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import { Img } from "..";
+import { useSelector } from "react-redux";
+import { io } from "socket.io-client";
+import api from "@/utils/axios";
+import { formatDistanceToNow } from "date-fns";
+import Avatar from "react-avatar";
 
-export const notificationData = [
-  {
-    userImg: "pratik.jpg",
-    userName: "Pratik Biswas",
-    userContent: "started following you",
-    notificationTime: "1d",
-  },
-  {
-    userImg: "pratik.jpg",
-    userName: "Pratik Biswas",
-    userContent: "started following you",
-    notificationTime: "1d",
-  },
-  {
-    userImg: "pratik.jpg",
-    userName: "Pratik Biswas",
-    userContent: "started following you",
-    notificationTime: "1d",
-  },
-  {
-    userImg: "pratik.jpg",
-    userName: "Pratik Biswas",
-    userContent: "started following you",
-    notificationTime: "1d",
-  },
-  {
-    userImg: "pratik.jpg",
-    userName: "Pratik Biswas",
-    userContent: "started following you",
-    notificationTime: "1d",
-  },
-  {
-    userImg: "pratik.jpg",
-    userName: "Pratik Biswas",
-    userContent: "started following you",
-    notificationTime: "1d",
-  },
-  // Add more data as needed
-];
+const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
+  reconnection: true,
+});
 
 const Popup = ({ setIsOpenPopup, position }) => {
+  const [notifications, setNotifications] = useState([]);
+  const { user } = useSelector((state) => state.user);
+  useEffect(() => {
+    if (user) {
+      loadNotifications();
+      socket.on("new-notification", (newNotification) => {
+        setNotifications((prevNotifications) => [
+          newNotification,
+          ...prevNotifications,
+        ]);
+      });
+      return () => {
+        socket.off("new-notification");
+      };
+    }
+  }, [user]);
+  const loadNotifications = async () => {
+    const { data } = await api.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/notifications`
+    );
+    setNotifications(data);
+  };
+
   return (
     <div
       onClick={setIsOpenPopup.bind(this, false)}
@@ -72,31 +63,45 @@ const Popup = ({ setIsOpenPopup, position }) => {
         <div className="max-h-[400px] overflow-y-auto">
           {/* body */}
           <div className="gap-y-3 my-10">
-            {notificationData.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-center gap-x-2 py-2"
-              >
-                {/* img */}
-                <div className="flex items-center justify-center">
-                  <Img
-                    src={item.userImg}
-                    width={70}
-                    height={70}
-                    alt="sidebarlogo"
-                    className="rounded-full"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <div className="flex w-full">
+            {notifications.map((notification, index) => {
+              const imageUrl =
+                notification.post?.image?.url || notification.user?.photo?.url;
+              console.log(notification.createdAt);
+              return (
+                <div
+                  key={index}
+                  className="flex items-center justify-center gap-x-2 py-2"
+                >
+                  <div className="flex items-center justify-center">
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        width={70}
+                        height={70}
+                        alt="sidebarlogo"
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <Avatar
+                        name={notification.user?.name}
+                        size="70"
+                        round={true}
+                      />
+                    )}
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex w-full">
+                      <p>{notification.text}</p>
+                    </div>
                     <p>
-                      <span> {item.userName} </span> {item.userContent}
+                      {/* {formatDistanceToNow(new Date(notification.createdAt), {
+                        addSuffix: true,
+                      })} */}
                     </p>
                   </div>
-                  <p>{item.notificationTime} ago</p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

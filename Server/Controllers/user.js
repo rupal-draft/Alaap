@@ -58,10 +58,7 @@ export const profileUpdate = async (req, res) => {
     updatedUser.password = undefined;
     res.json({
       success: true,
-      user: {
-        photo: updatedUser.photo,
-        coverphoto: updatedUser.coverphoto,
-      },
+      user: updatedUser,
     });
   } catch (err) {
     if (err.code == 11000) {
@@ -104,7 +101,11 @@ export const addFollower = async (req, res, next) => {
     await User.findByIdAndUpdate(req.body._id, {
       $push: { notifications: { text: notificationMessage, user: req.userID } },
     });
-    req.notificationMessage = notificationMessage;
+    const notification = {
+      text: notificationMessage,
+      user: req.userID,
+    };
+    req.notification = notification;
     next();
   } catch (err) {
     console.log(err);
@@ -124,7 +125,7 @@ export const userFollow = async (req, res) => {
     res.json({
       user,
       follower,
-      notificationMessage: req.notificationMessage,
+      notification: req.notification,
     });
   } catch (err) {
     console.log(err);
@@ -214,8 +215,12 @@ export const getUserNotifications = async (req, res) => {
   try {
     const user = await User.findById(req.userID)
       .populate({
+        path: "notifications.post",
+        select: "image",
+      })
+      .populate({
         path: "notifications.user",
-        select: "photo",
+        select: "photo name",
       })
       .select("-password");
 

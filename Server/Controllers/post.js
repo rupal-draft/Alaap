@@ -41,47 +41,10 @@ export const createPost = async (req, res) => {
   }
 };
 
-export const uploadImage = async (req, res) => {
-  try {
-    const result = await cloudinary.uploader.upload(req.files.image.path);
-
-    res.json({
-      url: result.secure_url,
-      public_id: result.public_id,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
-export const videoUpload = async (req, res) => {
-  try {
-    const { video } = req.files;
-    if (!video) return res.status(404).send("No Video found!");
-
-    const params = {
-      Bucket: "sociofy-bucket",
-      Key: `${nanoid()}.${video.type.split("/")[1]}`,
-      Body: readFileSync(video.path),
-      ACL: "public-read",
-      ContentType: video.type,
-    };
-    S3.upload(params, (err, data) => {
-      if (err) {
-        console.error(err);
-        res.sendStatus(400);
-      }
-      console.log(data);
-      res.send(data);
-    });
-  } catch (err) {
-    console.error(err);
-  }
-};
-
 export const postsByUser = async (req, res) => {
   try {
     const posts = await Post.find({ postedBy: req.userID })
-      .populate("postedBy", "_id name image")
+      .populate("postedBy", "_id name photo")
       .sort({ createdAt: -1 })
       .limit(10);
 
@@ -134,7 +97,7 @@ export const deletePost = async (req, res) => {
 export const likePost = async (req, res) => {
   try {
     const post = await Post.findByIdAndUpdate(
-      req.body.id,
+      req.body._id,
       {
         $addToSet: { likes: req.userID },
       },
@@ -150,11 +113,16 @@ export const likePost = async (req, res) => {
         notifications: {
           text: notificationMessage,
           user: req.userID,
-          post: req.body.id,
+          post: req.body._id,
         },
       },
     });
-    res.json(post);
+    const notification = {
+      text: notificationMessage,
+      user: req.userID,
+      post: req.body._id,
+    };
+    res.json(notification);
   } catch (err) {
     console.log(err);
   }
@@ -163,13 +131,13 @@ export const likePost = async (req, res) => {
 export const unlikePost = async (req, res) => {
   try {
     const post = await Post.findByIdAndUpdate(
-      req.body.id,
+      req.body._id,
       {
         $pull: { likes: req.userID },
       },
       { new: true }
     );
-    res.json(post);
+    res.json({ ok: true });
   } catch (err) {
     console.log(err);
   }
@@ -201,7 +169,12 @@ export const addComment = async (req, res) => {
         },
       },
     });
-    res.json(post);
+    const notification = {
+      text: notificationMessage,
+      user: req.userID,
+      post: postId,
+    };
+    res.json(notification);
   } catch (err) {
     console.log(err);
   }
@@ -209,17 +182,38 @@ export const addComment = async (req, res) => {
 
 export const removeComment = async (req, res) => {
   try {
-    const { postId, comment } = req.body;
+    const { postId, commentId } = req.body;
     const post = await Post.findByIdAndUpdate(
       postId,
       {
-        $pull: { comments: { _id: comment._id } },
+        $pull: { comments: { _id: commentId } },
       },
       { new: true }
     );
-    res.json(post);
+    res.json({ ok: true });
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const getPostComments = async (req, res) => {
+  const { postId } = req.query;
+  try {
+    const post = await Post.findById(postId)
+      .populate({
+        path: "comments.postedBy",
+        select: "name photo.url",
+      })
+      .exec();
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.json(post.comments);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error while fetching comments" });
   }
 };
 

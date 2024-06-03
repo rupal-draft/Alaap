@@ -86,14 +86,6 @@ const Home = () => {
         </li>
         <li style={{ marginBottom: "10px" }}>
           <Link
-            href="/notifications"
-            style={{ color: "#87CEFA", textDecoration: "none" }}
-          >
-            Notifications
-          </Link>
-        </li>
-        <li style={{ marginBottom: "10px" }}>
-          <Link
             href="/singlestory"
             style={{ color: "#87CEFA", textDecoration: "none" }}
           >
