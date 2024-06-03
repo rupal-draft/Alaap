@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Logo from "../../../public/images/sociofyLogoTemp.png";
 import { Img, Button, Text, Heading, Input } from "../../components";
 import Link from "next/link";
 import { Sidebar, sidebarClasses } from "react-pro-sidebar";
+import Popup from "./Popup";
 
 import { FaHome, FaUserFriends } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
@@ -17,12 +18,12 @@ export const navData = [
   { name: "Home", path: "/home1", icon: <FaHome /> },
   { name: "Profile", path: "/myprofile", icon: <FaCircleUser /> },
   { name: "Friends", path: "/myfriends", icon: <FaUserFriends /> },
-  { name: "Messages", path: "/messages", icon: <BsSendFill /> },
   {
     name: "Notifications",
-    path: "/notifications",
+    path: "",
     icon: <IoIosNotifications />,
   },
+  { name: "Messages", path: "/messages", icon: <BsSendFill /> },
 ];
 export const navData1 = [
   { name: "Settings", path: "/settings", icon: <IoIosSettings /> },
@@ -36,66 +37,78 @@ const Navbar = ({ open, setOpen }) => {
     dispatch(logout());
   };
 
+  const [isOpenPopup, setIsOpenPopup] = useState(false);
+  const notificationRef = useRef(null);
+  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (notificationRef.current) {
+      const rect = notificationRef.current.getBoundingClientRect();
+      setPopupPosition({ top: rect.top + 10, left: rect.right + 10 });
+    }
+  }, [isOpenPopup]);
+
+  const handleIconClick = (link) => {
+    if (link.name === "Notifications") {
+      setIsOpenPopup(!isOpenPopup);
+    }
+  };
+
   return (
     <div
-      className={`fixed lg:!sticky top-0 h-screen overflow-auto bg-background pt-0 flex flex-col items-center transition-width duration-700 border-r-[2px] border-[#31363F] ${
-        open ? "w-[100px]" : "w-[0px]"
+      className={`fixed z-50 lg:!sticky top-0 h-screen self-stretch overflow-auto bg-background pt-0 flex flex-col items-center transition-width duration-700 border-r-[2px] border-[#31363F] ${
+        open ? "w-[80px]" : "w-[0px]"
       }`}
     >
-      {/*  */}
-
-      <div className="flex flex-col items-center justify-center  gap-[50px]">
-        <div className="w-[60px] pt-5 lg:w-[70px] ">
-          <Image src={Logo} alt="Meow" className="rounded-full" />
-        </div>
-
-        <div className="mb-[15px] justify-center items-center flex flex-col gap-80 xl:gap-[25rem]">
-          <div className="flex flex-col gap-8 items-center justify-center">
-            {navData.map((link, index) => (
-              <Link href={link.path} key={index} className="mx-2">
-                <div className="flex flex-col items-center justify-center relative group w-full">
-                  <div className="absolute top-[-32px] hidden group-hover:flex">
-                    <div className="bg-highlight relative flex text-primary_text items-center p-[6px] rounded-[3px]">
-                      <div className="text-[12px] leading-none font-semibold capitalize flex-grow text-center relative">
-                        {link.name}
-                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-solid border-t-[10px] border-t-highlight border-x-[8px] border-x-transparent"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg text-2xl text-primary_text hover:text-highlight">
-                    {link.icon}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex flex-col gap-8 items-center justify-center">
-            {navData1.map((link, index) => (
-              <Link href={link.path} key={index} className="mx-2">
-                <div
-                  className="flex flex-col items-center justify-center relative group w-full"
-                  onClick={link.action === "logout" ? handleLogout : undefined}
-                >
-                  <div className="absolute top-[-32px] hidden group-hover:flex">
-                    <div className="bg-highlight relative flex text-primary_text items-center p-[6px] rounded-[3px]">
-                      <div className="text-[12px] leading-none font-semibold capitalize flex-grow text-center relative">
-                        {link.name}
-                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-solid border-t-[10px] border-t-highlight border-x-[8px] border-x-transparent"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg  text-2xl text-primary_text hover:text-highlight">
-                    {link.icon}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
+      {/* Logo */}
+      <div className="w-[60px] py-5 lg:w-[70px]">
+        <Image src={Logo} alt="Meow" className="rounded-full" />
       </div>
 
-      {/* menu button */}
+      {/* Other buttons */}
+      <div className="flex flex-col gap-6 items-center justify-center my-3">
+        {navData.map((link, index) => (
+          <div key={index} className="mx-2">
+            <Link
+              href={link.path}
+              onClick={() => handleIconClick(link)}
+              className="flex flex-col items-center justify-center relative group w-full"
+              ref={link.name === "Notifications" ? notificationRef : null}
+            >
+              <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg text-2xl text-primary_text hover:text-highlight">
+                {link.icon}
+              </div>
+            </Link>
+            {link.name === "Notifications" && isOpenPopup && (
+              <Popup setIsOpenPopup={setIsOpenPopup} position={popupPosition} />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Settings and Log Out buttons */}
+      <div className="flex flex-col gap-6 items-center justify-center mt-auto my-3">
+        {navData1.map((link, index) => (
+          <Link href={link.path} key={index} className="mx-2">
+            <div
+              className="flex flex-col items-center justify-center relative group w-full"
+              onClick={link.action === "logout" ? handleLogout : undefined}
+            >
+              <div className="absolute top-[-27px] hidden group-hover:flex">
+                <div className="bg-highlight relative flex text-primary_text items-center p-[6px] rounded-[3px]">
+                  <div className="text-[12px] leading-none font-semibold capitalize flex-grow text-center relative">
+                    {link.name}
+                    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-solid border-t-[10px] border-t-highlight border-x-[8px] border-x-transparent"></div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg text-2xl text-primary_text hover:text-highlight">
+                {link.icon}
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

@@ -11,12 +11,83 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { AiOutlineClose } from "react-icons/ai";
 
 import { IoIosShareAlt } from "react-icons/io";
-import { FaRegCommentAlt, FaRegHeart, FaHeart } from "react-icons/fa";
+import {
+  FaRegCommentAlt,
+  FaRegHeart,
+  FaHeart,
+  FaChevronCircleLeft,
+  FaChevronCircleRight,
+} from "react-icons/fa";
 
 import CommentBody from "../commentBody";
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
 });
+
+export const storiesData = [
+  {
+    userName: "Pratik Biswas",
+    userImg: "pratik.jpg",
+  },
+
+  {
+    userName: "Rupal Paul",
+    userImg: "rupal.jpg",
+  },
+
+  {
+    userName: "Sattiwikee Ghosh",
+    userImg: "sattiwikee.jpg",
+  },
+  {
+    userName: "post1.jpg",
+    userImg: "post1.jpg",
+  },
+
+  {
+    userName: "post2.jpg",
+    userImg: "post2.jpg",
+  },
+
+  {
+    userName: "post3.jpg",
+    userImg: "post3.jpg",
+  },
+  {
+    userName: "post1.jpg",
+    userImg: "post1.jpg",
+  },
+
+  {
+    userName: "post2.jpg",
+    userImg: "post2.jpg",
+  },
+
+  {
+    userName: "post3.jpg",
+    userImg: "post3.jpg",
+  },
+
+  {
+    userName: "post2.jpg",
+    userImg: "post2.jpg",
+  },
+
+  {
+    userName: "post3.jpg",
+    userImg: "post3.jpg",
+  },
+
+  {
+    userName: "post2.jpg",
+    userImg: "post2.jpg",
+  },
+
+  {
+    userName: "post3.jpg",
+    userImg: "post3.jpg",
+  },
+];
 
 const Posts = () => {
   const [image, setImage] = useState(null);
@@ -28,6 +99,16 @@ const Posts = () => {
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
   const { user } = useSelector((state) => state.user);
+
+  const sliderRef = useRef(null);
+
+  const scrollLeft = () => {
+    sliderRef.current.scrollBy({ left: -200, behavior: "smooth" });
+  };
+
+  const scrollRight = () => {
+    sliderRef.current.scrollBy({ left: 200, behavior: "smooth" });
+  };
 
   useEffect(() => {
     if (user) {
@@ -168,11 +249,16 @@ const Posts = () => {
     }
   };
 
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const togglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+
   return (
-    <div className="grid xl:grid-cols-2 gap-[30px] w-full">
-      <div className="flex flex-col gap-[30px]">
+    <div className="grid gap-[30px] w-full">
+      <div className="flex flex-col xl:flex-row gap-[30px]">
         {/* Create Post Section */}
-        <div className="flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
+        <div className="order-2 xl:order-1 flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
           <form className="flex gap-2.5 w-full" onSubmit={createPost}>
             <div className="flex items-start">
               <Link href="/myprofile">
@@ -190,7 +276,7 @@ const Posts = () => {
                 placeholder="What are you thinking…"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] pt-1 pl-1 border rounded-lg border-highlight focus:border-gray-500 outline-none transition-all resize-none h-[70px] "
+                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] pt-1 pl-1 border rounded-lg border-highlight focus:border-gray-500 outline-none transition-all resize-none h-[70px]"
               />
               <div className="flex gap-2 w-full">
                 <input
@@ -212,7 +298,7 @@ const Posts = () => {
                 <Button
                   type="button"
                   onClick={() => imageInputRef.current.click()}
-                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] ${
+                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] ${
                     isVideoSelected ? "cursor-not-allowed" : ""
                   }`}
                   disabled={isVideoSelected}
@@ -222,7 +308,7 @@ const Posts = () => {
                 <Button
                   type="button"
                   onClick={() => videoInputRef.current.click()}
-                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] ${
+                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] ${
                     isImageSelected ? "cursor-not-allowed" : ""
                   }`}
                   disabled={isImageSelected}
@@ -231,7 +317,7 @@ const Posts = () => {
                 </Button>
                 <button
                   type="submit"
-                  className="flex-grow flex items-center justify-center cursor-pointer border bg-highlight rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] px-2"
+                  className="flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] px-2"
                 >
                   Post
                 </button>
@@ -273,41 +359,88 @@ const Posts = () => {
           )}
         </div>
 
-        {/* Left Column Posts */}
-        {posts &&
-          posts
-            .filter((_, index) => index % 2 === 0)
-            .map((post, index) => (
-              <Post
-                post={post}
-                key={index}
-                loadPosts={loadPosts}
-                toggleLike={toggleLike}
-              />
-            ))}
+        {/* Stories Section */}
+        <div className="relative order-1 xl:order-2 flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
+          <button
+            onClick={scrollLeft}
+            className="absolute top-12 z-10 px-1 left-0 rounded-full text-3xl  text-highlight hover:text-hover_highlight hidden lg:flex"
+          >
+            <FaChevronCircleLeft />
+          </button>
+
+          <button
+            onClick={scrollRight}
+            className="rounded-full text-3xl font-bold  text-highlight hover:text-hover_highlight hidden absolute top-12 z-10 px-1 right-0 lg:flex"
+          >
+            <FaChevronCircleRight />
+          </button>
+          <div className=" flex flex-col items-center justify-between w-full  bg-shadow ">
+            <div
+              className="relative flex items-center justify-center gap-x-3 overflow-hidden
+            w-[240px]
+            min-[360px]:w-[300px]
+            sm:w-[570px]
+            md:w-[700px]
+            lg:w-[870px] 
+            xl:w-[520px]
+            2xl:w-[610px] 
+          "
+            >
+              <div
+                onClick={togglePopup}
+                ref={sliderRef}
+                className="flex overflow-x-auto gap-[2rem] cursor-pointer "
+              >
+                <div className="flex-shrink-0 flex gap-x-2">
+                  {storiesData.map((content, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col items-center justify-between gap-y-1 w-[80px]"
+                    >
+                      <div className="flex items-center justify-center w-full">
+                        <Img
+                          src={content.userImg}
+                          width={65}
+                          height={65}
+                          alt="sidebarlogo"
+                          className="w-full h-auto border-2 border-[#00ffff] rounded-full"
+                        />
+                      </div>
+                      <div className="flex items-center justify-center w-full">
+                        <p className="text-secondary_text text-sm max-w-[80px] overflow-hidden whitespace-nowrap overflow-ellipsis">
+                          {content.userName}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-[30px]">
-        {/* Right Column Posts */}
+      {/* Posts */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-[30px] w-full">
         {posts &&
-          posts
-            .filter((_, index) => index % 2 !== 0)
-            .map((post, index) => (
-              <Post
-                post={post}
-                key={index}
-                loadPosts={loadPosts}
-                toggleLike={toggleLike}
-              />
-            ))}
+          posts.map((post, index) => (
+            <Post
+              post={post}
+              key={index}
+              loadPosts={loadPosts}
+              toggleLike={toggleLike}
+            />
+          ))}
       </div>
+
+      {isPopupOpen && <PopupStories onClose={togglePopup} content={posts} />}
     </div>
   );
 };
 
 // Post
 
-export const Post = ({ post, loadPosts, toggleLike }) => {
+const Post = ({ post, loadPosts, toggleLike }) => {
   function formatDateTime(isoString) {
     const date = new Date(isoString);
     return new Intl.DateTimeFormat("en-US", {
@@ -379,14 +512,15 @@ export const Post = ({ post, loadPosts, toggleLike }) => {
             <Text
               size="s"
               as="p"
-              className="!text-highlight text-[10px] md:text-sm font-semibold"
+              className="!text-secondary_text text-[10px] md:text-sm font-semibold"
             >
               {formattedDate}
             </Text>
           </div>
         </div>
         <DeleteOutlined
-          className="text-red-500 cursor-pointer text-xl sm:text-2xl"
+          className="text-red-500 cursor-pointer text-xl sm:text-2xl duration-500
+          transition-transform hover:scale-125"
           onClick={handleDelete}
         />
       </div>
@@ -433,12 +567,7 @@ export const Post = ({ post, loadPosts, toggleLike }) => {
             className="leading-5 !text-primary_text text-xs sm:text-base"
           >
             {truncatedContent}
-            {/* <Link
-              href={`/singlepost/${post._id}`}
-              className="inline-block text-highlight"
-            >
-              ... Read More
-            </Link> */}
+
             <div
               onClick={togglePopup}
               className="inline-block text-highlight cursor-pointer"
@@ -455,7 +584,7 @@ export const Post = ({ post, loadPosts, toggleLike }) => {
               onClick={() => toggleLike(post._id)}
             >
               {post.liked ? (
-                <FaHeart className="text-red50" />
+                <FaHeart className="text-red-500" />
               ) : (
                 <FaRegHeart className="text-primary_text" />
               )}
@@ -463,14 +592,14 @@ export const Post = ({ post, loadPosts, toggleLike }) => {
                 {post.likes.length}
               </Text>
             </div>
-            <div className="flex items-center justify-center gap-x-2 ">
+            <div className="flex items-center justify-center gap-x-2 cursor-pointer ">
               <FaRegCommentAlt className="text-primary_text " />
               <Text as="p" className="text-primary_text text-[1rem]">
                 {post.comments.length}
               </Text>
             </div>
           </div>
-          <div className="flex items-center text-primary_text cursor-pointer">
+          <div className="flex items-center text-primary_text cursor-pointer relative">
             <IoIosShareAlt className="text-xl" />
           </div>
         </div>
@@ -480,9 +609,11 @@ export const Post = ({ post, loadPosts, toggleLike }) => {
   );
 };
 
-// Popup
+// Popup for posts
 
 const Popup = ({ onClose, post }) => {
+  const [showFullContent, setShowFullContent] = useState(false);
+
   function formatDateTime(isoString) {
     const date = new Date(isoString);
     return new Intl.DateTimeFormat("en-US", {
@@ -495,7 +626,21 @@ const Popup = ({ onClose, post }) => {
       hour12: true,
     }).format(date);
   }
+
   const formattedDate = formatDateTime(post.createdAt);
+
+  const truncateText = (text, wordLimit) => {
+    if (showFullContent) return text;
+    const words = text.split(" ");
+    if (words.length <= wordLimit) return text;
+    return words.slice(0, wordLimit).join(" ") + " ";
+  };
+
+  const truncatedContent = truncateText(post.content, 20);
+
+  const handleReadMoreOrLess = () => {
+    setShowFullContent(!showFullContent);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-filter backdrop-blur-lg">
@@ -509,20 +654,18 @@ const Popup = ({ onClose, post }) => {
           </button>
         </div>
 
-        <div className="flex items-center bg-shadow rounded-lg max-w-[80vw]">
+        <div className="flex items-center bg-shadow rounded-lg max-w-[20rem] md:max-w-full">
           <div className="flex flex-col md:flex-row w-full items-start justify-between gap-x-5 p-5">
             <div className="flex w-full flex-col">
-              <div className="flex flex-col items-center justify-between gap-5 sm:flex-row"></div>
-
               <div className="flex flex-col items-center">
                 <div
                   className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
-                  w-[240px] h-[240px]
-                  min-[360px]:w-[300px] min-[360px]:h-[300px]
-                  sm:w-[570px] sm:h-[500px]
-                  md:w-[700px] 
-                  lg:w-[870px] lg:h-[550px]
-                  xl:w-[530px] xl:h-[500px]
+                  w-[270px] h-[240px]
+                  min-[360px]:w-[280px] min-[360px]:h-[250px]
+                  sm:w-[280px] sm:h-[250px]
+                  md:w-[350px] md:h-[420px]
+                  lg:w-[450px] lg:h-[420px]
+                  xl:w-[550px] xl:h-[550px]
                   2xl:w-[650px] 2xl:h-[640px]"
                 >
                   {post && post.image && post.image.url && (
@@ -553,9 +696,23 @@ const Popup = ({ onClose, post }) => {
             </div>
 
             {/* comments */}
-            <div className="flex w-full shadow-inner flex-col gap-y-5 rounded-lg my-3 bg-background p-5 max-w-[400px] ">
+            <div
+              className="flex w-full shadow-inner flex-col gap-y-3 rounded-lg my-3 bg-background p-5 
+            
+            
+            max-w-[400px]  
+            h-[300px]
+            min-[360px]:h-[300px]
+            sm:h-[300px]
+            md:h-[420px]   
+            lg:h-[450px]
+            xl:h-[550px]
+            2xl:h-[640px]
+            
+            "
+            >
               {/* who posted */}
-              <div className="flex w-[23.5%] items-center gap-2.5  bg-background fixed">
+              <div className="flex items-center gap-2.5 bg-background fixed">
                 {post.postedBy.photo ? (
                   <img
                     src={post.postedBy.photo}
@@ -581,25 +738,110 @@ const Popup = ({ onClose, post }) => {
                   >
                     {post.postedBy.name}
                   </Heading>
-                  <Text
-                    size="s"
-                    as="p"
-                    className="!text-highlight text-[10px] md:text-sm font-semibold"
-                  >
+                  <p className="!text-secondary_text text-[10px] lg:text-xs xl:text-sm font-semibold">
                     {formattedDate}
-                  </Text>
+                  </p>
                 </div>
               </div>
-              <div className="flex flex-col w-full gap-y-5 mt-[4.5rem]">
+              <div className="flex flex-col w-full gap-y-2 mt-[4.5rem] h-[calc(100%-4.5rem)] overflow-y-auto">
                 {/* description */}
                 <div className="flex w-full">
-                  <h1 className="!text-primary_text text-sm">
-                    {post?.content}
-                  </h1>
+                  <p className="!text-primary_text text-sm">
+                    {truncatedContent}
+                    <span
+                      onClick={handleReadMoreOrLess}
+                      className="inline-block text-highlight cursor-pointer "
+                    >
+                      {showFullContent ? "... Read Less" : "... Read More"}
+                    </span>
+                  </p>
                 </div>
-                {/* comments */}
 
+                {/* like counts */}
+                <div className="flex self-stretch justify-between gap-y-5 ">
+                  <div className="flex items-center justify-between gap-[15px]">
+                    <div
+                      className="flex items-center cursor-pointer"
+                      // onClick={() => toggleLike(post._id)}
+                    >
+                      {post.liked ? (
+                        <FaHeart className="text-red-500" />
+                      ) : (
+                        <FaRegHeart className="text-primary_text" />
+                      )}
+                      <Text
+                        as="p"
+                        className="ml-[5px] text-primary_text text-[1rem]"
+                      >
+                        {post.likes.length}
+                      </Text>
+                    </div>
+                    <div className="flex items-center justify-center gap-x-2 cursor-pointer ">
+                      <FaRegCommentAlt className="text-primary_text " />
+                      <Text as="p" className="text-primary_text text-[1rem]">
+                        {post.comments.length}
+                      </Text>
+                    </div>
+                  </div>
+                  <div className="flex items-center text-primary_text cursor-pointer">
+                    <IoIosShareAlt className="text-xl" />
+                  </div>
+                </div>
+
+                {/* comments */}
                 <CommentBody />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Popup for stories
+
+const PopupStories = ({ onClose, content }) => {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-filter backdrop-blur-lg">
+      <div>
+        <div className="flex justify-end text-3xl">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-primary_text"
+          >
+            <AiOutlineClose />
+          </button>
+        </div>
+
+        <div className="flex items-center bg-shadow rounded-lg max-w-[20rem] md:max-w-full">
+          <div className="flex flex-col md:flex-row w-full items-start justify-between gap-x-5 p-5">
+            <div className="flex w-full flex-col">
+              <div className="flex flex-col items-center">
+                <div
+                  className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
+                  w-[270px] h-[240px]
+                  min-[360px]:w-[280px] min-[360px]:h-[250px]
+                  sm:w-[280px] sm:h-[250px]
+                  md:w-[350px] md:h-[420px]
+                  lg:w-[450px] lg:h-[420px]
+                  xl:w-[550px] xl:h-[550px]
+                  2xl:w-[650px] 2xl:h-[640px]"
+                >
+                  {/* <h1 className="text-4xl text-primary_text">Pratik Biswas</h1> */}
+
+                  <div className="flex flex-col items-center justify-between gap-y-1 w-[80px]">
+                    <div className="flex items-center justify-center w-full">
+                      <Img
+                        src={content.userImg}
+                        width={65}
+                        height={65}
+                        alt="sidebarlogo"
+                        className="w-full h-auto border-2 border-[#00ffff] rounded-full"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
