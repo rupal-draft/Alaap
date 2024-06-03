@@ -22,6 +22,7 @@
     "mongoose": "^8.3.4",
     "morgan": "^1.10.0",
     "nanoid": "^5.0.7",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.13",
     "socket.io": "^4.7.5"
   },

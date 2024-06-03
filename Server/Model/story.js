@@ -3,10 +3,6 @@ const { ObjectId } = mongoose.Schema;
 
 const storySchema = new mongoose.Schema(
   {
-    content: {
-      type: String,
-      required: true,
-    },
     postedBy: {
       type: ObjectId,
       ref: "User",
@@ -15,7 +11,6 @@ const storySchema = new mongoose.Schema(
       url: String,
       public_id: String,
     },
-    video_link: {},
     likes: [{ type: ObjectId, ref: "user" }],
   },
   { timestamps: true }

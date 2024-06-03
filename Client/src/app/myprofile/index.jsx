@@ -14,8 +14,12 @@ export default function MyProfilePage() {
   const [open, setOpen] = useState(true);
   const [posts, setPosts] = useState([]);
   const [followers, setFollower] = useState([]);
-  const [currentUser, setCurrentUser] = useState({});
-  const { user } = useSelector((state) => state?.user);
+  const { user } = useSelector((state) => state.user);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   useEffect(() => {
     const handleResize = () => {
       if (window.matchMedia("(min-width: 768px)").matches) {
@@ -50,17 +54,6 @@ export default function MyProfilePage() {
       `${process.env.NEXT_PUBLIC_SERVER_URL}/get/user-followers`
     );
     setFollower(data);
-  };
-  useEffect(() => {
-    if (user) {
-      loadCurrentUser();
-    }
-  }, [user]);
-  const loadCurrentUser = async () => {
-    const { data } = await api.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/current-user`
-    );
-    setCurrentUser(data);
   };
 
   const toggleLike = async (postId) => {
@@ -114,15 +107,15 @@ export default function MyProfilePage() {
                 <div className="flex flex-row items-start justify-center self-stretch gap-5">
                   <div className="flex w-2/3 flex-col items-center justify-center self-stretch ">
                     <div className="w-[60px] lg:w-[8rem]">
-                      {currentUser?.user?.photo?.url ? (
+                      {isClient && user.photo?.url ? (
                         <img
-                          src={currentUser.user.photo.url}
+                          src={user.photo.url}
                           alt="Meow"
                           className="rounded-xl"
                         />
                       ) : (
                         <Avatar
-                          name={currentUser?.user?.name || "User"}
+                          name={isClient && user?.name ? user.name : "User"}
                           size="110"
                           round={true}
                           className="cursor-pointer"
@@ -130,9 +123,9 @@ export default function MyProfilePage() {
                       )}
                     </div>
 
-                    {currentUser?.user?.name && (
+                    {isClient && user?.name && (
                       <h1 className="!text-white-A700 text-xl pt-1 font-bold text-center">
-                        {currentUser.user.name || "User"}
+                        {user.name || "User"}
                       </h1>
                     )}
                     <div className="py-2">
@@ -159,10 +152,8 @@ export default function MyProfilePage() {
                       About Me
                     </h1>
                     <div className="w-full !font-normal border rounded-tl-none rounded-xl px-1 py-2  !text-white-A700_cc">
-                      {currentUser?.user?.about && (
-                        <p className="leading-[1.1rem]">
-                          {currentUser.user.about}
-                        </p>
+                      {isClient && user?.about && (
+                        <p className="leading-[1.1rem]">{user.about}</p>
                       )}
                     </div>
                   </div>

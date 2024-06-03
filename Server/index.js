@@ -6,6 +6,8 @@ import authRoutes from "./routes/auth.js";
 import postRoutes from "./routes/post.js";
 import storyRoutes from "./routes/story.js";
 import userRoutes from "./routes/user.js";
+import uploadRoutes from "./routes/upload.js";
+
 import morgan from "morgan";
 import "dotenv/config";
 import { createServer } from "http";
@@ -46,6 +48,7 @@ app.use("/api", authRoutes);
 app.use("/api", postRoutes);
 app.use("/api", storyRoutes);
 app.use("/api", userRoutes);
+app.use("/api", uploadRoutes);
 
 const port = process.env.PORT || 8000;
 
@@ -53,13 +56,17 @@ io.on("connect", (socket) => {
   socket.on("new-post", (newPost) => {
     socket.broadcast.emit("new-post", newPost);
   });
-
   socket.on("new-follower", (newFollowerData) => {
     socket.broadcast.emit("new-follower", newFollowerData);
   });
-
   socket.on("new-following", (newFollowingData) => {
     socket.broadcast.emit("new-following", newFollowingData);
+  });
+  socket.on("new-story", (newStory) => {
+    socket.broadcast.emit("new-story", newStory);
+  });
+  socket.on("new-notification", (newNotification) => {
+    socket.broadcast.emit("new-notification", newNotification);
   });
 });
 http.listen(port, () => console.log(`Server running on port ${port}`));

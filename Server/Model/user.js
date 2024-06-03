@@ -1,6 +1,25 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
+const notificationSchema = new Schema(
+  {
+    post: {
+      type: Schema.ObjectId,
+      ref: "Post",
+    },
+    story: {
+      type: Schema.ObjectId,
+      ref: "Story",
+    },
+    user: {
+      type: Schema.ObjectId,
+      ref: "User",
+    },
+    text: String,
+  },
+  { timestamps: true }
+);
+
 const userSchema = new Schema(
   {
     name: {
@@ -31,19 +50,7 @@ const userSchema = new Schema(
     },
     following: [{ type: Schema.ObjectId, ref: "User" }],
     followers: [{ type: Schema.ObjectId, ref: "User" }],
-    notifications: [
-      {
-        post: {
-          type: Schema.ObjectId,
-          ref: "Post",
-        },
-        user: {
-          type: Schema.ObjectId,
-          ref: "User",
-        },
-        text: String,
-      },
-    ],
+    notifications: [notificationSchema],
   },
   { timestamps: true }
 );

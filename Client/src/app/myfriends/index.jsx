@@ -97,6 +97,7 @@ export default function MyFriendsPage() {
       );
       dispatch(setCredentials({ user: data.user }));
       socket.emit("new-follower", data.follower);
+      socket.emit("new-notification", data.notification);
       let filtered = unfollowing.filter((p) => p._id !== unfollower._id);
       setUnFollowing(filtered);
       setIsFollowing(true);
@@ -243,7 +244,7 @@ export default function MyFriendsPage() {
                       key={"myfriends" + index}
                       className="flex w-full flex-col items-center justify-center rounded-[12px] bg-white-A700 p-[37px] sm:p-5"
                     >
-                      {follow.photo && follower.photo.url ? (
+                      {follow.photo && follow.photo.url ? (
                         <img
                           src={follow.photo.url}
                           width={58}

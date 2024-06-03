@@ -1,19 +1,14 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Heading, Button } from "../../components";
 import Navbar from "@/components/Nav/Navbar";
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import api from "@/utils/axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "@/Context/Slices/authSlice";
-import { SyncOutlined } from "@ant-design/icons";
-
-const dropDownOptions = [
-  { label: "Option1", value: "option1" },
-  { label: "Option2", value: "option2" },
-  { label: "Option3", value: "option3" },
-];
+import { DeleteOutlined, SyncOutlined } from "@ant-design/icons";
+import Avatar from "react-avatar";
 
 export default function SettingsPage() {
   const [open, setOpen] = useState(true);
@@ -29,6 +24,12 @@ export default function SettingsPage() {
   const coverInputRef = useRef(null);
   const [final, setFinal] = useState({});
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handlePhotoUpload = async (event) => {
     const file = event.target.files[0];
@@ -46,6 +47,7 @@ export default function SettingsPage() {
       toast.error("Image upload failed!");
     }
   };
+
   const handleCoverPhotoUpload = async (event) => {
     const file = event.target.files[0];
     const formData = new FormData();
@@ -62,6 +64,43 @@ export default function SettingsPage() {
       toast.error("Image upload failed!");
     }
   };
+
+  const handleCoverRemove = async () => {
+    try {
+      const { data } = await api.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/remove-image`,
+        {
+          image: coverphoto,
+        }
+      );
+      if (data.status) {
+        setCoverPhoto({});
+        coverInputRef.current.value = "";
+        toast.error("Cover Photo removed");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handlePhotoRemove = async () => {
+    try {
+      const { data } = await api.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/remove-image`,
+        {
+          image: photo,
+        }
+      );
+      if (data.status) {
+        setPhoto({});
+        photoInputRef.current.value = "";
+        toast.error("Photo removed");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -102,10 +141,10 @@ export default function SettingsPage() {
       setLoading(false);
     }
   };
+
   return (
     <div className="w-full bg-gray-100">
       <div className="flex flex-row items-start justify-between gap-5 md:flex-col">
-        {/**Sidebar */}
         <Navbar open={open} setOpen={setOpen} />
         <div
           className={`md:hidden fixed z-50 bottom-0 transition-all duration-700 ${
@@ -122,64 +161,94 @@ export default function SettingsPage() {
           </h1>
         </div>
 
-        {/* User Information Section */}
         <div className="flex flex-col md:w-[70%] px-auto mx-auto items-center justify-between">
           <Heading as="h1" className="!text-gray-800 !font-bold !text-3xl mb-8">
             My Profile Information
           </Heading>
 
-          {/**Form */}
           <form
             className="flex flex-col gap-6 w-full mb-28"
             onSubmit={handleSubmit}
           >
-            {/* Cover Photo Section */}
             <div className="flex flex-col items-center gap-4">
               <div className="w-full h-60 rounded-lg overflow-hidden">
-                {final &&
-                final.user &&
-                final.user.coverphoto &&
-                final.user.coverphoto.url ? (
+                {isClient && coverphoto?.url ? (
+                  <img
+                    src={coverphoto.url}
+                    alt="Cover Photo"
+                    className="w-full h-full object-cover"
+                  />
+                ) : isClient && final?.user?.coverphoto?.url ? (
                   <img
                     src={final.user.coverphoto.url}
                     alt="Cover Photo"
                     className="w-full h-full object-cover"
                   />
+                ) : isClient && user?.coverphoto?.url ? (
+                  <img
+                    src={user.coverphoto.url}
+                    alt="Cover Photo"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
-                  <div className="w-full h-full bg-gray-300" />
+                  <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                    <span>Cover Photo</span>
+                  </div>
                 )}
               </div>
-              <input
-                onChange={handleCoverPhotoUpload}
-                type="file"
-                accept="image/*"
-                id="image"
-                name="image"
-                ref={coverInputRef}
-              />
+              <div className="mt-1 flex items-center">
+                <input
+                  onChange={handleCoverPhotoUpload}
+                  type="file"
+                  accept="image/*"
+                  id="coverImage"
+                  name="coverImage"
+                  ref={coverInputRef}
+                />
+                <DeleteOutlined onClick={handleCoverRemove} />
+              </div>
             </div>
 
-            {/* Profile Picture Section */}
             <div className="flex flex-col items-center gap-4">
               <div className="w-32 h-32 rounded-full overflow-hidden">
-                <img
-                  src={
-                    final?.user?.photo && final.user.photo.url
-                      ? final.user.photo.url
-                      : "https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1"
-                  }
-                  alt="Avatar"
-                  className="w-full h-full object-cover"
-                />
+                {isClient && photo?.url ? (
+                  <img
+                    src={photo.url}
+                    alt="Avatar"
+                    className="w-full h-full object-cover"
+                  />
+                ) : isClient && final?.user?.photo?.url ? (
+                  <img
+                    src={final.user.photo.url}
+                    alt="Avatar"
+                    className="w-full h-full object-cover"
+                  />
+                ) : isClient && user?.photo?.url ? (
+                  <img
+                    src={user.photo.url}
+                    alt="Avatar"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Avatar
+                    name={final?.user?.name || user?.name || "User"}
+                    size="100"
+                    round
+                    className="cursor-pointer"
+                  />
+                )}
               </div>
-              <input
-                onChange={handlePhotoUpload}
-                type="file"
-                accept="image/*"
-                id="image"
-                name="image"
-                ref={photoInputRef}
-              />
+              <div className="mt-1 flex items-center">
+                <input
+                  onChange={handlePhotoUpload}
+                  type="file"
+                  accept="image/*"
+                  id="profileImage"
+                  name="profileImage"
+                  ref={photoInputRef}
+                />
+                <DeleteOutlined onClick={handlePhotoRemove} />
+              </div>
             </div>
 
             <div>
@@ -262,7 +331,7 @@ export default function SettingsPage() {
               {loading ? (
                 <SyncOutlined spin className="py-1" />
               ) : (
-                "Create an account"
+                "Update Profile"
               )}
             </Button>
           </form>
