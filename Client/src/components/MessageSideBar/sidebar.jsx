@@ -18,11 +18,11 @@ const users = [
 
 const Sidebar = () => {
   return (
-    <div className="w-full h-full bg-white">
+    <div className=" bg-white">
       <div className="h-16 flex items-center">
-        <h2 className="text-xl font-bold p-4 text-slate-800">Users</h2>
+        <h2 className="text-xl font-bold p-4 text-white-A700">Sociofy Users</h2>
       </div>
-      <div className="bg-slate-200 p-[0.5px]"></div>
+      {/* <div className="bg-slate-200 p-[0.5px]"></div> */}
 
       <div className="h-[calc(100vh-65px)] overflow-x-hidden overflow-y-auto scrollbar">
         {users.length === 0 && (

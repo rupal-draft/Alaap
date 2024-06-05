@@ -22,11 +22,12 @@ const MessageLayout = ({ children }) => {
   }, []);
 
   return (
-    <div className="grid lg:grid-cols-[70px,1fr] h-screen max-h-screen">
-      {" "}
+    <div className="flex h-screen max-h-screen">
       <Navbar open={open} setOpen={setOpen} className="lg:px-4 py-4" />
-      <Sidebar className="lg:col-span-1 hidden lg:block" />{" "}
-      <main className="lg:col-span-2">{children}</main>{" "}
+      <div className="flex flex-grow">
+        <Sidebar className="hidden lg:block lg:w-1/4" />
+        <main className="flex-grow">{children}</main>
+      </div>
     </div>
   );
 };
