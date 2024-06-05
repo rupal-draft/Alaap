@@ -1,5 +1,5 @@
 import React from "react";
-import Page from ".";
+import Page from "./[id]";
 
 export const metadata = {
   title: "Rupal's Application1",
