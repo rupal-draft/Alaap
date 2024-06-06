@@ -1,7 +1,6 @@
 import Story from "./../Model/story.js";
 import cloudinary from "cloudinary";
 import User from "./../Model/user.js";
-import cron from "node-cron";
 
 export const createStory = async (req, res) => {
   const { image } = req.body;
@@ -18,18 +17,6 @@ export const createStory = async (req, res) => {
       "postedBy",
       "_id name"
     );
-    //"*/10 * * * * *" 10 sec for testing
-    // cron.schedule("*/10 * * * * *", async () => {
-    //   try {
-    //     await Story.findByIdAndDelete(story._id);
-    //     if (story.image && story.image.public_id) {
-    //       await cloudinary.uploader.destroy(story.image.public_id);
-    //     }
-    //   } catch (error) {
-    //     console.error("Error deleting story:", error);
-    //   }
-    // });
-
     res.json(storyWithUser);
   } catch (err) {
     console.log(err);
@@ -107,12 +94,34 @@ export const storyFeed = async (req, res) => {
     const user = await User.findById(req.userID);
     let following = user.following;
     following.push(req.userID);
-    const stories = await Story.find({ postedBy: { $in: following } })
+
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const recentStories = await Story.find({
+      postedBy: { $in: following },
+      createdAt: { $gte: twentyFourHoursAgo },
+    })
       .populate("postedBy", "_id name")
       .sort({ createdAt: -1 });
 
-    res.json(stories);
+    const oldStories = await Story.find({
+      postedBy: { $in: following },
+      createdAt: { $lt: twentyFourHoursAgo },
+    });
+
+    for (const story of oldStories) {
+      if (story.image && story.image.public_id) {
+        await cloudinary.v2.uploader.destroy(story.image.public_id);
+      }
+    }
+
+    await Story.deleteMany({
+      postedBy: { $in: following },
+      createdAt: { $lt: twentyFourHoursAgo },
+    });
+
+    res.json(recentStories);
   } catch (err) {
     console.log(err);
+    res.status(500).json({ message: "Server error" });
   }
 };
