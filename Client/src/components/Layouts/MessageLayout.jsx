@@ -23,11 +23,13 @@ const MessageLayout = ({ children }) => {
 
   return (
     <div className="flex h-screen max-h-screen">
-      <Navbar open={open} setOpen={setOpen} className="lg:px-4 py-4" />
-      <div className="flex flex-grow">
-        <Sidebar className="hidden lg:block lg:w-1/4" />
-        <main className="flex-grow">{children}</main>
-      </div>
+      <Navbar
+        open={open}
+        setOpen={setOpen}
+        className="w-[70px] lg:w-[240px] px-4 py-4"
+      />
+      <Sidebar className="w-[70px] lg:w-[240px] hidden lg:block" />
+      <main className="flex-1 ">{children}</main>
     </div>
   );
 };
