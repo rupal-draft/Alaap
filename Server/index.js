@@ -7,21 +7,9 @@ import postRoutes from "./routes/post.js";
 import storyRoutes from "./routes/story.js";
 import userRoutes from "./routes/user.js";
 import uploadRoutes from "./routes/upload.js";
-
+import { app, http } from "./Socket/index.js";
 import morgan from "morgan";
 import "dotenv/config";
-import { createServer } from "http";
-import { Server } from "socket.io";
-
-const app = express();
-const http = createServer(app);
-const io = new Server(http, {
-  cors: {
-    origin: [process.env.FRONTEND],
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-type"],
-  },
-});
 
 app.use(
   cors({
@@ -52,21 +40,4 @@ app.use("/api", uploadRoutes);
 
 const port = process.env.PORT || 8000;
 
-io.on("connect", (socket) => {
-  socket.on("new-post", (newPost) => {
-    socket.broadcast.emit("new-post", newPost);
-  });
-  socket.on("new-follower", (newFollowerData) => {
-    socket.broadcast.emit("new-follower", newFollowerData);
-  });
-  socket.on("new-following", (newFollowingData) => {
-    socket.broadcast.emit("new-following", newFollowingData);
-  });
-  socket.on("new-story", (newStory) => {
-    socket.broadcast.emit("new-story", newStory);
-  });
-  socket.on("new-notification", (newNotification) => {
-    socket.broadcast.emit("new-notification", newNotification);
-  });
-});
 http.listen(port, () => console.log(`Server running on port ${port}`));
