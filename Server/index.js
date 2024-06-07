@@ -7,6 +7,7 @@ import postRoutes from "./routes/post.js";
 import storyRoutes from "./routes/story.js";
 import userRoutes from "./routes/user.js";
 import uploadRoutes from "./routes/upload.js";
+import messageRoutes from "./routes/message.js";
 import { app, http } from "./Socket/index.js";
 import morgan from "morgan";
 import "dotenv/config";
@@ -37,6 +38,7 @@ app.use("/api", postRoutes);
 app.use("/api", storyRoutes);
 app.use("/api", userRoutes);
 app.use("/api", uploadRoutes);
+app.use("/api", messageRoutes);
 
 const port = process.env.PORT || 8000;
 
