@@ -1,9 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { getUserDetailsFromToken } from "../Middleware/verify.js";
-import User from "./../Model/user.js";
-import { ConversationModel, MessageModel } from "./../Model/conversation.js";
+
 
 const app = express();
 const http = createServer(app);
