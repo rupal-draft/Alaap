@@ -2,7 +2,6 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-
 const app = express();
 const http = createServer(app);
 const io = new Server(http, {
@@ -13,8 +12,68 @@ const io = new Server(http, {
   },
 });
 
+let users = [];
+const addUser = (userId, socketId, userInfo) => {
+  const checkUser = users.some((u) => u.userId === userId);
+
+  if (!checkUser) {
+    users.push({ userId, socketId, userInfo });
+  }
+};
+
+const findFriend = (id) => {
+  return users.find((u) => u.userId === id);
+};
+
+const userRemove = (socketId) => {
+  users = users.filter((u) => u.socketId !== socketId);
+};
 
 io.on("connect", async (socket) => {
+  socket.on("addUser", (userId, userInfo) => {
+    // console.log(userId);
+    addUser(userId, socket.id, userInfo);
+    io.emit("getUser", users);
+
+    // const us = users.filter((u) => u.userId !== userId);
+    // const con = "new_user_add";
+    // for (var i = 0; i < us.length; i++) {
+    //   socket.to(us[i].socketId).emit("new_user_add", con);
+    // }
+  });
+  socket.on("sendMessage", (data) => {
+    // console.log(data);
+    const user = findFriend(data.reseverId);
+    // console.log(user);
+    if (user !== undefined) {
+      socket.to(user.socketId).emit("getMessage", data);
+    }
+  });
+
+  socket.on("messageSeen", (msg) => {
+    // console.log(msg);
+    const user = findFriend(msg.senderId);
+    if (user !== undefined) {
+      socket.to(user.socketId).emit("msgSeenResponse", msg);
+    }
+  });
+
+  socket.on("typingMessage", (data) => {
+    const user = findFriend(data.reseverId);
+    if (user !== undefined) {
+      socket.to(user.socketId).emit("typingMessageGet", {
+        senderId: data.senderId,
+        reseverId: data.reseverId,
+        msg: data.msg,
+      });
+    }
+  });
+
+  socket.on("disconnect", () => {
+    userRemove(socket.id);
+    io.emit("getUser", users);
+  });
+
   socket.on("new-post", (newPost) => {
     socket.broadcast.emit("new-post", newPost);
   });

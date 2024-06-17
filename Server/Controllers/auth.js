@@ -58,7 +58,7 @@ export const login = async (req, res) => {
       });
     }
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
+      expiresIn: "180d",
     });
     user.password = undefined;
     user.secret = undefined;
@@ -78,7 +78,7 @@ export const forgotPassword = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.send({ Status: "No User found" });
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "10d",
+      expiresIn: "180d",
     });
     // console.log(token);//For postman purpose
     var transporter = nodemailer.createTransport({
@@ -106,7 +106,7 @@ export const forgotPassword = async (req, res) => {
       
       If you did not request this password reset, please disregard this email. Your account is still secure, and no changes have been made.
       
-      Thank you for using [Your Platform Name].
+      Thank you for using Sociofy.
       
       Best regards,
       Sociofy Team`,
