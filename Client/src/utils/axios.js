@@ -22,7 +22,11 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response.status === 401) {
-      store.dispatch(logout());
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem("user");
+        window.localStorage.removeItem("token");
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   }

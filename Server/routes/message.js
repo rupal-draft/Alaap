@@ -8,15 +8,16 @@ import {
   messageGet,
   messageSeen,
   messageUploadDB,
+  searchUser,
 } from "../Controllers/message.js";
 
 const router = express.Router();
 
 router.get("/get-friends", requireSignin, getFriends);
+router.post("/search-user", searchUser);
 router.post("/send-message", requireSignin, messageUploadDB);
 router.get("/get-message/:id", requireSignin, messageGet);
-router.post("/image-message-send", requireSignin, ImageMessageSend);
-
+router.post("/image-send", requireSignin, ImageMessageSend);
 router.post("/seen-message", requireSignin, messageSeen);
 router.post("/delivared-message", requireSignin, delivaredMessage);
 

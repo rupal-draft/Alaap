@@ -1,7 +1,6 @@
 import User from "./../Model/user.js";
 import Message from "./../Model/message.js";
-import formidable from "formidable";
-import fs from "fs";
+
 
 const getLastMessage = async (myId, fdId) => {
   const msg = await Message.findOne({
@@ -55,7 +54,11 @@ export const getFriends = async (req, res) => {
       fnd_msg = [
         ...fnd_msg,
         {
-          fndInfo: friendGet[i],
+          fndInfo: {
+            name: friendGet[i].name,
+            photo: friendGet[i].photo,
+            id: friendGet[i]._id,
+          },
           msgInfo: lmsg,
         },
       ];
@@ -71,10 +74,29 @@ export const getFriends = async (req, res) => {
   }
 };
 
+export const searchUser = async (request, response) => {
+  try {
+    const { search } = request.body;
+
+    const query = new RegExp(search, "i");
+
+    const user = await User.find({
+      $or: [{ name: query }],
+    }).select("-password");
+
+    return response.json(user);
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+    });
+  }
+};
+
 export const messageUploadDB = async (req, res) => {
   const { senderName, reseverId, message } = req.body;
   const senderId = req.userID;
 
+  if (!message) return;
   try {
     const insertMessage = await Message.create({
       senderId: senderId,
@@ -149,53 +171,36 @@ export const messageGet = async (req, res) => {
   }
 };
 
-export const ImageMessageSend = (req, res) => {
+export const ImageMessageSend = async (req, res) => {
   const senderId = req.userID;
-  const form = formidable();
-
-  form.parse(req, (err, fields, files) => {
-    const { senderName, reseverId, imageName } = fields;
-
-    const newPath = `${__dirname}/../../../frontend/public/image/${imageName}`;
-    files.image.originalFilename = imageName;
-
-    try {
-      fs.copyFile(files.image.filepath, newPath, async (err) => {
-        if (err) {
-          res.status(500).json({
-            error: {
-              errorMessage: "Image upload fail",
-            },
-          });
-        } else {
-          const insertMessage = await Message.create({
-            senderId: senderId,
-            senderName: senderName,
-            reseverId: reseverId,
-            message: {
-              text: "",
-              image: files.image.originalFilename,
-            },
-          });
-          res.status(201).json({
-            success: true,
-            message: insertMessage,
-          });
-        }
-      });
-    } catch (error) {
-      res.status(500).json({
-        error: {
-          errorMessage: "Internal Server Error",
-        },
-      });
-    }
-  });
+  const { senderName, reseverId, image } = req.body;
+  try {
+    const insertMessage = await Message.create({
+      senderId: senderId,
+      senderName: senderName,
+      reseverId: reseverId,
+      message: {
+        text: "",
+        image: image,
+      },
+    });
+    res.status(201).json({
+      success: true,
+      message: insertMessage,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: {
+        errorMessage: "Internal Server Error",
+      },
+    });
+  }
 };
 
 export const messageSeen = async (req, res) => {
-  const messageId = req.body._id;
-
+  // console.log(req.body);
+  // return;
+  const messageId = req.body.message.id;
   await Message.findByIdAndUpdate(messageId, {
     status: "seen",
   })
@@ -217,7 +222,7 @@ export const delivaredMessage = async (req, res) => {
   const messageId = req.body._id;
 
   await Message.findByIdAndUpdate(messageId, {
-    status: "delivared",
+    status: "delivered",
   })
     .then(() => {
       res.status(200).json({

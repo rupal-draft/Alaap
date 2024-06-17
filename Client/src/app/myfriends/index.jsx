@@ -190,7 +190,7 @@ export default function MyFriendsPage() {
                       >
                         {search.photo ? (
                           <img
-                            src={search.photo}
+                            src={search.photo.url}
                             width={58}
                             height={58}
                             alt="user"
@@ -245,7 +245,7 @@ export default function MyFriendsPage() {
                     >
                       {follow.photo ? (
                         <img
-                          src={follow.photo}
+                          src={follow.photo.url}
                           width={58}
                           height={58}
                           alt="user"
@@ -296,7 +296,7 @@ export default function MyFriendsPage() {
                   >
                     {fan.photo ? (
                       <img
-                        src={fan.photo}
+                        src={fan.photo.url}
                         width={58}
                         height={58}
                         alt="billy_green"
@@ -352,7 +352,7 @@ export default function MyFriendsPage() {
                     <div className="flex items-center gap-2.5">
                       {unfollower.photo ? (
                         <img
-                          src={unfollower.photo}
+                          src={unfollower.photo.url}
                           width={38}
                           height={38}
                           alt="avatar"
