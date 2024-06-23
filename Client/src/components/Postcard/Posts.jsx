@@ -33,6 +33,7 @@ const Posts = () => {
   const [isImageSelected, setIsImageSelected] = useState(false);
   const [isVideoSelected, setIsVideoSelected] = useState(false);
   const imageInputRef = useRef(null);
+  const storyInputRef = useRef(null);
   const videoInputRef = useRef(null);
   const { user } = useSelector((state) => state.user);
   const [isClient, setIsClient] = useState(false);
@@ -195,7 +196,7 @@ const Posts = () => {
         { image: data }
       );
       loadStories();
-      imageInputRef.current.value = "";
+      storyInputRef.current.value = "";
       socket.emit("new-story", res);
       toast.success("Story uploaded💓💓");
     } catch (e) {
@@ -444,7 +445,7 @@ const Posts = () => {
                         id="fileInput"
                         name="image"
                         onChange={createStory}
-                        ref={imageInputRef}
+                        ref={storyInputRef}
                         className="hidden"
                       />
                       <span className="text-3xl">+</span>
