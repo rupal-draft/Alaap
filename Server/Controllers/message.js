@@ -1,7 +1,6 @@
 import User from "./../Model/user.js";
 import Message from "./../Model/message.js";
 
-
 const getLastMessage = async (myId, fdId) => {
   const msg = await Message.findOne({
     $or: [
@@ -82,6 +81,7 @@ export const searchUser = async (request, response) => {
 
     const user = await User.find({
       $or: [{ name: query }],
+      _id: { $ne: request.userID },
     }).select("-password");
 
     return response.json(user);
@@ -200,7 +200,7 @@ export const ImageMessageSend = async (req, res) => {
 export const messageSeen = async (req, res) => {
   // console.log(req.body);
   // return;
-  const messageId = req.body.message.id;
+  const messageId = req.body._id;
   await Message.findByIdAndUpdate(messageId, {
     status: "seen",
   })

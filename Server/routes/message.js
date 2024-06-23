@@ -14,11 +14,11 @@ import {
 const router = express.Router();
 
 router.get("/get-friends", requireSignin, getFriends);
-router.post("/search-user", searchUser);
+router.post("/search-user", requireSignin, searchUser);
 router.post("/send-message", requireSignin, messageUploadDB);
 router.get("/get-message/:id", requireSignin, messageGet);
 router.post("/image-send", requireSignin, ImageMessageSend);
 router.post("/seen-message", requireSignin, messageSeen);
-router.post("/delivared-message", requireSignin, delivaredMessage);
+router.post("/delivered-message", requireSignin, delivaredMessage);
 
 export default router;

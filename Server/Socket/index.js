@@ -28,6 +28,9 @@ const findFriend = (id) => {
 const userRemove = (socketId) => {
   users = users.filter((u) => u.socketId !== socketId);
 };
+const userLogout = (userId) => {
+  users = users.filter((u) => u.userId !== userId);
+};
 
 io.on("connect", async (socket) => {
   socket.on("addUser", (userId, userInfo) => {
@@ -57,6 +60,18 @@ io.on("connect", async (socket) => {
       socket.to(user.socketId).emit("msgSeenResponse", msg);
     }
   });
+  socket.on("seen", (data) => {
+    const user = findFriend(data.senderId);
+    if (user !== undefined) {
+      socket.to(user.socketId).emit("seenSuccess", data);
+    }
+  });
+  socket.on("deliveredMessage", (msg) => {
+    const user = findFriend(msg.senderId);
+    if (user !== undefined) {
+      socket.to(user.socketId).emit("msgDeliveredResponse", msg);
+    }
+  });
 
   socket.on("typingMessage", (data) => {
     const user = findFriend(data.reseverId);
@@ -67,6 +82,11 @@ io.on("connect", async (socket) => {
         msg: data.msg,
       });
     }
+  });
+  socket.on("logout", (userId) => {
+    userRemove(socket.id);
+    userLogout(userId);
+    io.emit("getUser", users);
   });
 
   socket.on("disconnect", () => {
