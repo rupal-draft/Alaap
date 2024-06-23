@@ -30,11 +30,15 @@ export const navData1 = [
   { name: "Logout", path: "/login", icon: <IoIosLogOut />, action: "logout" },
 ];
 
-const Navbar = ({ open, setOpen }) => {
+const Navbar = ({ open, setOpen, socket, myId }) => {
   const [collapsed, setCollapsed] = React.useState(false);
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(logout());
+    dispatch({
+      type: "LOGOUT_SUCCESS",
+    });
+    if (socket && myId) socket.current.emit("logout", myId);
   };
 
   const [isOpenPopup, setIsOpenPopup] = useState(false);

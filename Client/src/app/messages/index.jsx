@@ -3,27 +3,57 @@ import Logo from "../../../public/images/sociofyLogoTemp.png";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/Nav/Navbar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { FaSearch } from "react-icons/fa";
 import api from "@/utils/axios";
-import Avatar from "@/components/Avatar/Avatar";
+import Avatar1 from "@/components/Avatar/Avatar";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { BsEmojiSmile } from "react-icons/bs";
-import { DeleteOutlined, FileImageOutlined } from "@ant-design/icons";
+import {
+  CheckCircleFilled,
+  CheckCircleOutlined,
+  DeleteOutlined,
+  FileImageOutlined,
+  SendOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 import notificationSound from "./../../../public/audio/notification.mp3";
 import sendingSound from "./../../../public/audio/sending.mp3";
 import useSound from "use-sound";
+import {
+  ImageMessageSend,
+  getFriends,
+  getMessage,
+  messageSend,
+  seenMessage,
+  updateMessage,
+} from "@/Context/Messanger/messangerAction";
+import Avatar from "react-avatar";
 
 const MessagesIndexPage = () => {
-  const [friends, setFriends] = useState([]);
   const [currentFriend, setCurrentFriend] = useState("");
   const { user } = useSelector((state) => state.user);
-  const [messages, setMessages] = useState([]);
+  const friend = useSelector((state) => state.messanger.friends);
+  const loading = useSelector((state) => state.messanger.loading);
+  const messageLoading = useSelector((state) => state.messanger.messageLoading);
+  const messageSendSuccess = useSelector(
+    (state) => state.messanger.messageSendSuccess
+  );
+  const message_get_success = useSelector(
+    (state) => state.messanger.message_get_success
+  );
+  const messages = useSelector((state) => state.messanger.message);
+  const imageMessageLoading = useSelector(
+    (state) => state.messanger.imageMessageLoading
+  );
+  const dispatch = useDispatch();
   const [newMessage, setNewMessage] = useState("");
+  const [searchUser, setSearchUser] = useState([]);
+  const [search, setSearch] = useState("");
   const [socketMessage, setSocketMessage] = useState({});
   const [typingMessage, setTypingMessage] = useState({});
   const messagesEndRef = useRef(null);
@@ -43,19 +73,34 @@ const MessagesIndexPage = () => {
     scrollToBottom();
   }, [messages]);
 
+  const handleSearchUser = async () => {
+    const URL = `${process.env.NEXT_PUBLIC_SERVER_URL}/search-user`;
+    try {
+      const { data } = await api.post(URL, {
+        search: search,
+      });
+      const standardizedData = data.map((user) => ({ ...user, id: user._id }));
+      setSearchUser(standardizedData);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (search) {
+      handleSearchUser();
+    } else {
+      setSearchUser([]);
+    }
+  }, [search]);
+
+  const displayUsers = search ? searchUser : friend;
+
   useEffect(() => {
     socket.current = io(process.env.NEXT_PUBLIC_SOCKET_URL);
 
     socket.current.on("getMessage", (data) => {
       setSocketMessage(data);
-      if (data.reseverId === user?._id) {
-        updateLastMessageStatus(data);
-        if (data.senderId !== currentFriend?.id) {
-          updateFriendMessageStatus(data);
-          seenMessage(data);
-          socket.current.emit("messageSeen", { ...data, status: "seen" });
-        }
-      }
     });
 
     socket.current.on("typingMessageGet", (data) => {
@@ -63,11 +108,28 @@ const MessagesIndexPage = () => {
     });
 
     socket.current.on("msgSeenResponse", (msg) => {
-      updateLastMessageStatus(msg);
-      updateFriendMessageStatus(msg);
+      dispatch({
+        type: "SEEN_MESSAGE",
+        payload: {
+          msgInfo: msg,
+        },
+      });
+    });
+    socket.current.on("msgDeliveredResponse", (msg) => {
+      dispatch({
+        type: "DELIVERED_MESSAGE",
+        payload: {
+          msgInfo: msg,
+        },
+      });
+    });
+    socket.current.on("seenSuccess", (data) => {
+      dispatch({
+        type: "SEEN_ALL",
+        payload: data,
+      });
     });
   }, [currentFriend]);
-
 
   useEffect(() => {
     socket.current.emit("addUser", user?._id, user);
@@ -82,63 +144,62 @@ const MessagesIndexPage = () => {
   }, []);
 
   useEffect(() => {
-    if (socketMessage) {
+    if (socketMessage && currentFriend) {
       if (
-        (socketMessage.senderId === currentFriend?.id &&
-          socketMessage.reseverId === user?._id) ||
-        (socketMessage.senderId === user?._id &&
-          socketMessage.reseverId === currentFriend?.id)
+        socketMessage.senderId === currentFriend?.id &&
+        socketMessage.reseverId === user?._id
       ) {
-        setMessages((prevMessages) => [...prevMessages, socketMessage]);
-        seenMessage(socketMessage);
-        const updatedSocketMessage = {
-          ...socketMessage,
-          status: "seen",
-        };
-        socket.current.emit("messageSeen", updatedSocketMessage);
+        dispatch({
+          type: "SOCKET_MESSAGE",
+          payload: {
+            message: socketMessage,
+          },
+        });
+        dispatch(seenMessage(socketMessage));
+        socket.current.emit("messageSeen", socketMessage);
+        dispatch({
+          type: "UPDATE_FRIEND_MESSAGE",
+          payload: {
+            msgInfo: socketMessage,
+            status: "seen",
+          },
+        });
       }
-      updateLastMessage(socketMessage);
     }
     setSocketMessage("");
-  }, [socketMessage, currentFriend]);
-
-  const seenMessage = async (msg) => {
-    try {
-      await api.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/seen-message`, msg);
-    } catch (e) {
-      console.error(e.response);
-    }
-  };
+  }, [socketMessage]);
 
   useEffect(() => {
-    if (user) {
-      loadFriends();
-    }
-  }, [user]);
-
-  const loadFriends = async () => {
-    const { data } = await api.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/get-friends`
-    );
-    setFriends(data.friends);
-  };
+    dispatch(getFriends());
+  }, [dispatch]);
 
   useEffect(() => {
-    if (currentFriend) {
-      loadMessages(currentFriend.id);
-    }
+    dispatch(getMessage(currentFriend.id));
   }, [currentFriend?.id]);
 
-  const loadMessages = async (id) => {
-    try {
-      const { data } = await api.get(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/get-message/${id}`
-      );
-      setMessages(data.message);
-    } catch (e) {
-      console.error(e);
+  useEffect(() => {
+    if (messages.length > 0) {
+      if (
+        messages[messages.length - 1].senderId !== user._id &&
+        messages[messages.length - 1].status !== "seen"
+      ) {
+        dispatch({
+          type: "UPDATE",
+          payload: {
+            id: currentFriend.id,
+          },
+        });
+        socket.current.emit("seen", {
+          senderId: currentFriend.id,
+          reseverId: user._id,
+        });
+        dispatch(seenMessage(messages[messages.length - 1]));
+      }
     }
-  };
+    dispatch({
+      type: "MESSAGE_GET_SUCCESS_CLEAR",
+    });
+  }, [message_get_success]);
 
   const inputHandle = (e) => {
     setNewMessage(e.target.value);
@@ -190,7 +251,7 @@ const MessagesIndexPage = () => {
         );
         setImage(data.url);
       } catch (e) {
-        console.log(e.response);
+        console.error(e.response);
       }
     }
   };
@@ -203,37 +264,8 @@ const MessagesIndexPage = () => {
       reseverId: currentFriend.id,
       image,
     };
-    try {
-      await api
-        .post(`${process.env.NEXT_PUBLIC_SERVER_URL}/image-send`, data)
-        .then((response) => {
-          socket.current.emit("sendMessage", {
-            senderId: user?._id,
-            senderName: user?.name,
-            reseverId: currentFriend.id,
-            time: new Date(),
-            message: {
-              text: "",
-              image: image,
-              id: response.data?.message?._id,
-            },
-          });
-          updateLastMessage({
-            senderId: user?._id,
-            senderName: user?.name,
-            reseverId: currentFriend.id,
-            message: {
-              text: "",
-              image: image,
-            },
-            time: new Date(),
-          });
-        });
-      setImage("");
-      loadMessages(currentFriend.id);
-    } catch (e) {
-      console.error(e.response);
-    }
+    dispatch(ImageMessageSend(data));
+    setImage("");
   };
 
   const handleMessage = async (e) => {
@@ -249,76 +281,23 @@ const MessagesIndexPage = () => {
       reseverId: currentFriend.id,
       msg: "",
     });
-    try {
-      await api
-        .post(`${process.env.NEXT_PUBLIC_SERVER_URL}/send-message`, data)
-        .then((response) => {
-          const newMsg = {
-            senderId: user?._id,
-            senderName: user?.name,
-            reseverId: currentFriend.id,
-            time: new Date(),
-            message: {
-              text: newMessage,
-              image: "",
-              id: response.data?.message?._id,
-            },
-            status: "sent",
-          };
-          socket.current.emit("sendMessage", newMsg);
-          updateLastMessage(newMsg);
-        });
-      setNewMessage("");
-      loadMessages(currentFriend.id);
-    } catch (e) {
-      console.error(e.response);
+    dispatch(messageSend(data));
+    setNewMessage("");
+  };
+  useEffect(() => {
+    if (messageSendSuccess) {
+      socket.current.emit("sendMessage", messages[messages.length - 1]);
+      dispatch({
+        type: "UPDATE_FRIEND_MESSAGE",
+        payload: {
+          msgInfo: messages[messages.length - 1],
+        },
+      });
+      dispatch({
+        type: "RESET_MESSAGE_SEND_SUCCESS",
+      });
     }
-  };
-  const updateLastMessage = (message) => {
-    setFriends((prevFriends) =>
-      prevFriends.map((friend) =>
-        friend.fndInfo.id === message.senderId ||
-        friend.fndInfo.id === message.reseverId
-          ? {
-              ...friend,
-              msgInfo: {
-                ...friend.msgInfo,
-                message: message.message,
-                senderId: message.senderId,
-                status: message.senderId === user?._id ? "sent" : "received",
-              },
-            }
-          : friend
-      )
-    );
-  };
-  const updateFriendMessageStatus = (msg) => {
-    setFriends((prevFriends) =>
-      prevFriends.map((friend) =>
-        friend.fndInfo.id === msg.senderId ||
-        friend.fndInfo.id === msg.reseverId
-          ? {
-              ...friend,
-              msgInfo: {
-                ...friend.msgInfo,
-                status: "seen",
-              },
-            }
-          : friend
-      )
-    );
-  };
-  const updateLastMessageStatus = (msg) => {
-    setMessages((prevMessages) =>
-      prevMessages.map((message, index) =>
-        message._id === msg._id
-          ? { ...message, status: "seen" }
-          : index === prevMessages.length - 1 && message.senderId === user?._id
-          ? { ...message, status: "seen" }
-          : message
-      )
-    );
-  };
+  }, [messageSendSuccess]);
 
   useEffect(() => {
     if (
@@ -327,10 +306,18 @@ const MessagesIndexPage = () => {
       socketMessage.reseverId === user?._id
     ) {
       notificationPlay();
-      updateLastMessage(socketMessage);
       toast.success(
         `${socketMessage.senderName.split(" ")[0]} has sent a new message`
       );
+      dispatch(updateMessage(socketMessage));
+      socket.current.emit("deliveredMessage", socketMessage);
+      dispatch({
+        type: "UPDATE_FRIEND_MESSAGE",
+        payload: {
+          msgInfo: socketMessage,
+          status: "delivered",
+        },
+      });
     }
   }, [socketMessage]);
 
@@ -351,15 +338,17 @@ const MessagesIndexPage = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  // console.log(friends);
+  // console.log(displayUsers);
   // console.log(activeUsers);
-  console.log(messages);
+  // console.log(messages);
   return (
     <div className="flex h-screen max-h-screen">
       <Navbar
         open={open}
         setOpen={setOpen}
         className="w-[70px] lg:w-[240px] px-4 py-4"
+        socket={socket}
+        myId={user?._id}
       />
       <div className="w-[70px] lg:w-[240px] hidden lg:block">
         <div className="flex flex-col items-center justify-center w-full h-full bg-gray-800">
@@ -373,6 +362,8 @@ const MessagesIndexPage = () => {
               <input
                 type="text"
                 placeholder="Search in social…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 className="w-full py-2 pl-10 pr-4 bg-[#cdcdcd] rounded-full text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
               />
               <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer" />
@@ -380,72 +371,91 @@ const MessagesIndexPage = () => {
           </div>
 
           <div className="flex-1 overflow-x-hidden overflow-y-auto scrollbar">
-            {friends.length === 0 && (
+            {loading && (
               <div className="mt-12">
-                <p className="text-lg text-center text-slate-400">
-                  No users available.
-                </p>
+                <SyncOutlined spin className="py-1" />
               </div>
             )}
 
-            {friends &&
-              friends.map((friend) => (
-                <div
-                  onClick={() => setCurrentFriend(friend.fndInfo)}
-                  key={friend._id}
-                  className="flex items-center gap-2 py-3 px-2 border border-transparent hover:border-primary rounded hover:bg-red-500 cursor-pointer w-full relative"
-                >
-                  <div className="relative">
-                    <Avatar
-                      imageUrl={friend.fndInfo?.photo?.url}
-                      name={friend.fndInfo.name}
-                      width={40}
-                      height={40}
-                    />
+            {displayUsers && displayUsers.length > 0 ? (
+              displayUsers.map((friend) => {
+                const isFriend = !search;
+                const userInfo = isFriend ? friend.fndInfo : user;
 
-                    {activeUsers.some(
-                      (activeUser) => activeUser.userId === friend.fndInfo.id
-                    ) && (
-                      <div className="absolute top-0 right-0 -mt-1 -mr-1 bg-green-500 rounded-full w-4 h-4 border-2 border-white"></div>
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-white font-semibold text-base break-words">
-                      {friend.fndInfo?.name}
-                    </h3>
-                    <div>
-                      {friend.msgInfo && friend.msgInfo?.message?.text ? (
-                        <div className="flex justify-between items-center">
-                          <span
-                            className={
-                              friend.msgInfo?.senderId !== user?._id
-                                ? "text-black font-bold"
-                                : "font-normal"
-                            }
-                          >
-                            {friend.msgInfo?.message.text.slice(0, 10)}...
-                          </span>
-                          <span className="ml-2">
-                            {friend.msgInfo.senderId === user?._id
-                              ? friend.msgInfo.status === "seen"
-                                ? "Seen"
-                                : "Sent"
-                              : friend.msgInfo.status === "seen"
-                              ? "Seen"
-                              : ""}
-                          </span>
-                        </div>
-                      ) : friend.msgInfo && friend.msgInfo?.message.image ? (
-                        <span>
-                          <FileImageOutlined />
-                        </span>
-                      ) : (
-                        <span>Connect You</span>
+                return (
+                  <div
+                    onClick={() => setCurrentFriend(userInfo)}
+                    key={userInfo._id}
+                    className="flex items-center gap-2 py-3 px-2 border border-transparent hover:border-primary rounded hover:bg-red-500 cursor-pointer w-full relative"
+                  >
+                    <div className="relative">
+                      <Avatar1
+                        imageUrl={userInfo?.photo?.url}
+                        name={userInfo.name}
+                        width={40}
+                        height={40}
+                      />
+
+                      {activeUsers.some(
+                        (activeUser) => activeUser.userId === userInfo.id
+                      ) && (
+                        <div className="absolute top-0 right-0 -mt-1 -mr-1 bg-green-500 rounded-full w-4 h-4 border-2 border-white"></div>
                       )}
                     </div>
+                    <div className="flex-1">
+                      <h3 className="text-white font-semibold text-base break-words">
+                        {userInfo?.name}
+                      </h3>
+
+                      <div>
+                        {friend.msgInfo && friend.msgInfo?.message?.text ? (
+                          <div className="flex justify-between items-center">
+                            <span
+                              className={
+                                friend.msgInfo?.senderId !== user?._id &&
+                                friend.msgInfo?.status !== "seen"
+                                  ? "text-black font-bold"
+                                  : "font-normal"
+                              }
+                            >
+                              {friend.msgInfo?.message?.text?.slice(0, 10) || ""}
+                              ...
+                            </span>
+                            <span className="ml-2">
+                              {friend.msgInfo.senderId === user?._id ? (
+                                friend.msgInfo.status === "seen" ? (
+                                  <img
+                                    src={userInfo?.photo?.url}
+                                    alt="Seen"
+                                    className="w-4 h-4 rounded-full"
+                                  />
+                                ) : friend.msgInfo.status === "delivered" ? (
+                                  <CheckCircleFilled />
+                                ) : (
+                                  <CheckCircleOutlined />
+                                )
+                              ) : (
+                                ""
+                              )}
+                            </span>
+                          </div>
+                        ) : friend.msgInfo && friend.msgInfo?.message.image ? (
+                          <span>
+                            <FileImageOutlined />
+                          </span>
+                        ) : (
+                          <span>Connect You</span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })
+            ) : (
+              <div className="mt-12">
+                <p className="text-white text-center">No users found</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -456,7 +466,7 @@ const MessagesIndexPage = () => {
             href="/"
             className="flex items-center gap-2 py-3 px-2 border-b cursor-pointer w-full"
           >
-            <Avatar
+            <Avatar1
               imageUrl={currentFriend.photo?.url}
               name={currentFriend.name}
               width={40}
@@ -482,14 +492,36 @@ const MessagesIndexPage = () => {
 
           {/* show messages */}
           <div className="flex-1 overflow-y-auto p-2 flex flex-col">
+            {(!messages || messages.length === 0) && !messageLoading && (
+              <div className="flex flex-col items-center justify-center mt-10">
+                {currentFriend.photo?.url ? (
+                  <img
+                    src={currentFriend.photo?.url}
+                    alt="Current Friend"
+                    className="w-40 h-40 rounded-full mb-4"
+                  />
+                ) : (
+                  <Avatar
+                    name={currentFriend.name}
+                    size="100"
+                    round={true}
+                    className="mb-4"
+                  />
+                )}
+                <div className="text-center">
+                  <p className="text-lg font-semibold">{currentFriend.name}</p>
+                  <p className="text-sm text-gray-500">and you are connected</p>
+                </div>
+              </div>
+            )}
+            {messageLoading && (
+              <div className="flex justify-center items-center mb-4">
+                <SyncOutlined spin style={{ fontSize: "24px" }} />
+              </div>
+            )}
             {messages &&
               messages.length > 0 &&
               messages.map((message, index) => {
-                const isLastSentMessage =
-                  message.senderId === user?._id &&
-                  (index === messages.length - 1 ||
-                    messages[index + 1].senderId !== user?._id);
-
                 return (
                   <React.Fragment key={index}>
                     <div
@@ -533,11 +565,14 @@ const MessagesIndexPage = () => {
                         />
                       )}
                     </div>
-                    {isLastSentMessage && message.status === "seen" && (
-                      <div className="text-xs text-gray-500 text-right pr-10">
-                        Seen
-                      </div>
-                    )}
+                    {index === messages.length - 1 &&
+                      message.senderId === user?._id && (
+                        <div className="text-xs text-gray-500 text-right pr-10">
+                          {message.status === "seen" && "Seen"}
+                          {message.status === "delivered" && "Delivered"}
+                          {message.status === "unseen" && "Sent"}
+                        </div>
+                      )}
                   </React.Fragment>
                 );
               })}
@@ -597,6 +632,7 @@ const MessagesIndexPage = () => {
                 placeholder="Write your message..."
                 value={newMessage}
                 onChange={inputHandle}
+                disabled={messageLoading}
                 className="w-full py-2 pl-10 pr-3 bg-[#cdcdcd] rounded-xl text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
               />
               <BsEmojiSmile
@@ -624,14 +660,26 @@ const MessagesIndexPage = () => {
                   handleMessage(e);
                 }
               }}
-              disabled={!image && !newMessage.trim()}
+              disabled={
+                !image &&
+                !newMessage.trim() &&
+                (messageLoading || imageMessageLoading)
+              }
               className={`py-2 px-4 rounded-xl focus:outline-none ${
                 image || newMessage.trim()
                   ? "bg-blue-500 text-white"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }`}
             >
-              Send
+              {imageMessageLoading ? (
+                <SyncOutlined spin className="text-white" />
+              ) : (
+                <SendOutlined
+                  className={`${
+                    image || newMessage.trim() ? "text-white" : "text-gray-500"
+                  }`}
+                />
+              )}
             </button>
           </div>
         </div>
