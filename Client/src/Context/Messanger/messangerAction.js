@@ -124,31 +124,4 @@ export const updateMessage = (msg) => async (dispatch) => {
   }
 };
 
-// export const updateMessage = (msg) => async (dispatch) => {
-//   try {
-//     const response = await axios.post("/api/messenger/delivared-message", msg);
-//     console.log(response.data);
-//   } catch (error) {
-//     console.log(error.response.message);
-//   }
-// };
 
-// export const getTheme = () => async (dispatch) => {
-//   const theme = localStorage.getItem("theme");
-//   dispatch({
-//     type: "THEME_GET_SUCCESS",
-//     payload: {
-//       theme: theme ? theme : "white",
-//     },
-//   });
-// };
-
-// export const themeSet = (theme) => async (dispatch) => {
-//   localStorage.setItem("theme", theme);
-//   dispatch({
-//     type: "THEME_SET_SUCCESS",
-//     payload: {
-//       theme: theme,
-//     },
-//   });
-// };
