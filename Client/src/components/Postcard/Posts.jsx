@@ -17,6 +17,7 @@ import {
   FaHeart,
   FaChevronCircleLeft,
   FaChevronCircleRight,
+  FaSave,
 } from "react-icons/fa";
 
 import CommentBody from "../commentBody";
@@ -318,7 +319,7 @@ const Posts = () => {
                 placeholder="What are you thinking…"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] pt-1 pl-1 border rounded-lg border-highlight focus:border-gray-500 outline-none transition-all resize-none h-[70px]"
+                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] pt-1 pl-1 border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none h-[70px]"
               />
               <div className="flex gap-2 w-full">
                 <input
@@ -691,7 +692,7 @@ export const Post = ({
             </div>
           </div>
           <div className="flex items-center text-primary_text cursor-pointer relative">
-            <IoIosShareAlt className="text-xl" />
+            <FaSave className="text-lg" />
           </div>
         </div>
       </div>
@@ -903,7 +904,7 @@ const Popup = ({
                     </div>
                   </div>
                   <div className="flex items-center text-primary_text cursor-pointer">
-                    <IoIosShareAlt className="text-xl" />
+                    <FaSave className="text-lg" />
                   </div>
                 </div>
 
