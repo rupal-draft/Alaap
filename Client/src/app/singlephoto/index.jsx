@@ -36,7 +36,9 @@ export default function SinglePhotoPage() {
                 padding: "12px",
                 backgroundColor: "#ffffff33",
                 borderRadius: "12px",
-                [`&:hover, &.ps-active`]: { backgroundColor: "#ffffff !important" },
+                [`&:hover, &.ps-active`]: {
+                  backgroundColor: "#ffffff !important",
+                },
               },
             }}
             rootStyles={{ ["&>ul"]: { gap: "322px" } }}
@@ -56,23 +58,59 @@ export default function SinglePhotoPage() {
               />
               <MenuItem
                 icon={
-                  <Img src="img_calendar.svg" width={24} height={24} alt="calendar" className="h-[24px] w-[24px]" />
+                  <Img
+                    src="img_calendar.svg"
+                    width={24}
+                    height={24}
+                    alt="calendar"
+                    className="h-[24px] w-[24px]"
+                  />
                 }
               />
               <MenuItem
-                icon={<Img src="img_lock.svg" width={24} height={24} alt="lock" className="h-[24px] w-[24px]" />}
+                icon={
+                  <Img
+                    src="img_lock.svg"
+                    width={24}
+                    height={24}
+                    alt="lock"
+                    className="h-[24px] w-[24px]"
+                  />
+                }
               />
               <MenuItem
-                icon={<Img src="img_lock_2.svg" width={24} height={24} alt="lock" className="h-[24px] w-[24px]" />}
+                icon={
+                  <Img
+                    src="img_lock_2.svg"
+                    width={24}
+                    height={24}
+                    alt="lock"
+                    className="h-[24px] w-[24px]"
+                  />
+                }
               />
               <MenuItem
-                icon={<Img src="img_search.svg" width={24} height={24} alt="search" className="h-[24px] w-[24px]" />}
+                icon={
+                  <Img
+                    src="img_search.svg"
+                    width={24}
+                    height={24}
+                    alt="search"
+                    className="h-[24px] w-[24px]"
+                  />
+                }
               />
             </div>
             <div className="flex flex-col">
               <MenuItem
                 icon={
-                  <Img src="img_arrow_left.svg" width={24} height={24} alt="arrowleft" className="h-[24px] w-[24px]" />
+                  <Img
+                    src="img_arrow_left.svg"
+                    width={24}
+                    height={24}
+                    alt="arrowleft"
+                    className="h-[24px] w-[24px]"
+                  />
                 }
               />
             </div>
@@ -89,7 +127,10 @@ export default function SinglePhotoPage() {
           <div className="flex flex-col self-end">
             <header className="flex w-[95%] items-center justify-between gap-5 md:w-full md:flex-col">
               <div className="flex w-[58%] items-center justify-between gap-5 md:w-full">
-                <a href="https://www.youtube.com/embed/bv8Fxk0sz7I" target="_blank">
+                <a
+                  href="https://www.youtube.com/embed/bv8Fxk0sz7I"
+                  target="_blank"
+                >
                   <Button
                     size="8xl"
                     shape="round"
@@ -108,7 +149,7 @@ export default function SinglePhotoPage() {
                   </Button>
                 </a>
                 <div className="flex items-center gap-2.5">
-                  <Text size="md" as="p" className="!text-white-A700">
+                  <Text size="md" as="p" className="text-primary_text">
                     Edward Ford
                   </Text>
                   <Link href="#">
@@ -123,7 +164,11 @@ export default function SinglePhotoPage() {
                 </div>
               </div>
               <div className="flex gap-5">
-                <Button size="6xl" shape="round" className="min-w-[48px] font-sfprodisplay font-bold">
+                <Button
+                  size="6xl"
+                  shape="round"
+                  className="min-w-[48px] font-sfprodisplay font-bold"
+                >
                   1
                 </Button>
                 <Link href="#">
@@ -145,13 +190,21 @@ export default function SinglePhotoPage() {
                 color="undefined_undefined"
                 className="mt-[390px] w-[48px]"
               >
-                <Img src="img_arrow_left_white_a700_48x48.svg" width={48} height={48} />
+                <Img
+                  src="img_arrow_left_white_a700_48x48.svg"
+                  width={48}
+                  height={48}
+                />
               </Button>
               <div className="mt-36 flex w-full max-w-[509px] md:self-stretch">
                 <Slider
                   autoPlay
                   autoPlayInterval={2000}
-                  responsive={{ 0: { items: 1 }, 550: { items: 1 }, 1050: { items: 1 } }}
+                  responsive={{
+                    0: { items: 1 },
+                    550: { items: 1 },
+                    1050: { items: 1 },
+                  }}
                   disableDotsControls
                   activeIndex={sliderState}
                   onSlideChanged={(e) => {
@@ -178,7 +231,11 @@ export default function SinglePhotoPage() {
                 color="undefined_undefined"
                 className="mt-[390px] w-[48px] !border"
               >
-                <Img src="img_arrow_right_white_a700.svg" width={48} height={48} />
+                <Img
+                  src="img_arrow_right_white_a700.svg"
+                  width={48}
+                  height={48}
+                />
               </Button>
               <div className="flex w-[39%] items-start gap-2.5 md:w-full">
                 <Img
@@ -192,7 +249,15 @@ export default function SinglePhotoPage() {
                   <Input
                     name="comment"
                     placeholder={`Write a comment…`}
-                    suffix={<Img src="img_save.svg" width={14} height={14} alt="save" className="h-[14px] w-[14px]" />}
+                    suffix={
+                      <Img
+                        src="img_save.svg"
+                        width={14}
+                        height={14}
+                        alt="save"
+                        className="h-[14px] w-[14px]"
+                      />
+                    }
                     className="mb-[98px] mt-[798px] gap-[35px] rounded sm:pr-5"
                   />
                 </div>

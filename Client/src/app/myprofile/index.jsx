@@ -10,6 +10,9 @@ import Avatar from "react-avatar";
 import Link from "next/link";
 
 export default function MyProfilePage() {
+  const maxDisplayedPhotos = 5;
+  const maxDisplayedFollowers = 8;
+
   const [collapsed, setCollapsed] = React.useState(false);
   const [open, setOpen] = useState(true);
   const [posts, setPosts] = useState([]);
@@ -100,12 +103,12 @@ export default function MyProfilePage() {
         </h1>
       </div>
 
-      <div className="flex items-center justify-center gap-5 md:w-full flex-col md:py-2 mr-5">
-        <div className="mt-6 flex flex-col gap-10">
+      <div className="flex items-center justify-center gap-5 md:w-full flex-col md:pt-7 pb-4 mr-5">
+        <div className="mt-0 flex flex-col gap-10">
           {/* rest contents */}
 
           <div className="flex flex-col items-start justify-center gap-y-5">
-            {/* left */}
+            {/* upper part */}
 
             <div className="flex flex-col items-start gap-y-10 rounded-xl p-[18px] bg-shadow">
               {/* 0th part */}
@@ -150,19 +153,19 @@ export default function MyProfilePage() {
                     </div>
 
                     {isClient && user?.name && (
-                      <h1 className="!text-white-A700 text-2xl pt-2 font-bold text-center">
+                      <h1 className="text-primary_text text-2xl pt-2 font-bold text-center">
                         {user.name || "User"}
                       </h1>
                     )}
                     <div className="py-2">
                       <div className="flex gap-x-3 text-sm justify-center">
                         {posts && posts.length > 0 && (
-                          <h1 className="!text-white-A700 text-center">
+                          <h1 className="text-primary_text text-center">
                             {posts.length} Posts
                           </h1>
                         )}
                         {followers && followers.length > 0 && (
-                          <h1 className="!text-white-A700 text-center">
+                          <h1 className="text-primary_text text-center">
                             {followers.length} Followers
                           </h1>
                         )}
@@ -184,103 +187,98 @@ export default function MyProfilePage() {
               <div>
                 {/* About me */}
                 <div className="flex flex-col self-stretch gap-y-5 pt-[12rem]">
-                  <h1 className="uppercase text-2xl font-extrabold tracking-[1.00px] !text-white-A700">
+                  <h1 className="uppercase text-2xl font-extrabold tracking-[1.00px] text-primary_text">
                     About Me
                   </h1>
                   <div className="w-full !font-normal text-secondary_text">
                     {isClient && user?.about && (
-                      <p className="leading-[1.1rem]">{user.about}</p>
-                      // <p className="leading-[1.1rem] text-secondary_text">
-                      //   Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      //   Cumque consectetur deserunt velit vero itaque. Pariatur,
-                      //   quod cum. Accusantium voluptate illum aliquid cumque
-                      //   doloribus praesentium voluptatum saepe nisi nam placeat.
-                      //   Hic.
-                      // </p>
+                      <p className="leading-normal">{user.about}</p>
                     )}
                   </div>
                 </div>
               </div>
               {/* 2nd part */}
               <div className="flex flex-col items-start self-stretch gap-y-5">
-                <h1 className="!text-white-A700 uppercase text-2xl font-extrabold">
+                <h1 className="text-primary_text uppercase text-2xl font-extrabold">
                   Followers
                 </h1>
-                <div className="flex flex-wrap gap-[15px] items-start self-stretch">
+                <div className="flex gap-[15px] items-start self-stretch">
                   {followers &&
-                    followers.map((follower, index) => (
-                      <div
-                        key={"listavatarone" + index}
-                        className="flex gap-[25px]"
-                      >
-                        {follower.photo && follower.photo.url ? (
-                          <img
-                            src={follower.photo.url}
-                            width={110}
-                            height={110}
-                            alt="Meow"
-                            className="rounded-full w-[8rem] h-[8rem] object-cover cursor-pointer"
-                            onClick={console.log("User profile redirected")}
-                          />
-                        ) : (
-                          <Avatar
-                            name={follower.name}
-                            size="128"
-                            round={true}
-                            className="cursor-pointer"
-                          />
-                        )}
-                      </div>
-                    ))}
+                    followers
+                      .slice(0, maxDisplayedFollowers)
+                      .map((follower, index) => (
+                        <div
+                          key={"listavatarone" + index}
+                          className="flex gap-[25px]"
+                        >
+                          {follower.photo && follower.photo.url ? (
+                            <img
+                              src={follower.photo.url}
+                              width={110}
+                              height={110}
+                              alt="Meow"
+                              className="rounded-full w-[8rem] h-[8rem] object-cover cursor-pointer"
+                              onClick={() =>
+                                console.log("User profile redirected")
+                              }
+                            />
+                          ) : (
+                            <Avatar
+                              name={follower.name}
+                              size="128"
+                              round={true}
+                              className="rounded-full w-[8rem] h-[8rem] object-cover cursor-pointer"
+                            />
+                          )}
+                        </div>
+                      ))}
                 </div>
-                <Button
-                  variant="outline"
-                  color="undefined_undefined"
-                  className="min-w-[97px] gap-[-3px] rounded font-medium text-secondary_text"
-                >
-                  See more...
-                </Button>
+                {followers.length > maxDisplayedFollowers && (
+                  <Link
+                    href="/myfriends" // Adjust 'to' prop based on your routing setup
+                    className="font-semibold text-secondary_text hover:text-primary_text"
+                  >
+                    See more...
+                  </Link>
+                )}
               </div>
+
               {/* 3rd part */}
               <div className="flex flex-col items-start justify-center self-stretch gap-5">
-                <h1 className="!text-white-A700 uppercase text-2xl font-extrabold">
+                <h1 className="text-primary_text uppercase text-2xl font-extrabold">
                   Photos
                 </h1>{" "}
                 <div className="flex flex-col items-start justify-center gap-[30px] rounded-xl">
-                  <div className="flex flex-col items-start gap-[30px] self-stretch">
-                    <div
-                      className="flex flex-wrap gap-[15px] self-stretch md:grid-cols-3 sm:grid-cols-1"
-                      style={{
-                        gridTemplateRows: `repeat(${Math.ceil(
-                          posts.length / 3
-                        )}, minmax(0, 1fr))`,
-                      }}
-                    >
+                  <div className="flex flex-col items-start gap-[15px] self-stretch">
+                    <div className="flex flex-wrap gap-[15px] self-stretch md:grid-cols-3 sm:grid-cols-1 text-primary_text">
                       {posts && posts.length > 0 ? (
-                        posts.map((post, index) => (
-                          <img
-                            key={index}
-                            src={post.image?.url}
-                            width={130}
-                            height={130}
-                            alt="image"
-                            className="h-[15rem] w-[265px] rounded-xl object-cover "
-                          />
-                        ))
+                        posts
+                          .slice(0, maxDisplayedPhotos)
+                          .map((post, index) => (
+                            <img
+                              key={index}
+                              src={post.image?.url}
+                              width={130}
+                              height={130}
+                              alt="image"
+                              className="h-[15rem] w-[265px] rounded-xl object-cover"
+                            />
+                          ))
                       ) : (
                         <p>No posts available.</p>
                       )}
                     </div>
-                    <Button
-                      variant="outline"
-                      color="undefined_undefined"
-                      className="min-w-[97px] gap-[-3px] rounded font-medium text-secondary_text"
-                    >
-                      See more...
-                    </Button>
+                    {posts.length > maxDisplayedPhotos && (
+                      <Link
+                        href="/mygallery" // Adjust 'to' prop based on your routing setup
+                        className="font-semibold text-secondary_text hover:text-primary_text"
+                      >
+                        See more...
+                      </Link>
+                    )}
                   </div>
                 </div>
-              </div>{" "}
+              </div>
             </div>
 
             {/* right */}

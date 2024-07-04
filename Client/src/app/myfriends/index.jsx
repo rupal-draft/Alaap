@@ -218,7 +218,7 @@ export default function MyFriendsPage() {
                               className="h-[14px] w-[14px]"
                             />
                           }
-                          className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 !text-white-A700 rounded font-medium"
+                          className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 text-primary_text rounded font-medium"
                           onClick={() => handleFollow(search)}
                         >
                           {isFollowing ? "Following" : "Follow Back!!"}
@@ -271,7 +271,7 @@ export default function MyFriendsPage() {
                             className="h-[14px] w-[14px]"
                           />
                         }
-                        className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 !text-white-A700 rounded font-medium"
+                        className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 text-primary_text rounded font-medium"
                         onClick={() => handleFollow(follow)}
                       >
                         {isFollowing ? "Following" : "Follow Back!!"}
@@ -324,7 +324,7 @@ export default function MyFriendsPage() {
                           className="h-[14px] w-[14px]"
                         />
                       }
-                      className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 !text-white-A700 rounded font-medium"
+                      className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 text-primary_text rounded font-medium"
                       onClick={() => handleUnfollow(fan)}
                     >
                       Unfollow
