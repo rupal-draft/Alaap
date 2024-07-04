@@ -3,6 +3,8 @@ import { comparePassword, hashPassword } from "./../Helpers/auth.js";
 import cloudinary from "cloudinary";
 
 export const profileUpdate = async (req, res) => {
+  // console.log(req.body);
+  // return;
   try {
     const data = {};
     const user = await User.findById(req.userID);
@@ -38,13 +40,13 @@ export const profileUpdate = async (req, res) => {
         }
       }
     }
-    if (req.body.photo) {
+    if (Object.keys(req.body.photo).length > 0) {
       if (user.photo && user.photo.public_id) {
         await cloudinary.uploader.destroy(user.photo.public_id);
       }
       data.photo = req.body.photo;
     }
-    if (req.body.coverphoto) {
+    if (Object.keys(req.body.coverphoto).length > 0) {
       if (user.coverphoto && user.coverphoto.public_id) {
         await cloudinary.uploader.destroy(user.coverphoto.public_id);
       }

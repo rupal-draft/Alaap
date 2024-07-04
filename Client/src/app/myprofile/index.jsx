@@ -1,13 +1,13 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "../../components";
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
-
 import Navbar from "@/components/Nav/Navbar";
 import { Post } from "@/components/Postcard/Posts";
 import { useSelector } from "react-redux";
 import api from "@/utils/axios";
 import Avatar from "react-avatar";
+import Link from "next/link";
 
 export default function MyProfilePage() {
   const [collapsed, setCollapsed] = React.useState(false);
@@ -20,6 +20,7 @@ export default function MyProfilePage() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.matchMedia("(min-width: 768px)").matches) {
@@ -38,17 +39,20 @@ export default function MyProfilePage() {
       loadUserPosts();
     }
   }, [user]);
+
   const loadUserPosts = async () => {
     const { data } = await api.get(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/user-posts`
     );
     setPosts(data);
   };
+
   useEffect(() => {
     if (user) {
       loadFollowers();
     }
   }, [user]);
+
   const loadFollowers = async () => {
     const { data } = await api.get(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/get/user-followers`
@@ -78,7 +82,7 @@ export default function MyProfilePage() {
   };
 
   return (
-    <div className="flex items-start justify-center gap-5 bg-[#dadada] ">
+    <div className="flex items-start justify-center gap-5 bg-background">
       {/* Nav bar */}
       <Navbar open={open} setOpen={setOpen} />
       <div
@@ -97,34 +101,56 @@ export default function MyProfilePage() {
       </div>
 
       <div className="flex items-center justify-center gap-5 md:w-full flex-col md:py-2 mr-5">
-        <div className="mt-6 flex flex-col gap-10 ">
+        <div className="mt-6 flex flex-col gap-10">
           {/* rest contents */}
 
-          <div className="flex flex-row items-start justify-center gap-x-10 bg-gray-100 ">
-            <div className="flex  items-center  bg-orange-400 justify-center gap-2.5 w-full">
-              <div className="flex flex-col  items-start gap-[0px]  rounded-xl p-[38px]   sm:p-7">
-                {/* 1st part */}
-                <div className="flex flex-row items-start justify-center self-stretch gap-5">
-                  <div className="flex w-2/3 flex-col items-center justify-center self-stretch ">
-                    <div className="w-[60px] lg:w-[8rem]">
+          <div className="flex flex-col items-start justify-center gap-y-5">
+            {/* left */}
+
+            <div className="flex flex-col items-start gap-y-10 rounded-xl p-[18px] bg-shadow">
+              {/* 0th part */}
+              <div className="flex relative flex-col items-center justify-center">
+                {isClient && user?.coverphoto?.url ? (
+                  <img
+                    src={user.coverphoto.url}
+                    alt="Cover Photo"
+                    className="rounded-xl object-cover
+                    
+                    w-[90rem] h-[20rem]"
+                  />
+                ) : (
+                  <div
+                    className=" rounded-xl object-cover bg-gray-300 flex items-center justify-center
+                  
+                  w-[86rem] h-[20rem]"
+                  >
+                    <span>Cover Photo</span>
+                  </div>
+                )}
+
+                <div className="flex absolute top-[13.5rem] left-0 right-0 flex-row items-start justify-center self-stretch gap-5">
+                  {/* profile photo */}
+                  <div className="flex flex-col items-center justify-center self-stretch">
+                    <div>
                       {isClient && user.photo?.url ? (
                         <img
                           src={user.photo.url}
                           alt="Meow"
-                          className="rounded-xl"
+                          className="rounded-full w-[12rem] h-[12rem] border-8 border-shadow object-cover"
                         />
                       ) : (
                         <Avatar
                           name={isClient && user?.name ? user.name : "User"}
-                          size="110"
+                          size="192"
                           round={true}
-                          className="cursor-pointer"
+                          className="cursor-pointer rounded-full w-[12rem] h-[12rem] border-2 border-shadow"
+                          style={{ border: "0px" }}
                         />
                       )}
                     </div>
 
                     {isClient && user?.name && (
-                      <h1 className="!text-white-A700 text-xl pt-1 font-bold text-center">
+                      <h1 className="!text-white-A700 text-2xl pt-2 font-bold text-center">
                         {user.name || "User"}
                       </h1>
                     )}
@@ -142,105 +168,133 @@ export default function MyProfilePage() {
                         )}
                       </div>
                     </div>
-                    <button className="cursor-pointer px-4 py-1 shadow-sm rounded-md border border-solid font-semibold w-[8.8rem] ml-0 my-2 md:my-0 duration-500 transition-transform hover:scale-105 transform-cpu">
-                      <span>Edit Profile</span>
-                    </button>
-                  </div>
 
-                  <div className=" flex flex-col self-stretch">
-                    <h1 className="uppercase text-2xl font-extrabold tracking-[1.00px] !text-white-A700">
-                      About Me
-                    </h1>
-                    <div className="w-full !font-normal border rounded-tl-none rounded-xl px-1 py-2  !text-white-A700_cc">
-                      {isClient && user?.about && (
-                        <p className="leading-[1.1rem]">{user.about}</p>
-                      )}
-                    </div>
+                    <Link
+                      // type="button"
+                      href="/settings"
+                      onClick={console.log("Feature is coming!")}
+                      className="flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] px-5 py-2 font-semibold"
+                    >
+                      Edit Profile
+                    </Link>
                   </div>
                 </div>
-                {/* 2nd part */}
-                <div className="my-[10px] flex flex-col items-center justify-center self-stretch gap-5">
-                  <h1 className="!text-white-A700 uppercase text-2xl font-extrabold">
-                    Followers
+              </div>
+              {/* 1st part */}
+              <div>
+                {/* About me */}
+                <div className="flex flex-col self-stretch gap-y-5 pt-[12rem]">
+                  <h1 className="uppercase text-2xl font-extrabold tracking-[1.00px] !text-white-A700">
+                    About Me
                   </h1>
-                  <div className="flex flex-col gap-[15px] items-center self-stretch">
-                    {followers &&
-                      followers.map((follower, index) => (
-                        <div
-                          key={"listavatarone" + index}
-                          className="flex gap-[25px]"
-                        >
-                          {follower.photo && follower.photo.url ? (
-                            <img
-                              src={follower.photo.url}
-                              width={110}
-                              height={110}
-                              alt="Meow"
-                              className="rounded-2xl cursor-pointer object-cover"
-                            />
-                          ) : (
-                            <Avatar
-                              name={follower.name}
-                              size="110"
-                              round={true}
-                              className="cursor-pointer"
-                            />
-                          )}
-                        </div>
-                      ))}
+                  <div className="w-full !font-normal text-secondary_text">
+                    {isClient && user?.about && (
+                      <p className="leading-[1.1rem]">{user.about}</p>
+                      // <p className="leading-[1.1rem] text-secondary_text">
+                      //   Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      //   Cumque consectetur deserunt velit vero itaque. Pariatur,
+                      //   quod cum. Accusantium voluptate illum aliquid cumque
+                      //   doloribus praesentium voluptatum saepe nisi nam placeat.
+                      //   Hic.
+                      // </p>
+                    )}
                   </div>
                 </div>
-                {/* 3rd part */}
-                <div className="my-[10px] flex flex-col items-center justify-center self-stretch gap-5">
-                  <h1 className="!text-white-A700 uppercase text-2xl font-extrabold">
-                    Photos
-                  </h1>{" "}
-                  <div className="flex flex-col items-start justify-center gap-[30px] rounded-[12px] bg-white-A700 p-[30px] sm:p-5">
-                    <div className="flex flex-col items-start gap-[30px] self-stretch">
+              </div>
+              {/* 2nd part */}
+              <div className="flex flex-col items-start self-stretch gap-y-5">
+                <h1 className="!text-white-A700 uppercase text-2xl font-extrabold">
+                  Followers
+                </h1>
+                <div className="flex flex-wrap gap-[15px] items-start self-stretch">
+                  {followers &&
+                    followers.map((follower, index) => (
                       <div
-                        className="grid grid-cols-3 gap-2.5 self-stretch md:grid-cols-2 sm:grid-cols-1"
-                        style={{
-                          gridTemplateRows: `repeat(${Math.ceil(
-                            posts.length / 3
-                          )}, minmax(0, 1fr))`,
-                        }}
+                        key={"listavatarone" + index}
+                        className="flex gap-[25px]"
                       >
-                        {posts && posts.length > 0 ? (
-                          posts.map((post, index) => (
-                            <img
-                              key={index}
-                              src={post.image?.url}
-                              width={130}
-                              height={130}
-                              alt="image"
-                              className="h-[130px] w-[240px] rounded-[12px] object-cover md:h-auto"
-                            />
-                          ))
+                        {follower.photo && follower.photo.url ? (
+                          <img
+                            src={follower.photo.url}
+                            width={110}
+                            height={110}
+                            alt="Meow"
+                            className="rounded-full w-[8rem] h-[8rem] object-cover cursor-pointer"
+                            onClick={console.log("User profile redirected")}
+                          />
                         ) : (
-                          <p>No posts available.</p>
+                          <Avatar
+                            name={follower.name}
+                            size="128"
+                            round={true}
+                            className="cursor-pointer"
+                          />
                         )}
                       </div>
-                      <Button
-                        variant="outline"
-                        color="undefined_undefined"
-                        className="min-w-[97px] gap-[-3px] rounded font-medium"
-                      >
-                        See more
-                      </Button>
-                    </div>
-                  </div>
-                </div>{" "}
+                    ))}
+                </div>
+                <Button
+                  variant="outline"
+                  color="undefined_undefined"
+                  className="min-w-[97px] gap-[-3px] rounded font-medium text-secondary_text"
+                >
+                  See more...
+                </Button>
               </div>
+              {/* 3rd part */}
+              <div className="flex flex-col items-start justify-center self-stretch gap-5">
+                <h1 className="!text-white-A700 uppercase text-2xl font-extrabold">
+                  Photos
+                </h1>{" "}
+                <div className="flex flex-col items-start justify-center gap-[30px] rounded-xl">
+                  <div className="flex flex-col items-start gap-[30px] self-stretch">
+                    <div
+                      className="flex flex-wrap gap-[15px] self-stretch md:grid-cols-3 sm:grid-cols-1"
+                      style={{
+                        gridTemplateRows: `repeat(${Math.ceil(
+                          posts.length / 3
+                        )}, minmax(0, 1fr))`,
+                      }}
+                    >
+                      {posts && posts.length > 0 ? (
+                        posts.map((post, index) => (
+                          <img
+                            key={index}
+                            src={post.image?.url}
+                            width={130}
+                            height={130}
+                            alt="image"
+                            className="h-[15rem] w-[265px] rounded-xl object-cover "
+                          />
+                        ))
+                      ) : (
+                        <p>No posts available.</p>
+                      )}
+                    </div>
+                    <Button
+                      variant="outline"
+                      color="undefined_undefined"
+                      className="min-w-[97px] gap-[-3px] rounded font-medium text-secondary_text"
+                    >
+                      See more...
+                    </Button>
+                  </div>
+                </div>
+              </div>{" "}
             </div>
-            {posts &&
-              posts.map((post, index) => (
-                <Post
-                  post={post}
-                  key={index}
-                  loadPosts={loadUserPosts}
-                  toggleLike={toggleLike}
-                />
-              ))}
+
+            {/* right */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-[30px] w-full">
+              {posts &&
+                posts.map((post, index) => (
+                  <Post
+                    post={post}
+                    key={index}
+                    loadPosts={loadUserPosts}
+                    toggleLike={toggleLike}
+                  />
+                ))}
+            </div>
           </div>
         </div>
       </div>

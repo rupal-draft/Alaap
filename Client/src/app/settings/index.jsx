@@ -259,7 +259,7 @@ export default function SettingsPage() {
                 shape="rounded"
                 type="text"
                 name="fullName"
-                placeholder="Rohan Gill..."
+                placeholder={user.name}
                 className="w-full"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -273,7 +273,7 @@ export default function SettingsPage() {
                 shape="rounded"
                 type="email"
                 name="email"
-                placeholder="rohangill@gmail.com..."
+                placeholder={user.email}
                 className="w-full"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -287,7 +287,7 @@ export default function SettingsPage() {
                 shape="rounded"
                 type="password"
                 name="oldpassword"
-                placeholder="Rohan@12345..."
+                placeholder="***********"
                 className="w-full"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
@@ -301,7 +301,7 @@ export default function SettingsPage() {
                 shape="rounded"
                 type="password"
                 name="newpassword"
-                placeholder="Rohan@98765..."
+                placeholder="***********"
                 className="w-full"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -311,11 +311,11 @@ export default function SettingsPage() {
               <Heading size="small" className="!text-gray-600">
                 About
               </Heading>
-              <input
+              <textarea
                 shape="rounded"
                 type="text"
                 name="about"
-                placeholder="3517 Prabhakar St., Patna, India..."
+                placeholder={user.about}
                 className="w-full"
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
