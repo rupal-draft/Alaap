@@ -228,7 +228,7 @@ export default function SettingsPage() {
             </div>
 
             {/* upload profile photo*/}
-            <div className="flex absolute top-[13.5rem] left-0 right-0 flex-col items-center gap-1">
+            <div className="flex mx-[30rem] absolute top-[13.5rem] left-0 right-0 flex-col items-center gap-1">
               <div className="w-[12rem] h-[12rem] rounded-full overflow-hidden border-8 border-shadow object-cover">
                 {isClient && photo?.url ? (
                   <img
