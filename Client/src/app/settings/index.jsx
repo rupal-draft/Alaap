@@ -144,16 +144,17 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex items-start justify-center gap-5 bg-background">
+    <div className="flex w-full h-full min-h-screen bg-background">
       {/* Nav bar */}
       <Navbar open={open} setOpen={setOpen} />
+
       <div
-        className={`md:hidden fixed z-50 bottom-0 transition-all duration-700 ${
-          open ? "left-[4.5rem] px-2 py-1" : "left-0 p-1"
+        className={`lg:hidden fixed z-50 bottom-0 transition-all duration-700 ${
+          open ? "left-[6rem] px-2 py-1" : "left-0 p-1"
         }`}
       >
         <h1
-          className="text-2xl bg-gray-50 p-2 rounded-xl font-semibold transition-transform duration-700"
+          className="text-2xl bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
           onClick={() => {
             setOpen(!open);
           }}
@@ -162,19 +163,27 @@ export default function SettingsPage() {
         </h1>
       </div>
 
-      <div className="flex flex-col w-[70%] px-auto mx-auto items-center justify-center gap-5 md:py-4 ">
-        <Heading as="h1" className=" text-primary_text !font-bold !text-3xl ">
+      <div className="flex flex-col w-[70%] px-auto mx-auto items-center justify-center gap-5 py-4 ">
+        <Heading
+          as="h1"
+          className=" text-primary_text !font-bold text-[1.5rem] sm:text-3xl "
+        >
           My Profile Information
         </Heading>
 
         <form
-          className="flex flex-col items-center gap-y-10 rounded-xl p-[18px] bg-shadow "
+          className="flex flex-col items-center gap-y-5 sm:gap-y-10 rounded-xl p-[18px] bg-shadow "
           onSubmit={handleSubmit}
         >
           {/* image form */}
           <div className="relative flex flex-col items-start gap-4">
             {/* upload cover photo */}
-            <div className="w-[85rem] h-[20rem] rounded-lg overflow-hidden">
+            <div
+              className="rounded-lg overflow-hidden
+            
+            w-[17rem] sm:w-[35rem] md:w-[45rem] lg:w-[50rem] xl:w-[70rem] 2xl:w-[85rem] 
+            h-[10rem] sm:h-[15rem]  lg:h-[20rem] "
+            >
               {isClient && coverphoto?.url ? (
                 <img
                   src={coverphoto.url}
@@ -200,12 +209,12 @@ export default function SettingsPage() {
               )}
             </div>
 
-            <div className="mt-1 flex flex-col items-start space-x-2">
+            <div className="mt-0 flex flex-col items-start space-x-2">
               <label
                 htmlFor="coverImage"
-                className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-4 rounded-lg text-[10px] md:text-base"
+                className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-2 sm:px-4 rounded-lg text-[10px] sm:text-base text-center w-1/2 sm:w-full"
               >
-                Upload your cover photo
+                Upload cover photo
               </label>
               <input
                 onChange={handleCoverPhotoUpload}
@@ -228,8 +237,18 @@ export default function SettingsPage() {
             </div>
 
             {/* upload profile photo*/}
-            <div className="flex mx-[30rem] absolute top-[13.5rem] left-0 right-0 flex-col items-center gap-1">
-              <div className="w-[12rem] h-[12rem] rounded-full overflow-hidden border-8 border-shadow object-cover">
+            <div
+              className="flex absolute left-0 right-0 flex-col items-center gap-1
+            
+              top-[6.5rem] sm:top-[10.5rem] md:top-[8.5rem] lg:top-[13.5rem] 
+              mx-16 sm:mx-[12rem]  "
+            >
+              <div
+                className="rounded-full overflow-hidden border-4 sm:border-8 border-shadow object-cover
+              
+              w-[6rem] sm:w-[8rem] md:w-[12rem] 
+              h-[6rem] sm:h-[8rem] md:h-[12rem] "
+              >
                 {isClient && photo?.url ? (
                   <img
                     src={photo.url}
@@ -257,12 +276,12 @@ export default function SettingsPage() {
                   />
                 )}
               </div>
-              <div className="mt-1 flex items-center space-x-2">
+              <div className="mt-0 flex items-center justify-center  space-x-2">
                 <label
                   htmlFor="profileImage"
-                  className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-4 rounded-lg text-[10px] md:text-base"
+                  className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-2 md:px-4 rounded-lg text-[10px] sm:text-base text-center w-full"
                 >
-                  Upload your profile photo
+                  Upload profile photo
                 </label>
                 <input
                   onChange={handlePhotoUpload}
@@ -287,7 +306,7 @@ export default function SettingsPage() {
           </div>
 
           {/* text form */}
-          <div className="flex flex-col pt-20 w-full gap-y-10">
+          <div className="flex flex-col pt-5 sm:pt-10 md:pt-16 w-full gap-y-5 sm:gap-y-10">
             <div className=" flex flex-col gap-y-2">
               <Heading size="small" className="!text-primary_text">
                 Full Name
@@ -363,7 +382,7 @@ export default function SettingsPage() {
           {/* update button */}
           <button
             type="submit"
-            className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-4 rounded-lg text-[10px] md:text-base"
+            className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-4 rounded-lg text-[13px] sm:text-base"
             disabled={loading}
           >
             {loading ? (
