@@ -5,36 +5,35 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { SyncOutlined } from "@ant-design/icons";
-import api from "@/utils/axios";
+import { FORGOT_PASSWORD_MUTATION } from "@/graphql/mutation";
+import { useMutation } from "@apollo/client";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const { data } = await api.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/forgot-password`,
-        {
-          email,
-        }
-      );
-
-      if (data.error) {
-        toast.error(data.error);
-        setLoading(false);
-      } else {
+  const [forgotPassword] = useMutation(FORGOT_PASSWORD_MUTATION, {
+    onCompleted: (data) => {
+      if (data.forgotPassword.Status === "Success") {
         setEmail("");
         setLoading(false);
         toast.success("Email Sent!!");
         router.push("/login");
+      } else {
+        setLoading(false);
+        toast.error("No User found");
       }
-    } catch (err) {
+    },
+    onError: (err) => {
       setLoading(false);
-      toast.error(err.response);
-    }
+      toast.error(err.message);
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    forgotPassword({ variables: { email } });
   };
   return (
     <div className="w-full bg-gray-100">

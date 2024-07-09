@@ -5,37 +5,36 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { SyncOutlined } from "@ant-design/icons";
-import api from "@/utils/axios";
+import { RESET_PASSWORD_MUTATION } from "@/graphql/mutation";
+import { useMutation } from "@apollo/client";
 
 export default function ResetPasswordPage({ params }) {
   const { id, token } = params;
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const { data } = await api.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/reset-password/${id}/${token}`,
-        {
-          password,
-        }
-      );
-
-      if (data.error) {
-        toast.error(data.error);
-        setLoading(false);
-      } else {
+  const [resetPassword] = useMutation(RESET_PASSWORD_MUTATION, {
+    onCompleted: (data) => {
+      if (data.resetPassword.Status === "Success") {
         setPassword("");
         setLoading(false);
         toast.success("Password Reset Successful");
         router.push("/login");
+      } else {
+        setLoading(false);
+        toast.error("Error resetting password");
       }
-    } catch (err) {
+    },
+    onError: (err) => {
       setLoading(false);
-      toast.error(err.response);
-    }
+      toast.error(err.message);
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    resetPassword({ variables: { id, token, password } });
   };
   return (
     <div className="w-full bg-gray-100">

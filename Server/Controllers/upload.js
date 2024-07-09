@@ -11,7 +11,7 @@ const awsConfig = {
   apiVersion: process.env.AWS_API_VERSION,
 };
 
-const S3 = new AWS.S3(awsConfig);
+export const S3 = new AWS.S3(awsConfig);
 
 export const uploadImage = async (req, res) => {
   try {

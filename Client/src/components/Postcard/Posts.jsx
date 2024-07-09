@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import Avatar from "react-avatar";
 import ReactPlayer from "react-player";
 import { io } from "socket.io-client";
-import { DeleteOutlined } from "@ant-design/icons";
+import { CloseCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 import { AiOutlineClose } from "react-icons/ai";
 
 import { IoIosShareAlt } from "react-icons/io";
@@ -20,6 +20,18 @@ import {
 } from "react-icons/fa";
 
 import CommentBody from "../commentBody";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  CREATE_POST_MUTATION,
+  CREATE_STORY_MUTATION,
+  DELETE_POST_MUTATION,
+  DELETE_STORY_MUTATION,
+  LIKE_POST_MUTATION,
+  LIKE_STORY_MUTATION,
+  UNLIKE_POST_MUTATION,
+  UNLIKE_STORY_MUTATION,
+} from "@/graphql/mutation";
+import { GET_POSTS_QUERY, GET_STORY_FEED_QUERY } from "@/graphql/query";
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
 });
@@ -51,9 +63,15 @@ const Posts = () => {
   const scrollRight = () => {
     sliderRef.current.scrollBy({ left: 200, behavior: "smooth" });
   };
-
+  const { data, loading, error, refetch } = useQuery(GET_POSTS_QUERY);
+  const loadPosts = async () => {
+    await refetch();
+  };
   useEffect(() => {
     if (user) {
+      if (data) {
+        setPosts(data.getPosts);
+      }
       loadPosts();
       socket.on("new-post", (newPost) => {
         setPosts((prevPosts) => [newPost, ...prevPosts]);
@@ -62,14 +80,20 @@ const Posts = () => {
         socket.off("new-post");
       };
     }
-  }, [user]);
+  }, [user, data]);
+  const {
+    data: storyData,
+    loading: storyLoading,
+    error: storyError,
+    refetch: refetchStories,
+  } = useQuery(GET_STORY_FEED_QUERY);
 
-  const loadPosts = async () => {
-    const { data } = await api.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/posts`
-    );
-    setPosts(data);
+  const loadStories = async () => {
+    if (user) {
+      await refetchStories();
+    }
   };
+
   useEffect(() => {
     if (user) {
       loadStories();
@@ -82,17 +106,16 @@ const Posts = () => {
     }
   }, [user]);
 
-  const loadStories = async () => {
-    const { data } = await api.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/story-feed`
-    );
-    const sortedStories = data.sort((a, b) => {
-      if (a.postedBy?._id === user?._id) return -1;
-      if (b.postedBy?._id === user?._id) return 1;
-      return 0;
-    });
-    setStories(sortedStories);
-  };
+  useEffect(() => {
+    if (storyData) {
+      const sortedStories = [...storyData.storyFeed]?.sort((a, b) => {
+        if (a.postedBy?._id === user?._id) return -1;
+        if (b.postedBy?._id === user?._id) return 1;
+        return 0;
+      });
+      setStories(sortedStories);
+    }
+  }, [storyData, user]);
 
   const handleImageChange = async (event) => {
     if (event.target.files.length > 0) {
@@ -146,7 +169,26 @@ const Posts = () => {
     }
   };
 
-  const createPost = async (e) => {
+  const [createPost] = useMutation(CREATE_POST_MUTATION, {
+    onCompleted: (data) => {
+      setContent("");
+      setImage(null);
+      setVideo(null);
+      imageInputRef.current.value = "";
+      videoInputRef.current.value = "";
+      setIsImageSelected(false);
+      setIsVideoSelected(false);
+      toast.success("Posted!!🖖🖖");
+      loadPosts();
+      socket.emit("new-post", data.createPost);
+    },
+    onError: (err) => {
+      console.error(err);
+      toast.error("Post creation failed");
+    },
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       let uploadedImage = null;
@@ -160,44 +202,39 @@ const Posts = () => {
         uploadedVideo = await handleVideoUpload(videoInputRef.current.files[0]);
       }
 
-      const { data } = await api.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/create-post`,
-        { content, image: uploadedImage, video: uploadedVideo }
-      );
-
-      setContent("");
-      setImage(null);
-      setVideo(null);
-      imageInputRef.current.value = "";
-      videoInputRef.current.value = "";
-      setIsImageSelected(false);
-      setIsVideoSelected(false);
-      toast.success("Posted!!🖖🖖");
-      loadPosts();
-      socket.emit("new-post", data);
+      await createPost({
+        variables: {
+          content,
+          image: uploadedImage,
+          video: uploadedVideo,
+        },
+      });
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Post creation failed");
     }
   };
-  const createStory = async (event) => {
+  const [createStory] = useMutation(CREATE_STORY_MUTATION);
+  const [deleteStory] = useMutation(DELETE_STORY_MUTATION);
+  const handleCreateStory = async (event) => {
     event.preventDefault();
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append("image", file);
 
     try {
-      const { data } = await api.post(
+      const { data: uploadedImage } = await api.post(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/upload-image`,
         formData
       );
-      const res = await api.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/create-story`,
-        { image: data }
-      );
+      const { data: storyData } = await createStory({
+        variables: {
+          image: uploadedImage,
+        },
+      });
       loadStories();
       storyInputRef.current.value = "";
-      socket.emit("new-story", res);
+      socket.emit("new-story", storyData);
       toast.success("Story uploaded💓💓");
     } catch (e) {
       console.error(e);
@@ -209,60 +246,64 @@ const Posts = () => {
   );
   const showPlusSign = !userHasPostedStories;
 
-  const deleteStory = async (storyId) => {
+  const handleDeleteStory = async (storyId) => {
     try {
-      await api.delete(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/delete-story/${storyId}`
-      );
+      await deleteStory({
+        variables: { id: storyId },
+      });
       loadStories();
+      toast.success("Story deleted successfully");
     } catch (e) {
       console.error(e);
       toast.error("Failed to delete story");
     }
   };
 
+  const [likePost] = useMutation(LIKE_POST_MUTATION, {
+    refetchQueries: [{ query: GET_POSTS_QUERY }],
+  });
+  const [unlikePost] = useMutation(UNLIKE_POST_MUTATION, {
+    refetchQueries: [{ query: GET_POSTS_QUERY }],
+  });
+
   const handleLike = async (_id) => {
     try {
-      const { data } = await api.put(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/like-post`,
-        { _id }
-      );
-      socket.emit("new-notification", data);
+      const { data } = await likePost({ variables: { postId: _id } });
+      socket.emit("new-notification", data.likePost);
+    } catch (err) {
+      console.log(err);
+      toast.error("Error liking post");
+    }
+  };
+
+  const handleUnlike = async (_id) => {
+    try {
+      await unlikePost({ variables: { postId: _id } });
+    } catch (err) {
+      console.log(err);
+      toast.error("Error unliking post");
+    }
+  };
+  const [likeStory] = useMutation(LIKE_STORY_MUTATION);
+  const [unlikeStory] = useMutation(UNLIKE_STORY_MUTATION);
+
+  const handleLikeStory = async (_id) => {
+    try {
+      const { data } = await likeStory({
+        variables: { id: _id },
+      });
+      socket.emit("new-notification", data.likeStory);
       loadPosts();
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleUnlike = async (_id) => {
+  const handleUnlikeStory = async (_id) => {
     try {
-      const { data } = await api.put(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/unlike-post`,
-        { _id }
-      );
-      loadPosts();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const StoryLike = async (_id) => {
-    try {
-      const { data } = await api.put(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/like-story`,
-        { _id }
-      );
-      socket.emit("new-notification", data);
-      loadPosts();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const StoryUnlike = async (_id) => {
-    try {
-      const { data } = await api.put(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/unlike-story`,
-        { _id }
-      );
+      const { data } = await unlikeStory({
+        variables: { id: _id },
+      });
       loadPosts();
     } catch (err) {
       console.log(err);
@@ -285,12 +326,15 @@ const Posts = () => {
     setIsPopupOpen(!isPopupOpen);
   };
 
+  // console.log(posts);
+  // console.log(stories);
+
   return (
     <div className="grid gap-[30px] w-full">
       <div className="flex flex-col xl:flex-row gap-[30px]">
         {/* Create Post Section */}
         <div className="order-2 xl:order-1 flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
-          <form className="flex gap-2.5 w-full" onSubmit={createPost}>
+          <form className="flex gap-2.5 w-full" onSubmit={handleSubmit}>
             <div className="flex items-start">
               {isClient && user?.photo?.url ? (
                 <Link href="/myprofile">
@@ -444,7 +488,7 @@ const Posts = () => {
                         accept="image/*"
                         id="fileInput"
                         name="image"
-                        onChange={createStory}
+                        onChange={handleCreateStory}
                         ref={storyInputRef}
                         className="hidden"
                       />
@@ -470,7 +514,7 @@ const Posts = () => {
                         {story.postedBy?._id === user?._id && (
                           <DeleteOutlined
                             className="absolute top-0 left-0 cursor-pointer text-red-500"
-                            onClick={() => deleteStory(story._id)}
+                            onClick={() => handleDeleteStory(story._id)}
                           />
                         )}
                       </div>
@@ -508,8 +552,8 @@ const Posts = () => {
         <PopupStories
           onClose={togglePopup}
           content={stories}
-          StoryLike={StoryLike}
-          StoryUnlike={StoryUnlike}
+          StoryLike={handleLikeStory}
+          StoryUnlike={handleUnlikeStory}
         />
       )}
     </div>
@@ -526,9 +570,18 @@ export const Post = ({
   user,
   isClient,
 }) => {
-  function formatDateTime(isoString) {
-    const date = new Date(isoString);
+  function formatDateTime(timestamp) {
+    if (!timestamp) {
+      return "Invalid Date";
+    }
+    const date = new Date(parseInt(timestamp, 10));
+
+    if (isNaN(date.getTime())) {
+      return "Invalid Date";
+    }
+
     return new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -540,15 +593,26 @@ export const Post = ({
   }
   const formattedDate = formatDateTime(post.createdAt);
 
+  const [deletePost] = useMutation(DELETE_POST_MUTATION);
+
   const handleDelete = async () => {
     try {
       const answer = window.confirm("Are you sure?");
       if (!answer) return;
-      const { data } = await api.delete(`/delete-post/${post._id}`);
-      toast.error("Post deleted");
-      loadPosts();
+
+      const { data } = await deletePost({
+        variables: { id: post._id },
+      });
+
+      if (data.deletePost.ok) {
+        toast.error("Post deleted");
+        loadPosts();
+      } else {
+        toast.error("Error deleting post");
+      }
     } catch (err) {
       console.log(err);
+      toast.error("Error deleting post");
     }
   };
 
@@ -570,7 +634,7 @@ export const Post = ({
         <div className="flex w-[100%] items-center gap-2.5">
           {post?.postedBy?.photo ? (
             <img
-              src={post.postedBy.photo.url}
+              src={post.postedBy?.photo?.url}
               width={50}
               height={50}
               alt="avatar"
@@ -591,7 +655,7 @@ export const Post = ({
               as="h3"
               className="!text-primary_text font-serif text-[17px] sm:text-[1.6rem]"
             >
-              {post.postedBy.name}
+              {post.postedBy?.name}
             </Heading>
             <Text
               size="s"
@@ -723,9 +787,18 @@ const Popup = ({
 }) => {
   const [showFullContent, setShowFullContent] = useState(false);
 
-  function formatDateTime(isoString) {
-    const date = new Date(isoString);
+  function formatDateTime(timestamp) {
+    if (!timestamp) {
+      return "Invalid Date";
+    }
+    const date = new Date(parseInt(timestamp, 10));
+
+    if (isNaN(date.getTime())) {
+      return "Invalid Date";
+    }
+
     return new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",

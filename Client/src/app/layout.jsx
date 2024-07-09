@@ -5,6 +5,7 @@ import "../styles/font.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import StoreProvider from "./StoreProvider";
+import ApolloProviderWrapper from "@/utils/apolloWrapper";
 
 function RootLayout({ children }) {
   return (
@@ -17,10 +18,12 @@ function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
-        <StoreProvider>
-          <ToastContainer />
-          {children}
-        </StoreProvider>
+        <ApolloProviderWrapper>
+          <StoreProvider>
+            <ToastContainer />
+            {children}
+          </StoreProvider>
+        </ApolloProviderWrapper>
       </body>
     </html>
   );

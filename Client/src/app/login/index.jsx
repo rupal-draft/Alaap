@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "@/Context/Slices/authSlice";
-import api from "@/utils/axios";
+import { useMutation } from "@apollo/client";
+import { LOGIN_MUTATION } from "@/graphql/mutation";
+import { resetClient } from "@/utils/graphql";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,31 +20,29 @@ export default function LoginPage() {
   useEffect(() => {
     if (user) router.push("/home1");
   }, [user]);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await api.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/login`,
-        {
-          email,
-          password,
-        }
-      );
-
-      if (data.error) {
-        toast.error(data.error);
-        setLoading(false);
+  const [login, { loading, error }] = useMutation(LOGIN_MUTATION, {
+    onCompleted: (data) => {
+      if (data.login.error) {
+        toast.error(data.login.error);
       } else {
+        const { token, user } = data.login;
         setEmail("");
         setPassword("");
-        dispatch(setCredentials(data.user));
-        window.localStorage.setItem("token", data.token);
+        window.localStorage.setItem("token", token);
+        resetClient();
+        dispatch(setCredentials(user));
         toast.success("Welcome Back!!");
         router.push("/home1");
       }
-    } catch (err) {
-      toast.error(err.response);
-    }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    login({ variables: { email, password } });
   };
   return (
     <div className="w-full bg-gray-100">

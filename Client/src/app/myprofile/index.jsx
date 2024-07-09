@@ -8,6 +8,8 @@ import { Post } from "@/components/Postcard/Posts";
 import { useSelector } from "react-redux";
 import api from "@/utils/axios";
 import Avatar from "react-avatar";
+import { POSTS_BY_USER_QUERY } from "@/graphql/query";
+import { useQuery } from "@apollo/client";
 
 export default function MyProfilePage() {
   const [collapsed, setCollapsed] = React.useState(false);
@@ -32,18 +34,19 @@ export default function MyProfilePage() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  const { data, loading, error, refetch } = useQuery(POSTS_BY_USER_QUERY);
 
   useEffect(() => {
     if (user) {
-      loadUserPosts();
+      refetch();
     }
-  }, [user]);
-  const loadUserPosts = async () => {
-    const { data } = await api.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/user-posts`
-    );
-    setPosts(data);
-  };
+  }, [user, refetch]);
+
+  useEffect(() => {
+    if (data) {
+      setPosts(data.postsByUser);
+    }
+  }, [data]);
   useEffect(() => {
     if (user) {
       loadFollowers();
@@ -54,27 +57,6 @@ export default function MyProfilePage() {
       `${process.env.NEXT_PUBLIC_SERVER_URL}/get/user-followers`
     );
     setFollower(data);
-  };
-
-  const toggleLike = async (postId) => {
-    const updatedPosts = posts.map((post) => {
-      if (post._id === postId) {
-        return { ...post, liked: !post.liked };
-      }
-      return post;
-    });
-
-    setPosts(updatedPosts);
-
-    try {
-      await api.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/toggle-like`, {
-        postId,
-      });
-      loadPosts();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to toggle like");
-    }
   };
 
   return (
@@ -233,14 +215,7 @@ export default function MyProfilePage() {
               </div>
             </div>
             {posts &&
-              posts.map((post, index) => (
-                <Post
-                  post={post}
-                  key={index}
-                  loadPosts={loadUserPosts}
-                  toggleLike={toggleLike}
-                />
-              ))}
+              posts.map((post, index) => <Post post={post} key={index} />)}
           </div>
         </div>
       </div>
