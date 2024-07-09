@@ -218,7 +218,7 @@ export default function MyFriendsPage() {
                               className="h-[14px] w-[14px]"
                             />
                           }
-                          className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 !text-white-A700 rounded font-medium"
+                          className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 text-primary_text rounded font-medium"
                           onClick={() => handleFollow(search)}
                         >
                           {isFollowing ? "Following" : "Follow Back!!"}
@@ -241,22 +241,20 @@ export default function MyFriendsPage() {
                   follower.map((follow, index) => (
                     <div
                       key={"myfriends" + index}
-                      className="flex w-full flex-col items-center justify-center rounded-[12px] bg-white-A700 p-[37px] sm:p-5"
+                      className="flex w-full flex-col items-center justify-center bg-white-A700 p-[37px] sm:p-5"
                     >
                       {follow.photo ? (
                         <img
                           src={follow.photo.url}
-                          width={58}
-                          height={58}
                           alt="user"
-                          className="h-[58px] w-[58px] rounded-[18px] object-cover"
+                          className="cursor-pointer rounded-full w-[8rem] h-[8rem] border-2 object-cover"
                         />
                       ) : (
                         <Avatar
                           name={follow.name}
-                          size="58"
-                          round="18px"
-                          className="h-[58px] w-[58px] object-cover"
+                          size="128"
+                          className="cursor-pointer rounded-full w-[8rem] h-[8rem] border-2 border-black"
+                          style={{ border: "0px" }}
                         />
                       )}
                       <Heading as="p" className="!text-black">
@@ -273,7 +271,7 @@ export default function MyFriendsPage() {
                             className="h-[14px] w-[14px]"
                           />
                         }
-                        className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 !text-white-A700 rounded font-medium"
+                        className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 text-primary_text rounded font-medium"
                         onClick={() => handleFollow(follow)}
                       >
                         {isFollowing ? "Following" : "Follow Back!!"}
@@ -326,7 +324,7 @@ export default function MyFriendsPage() {
                           className="h-[14px] w-[14px]"
                         />
                       }
-                      className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 !text-white-A700 rounded font-medium"
+                      className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 text-primary_text rounded font-medium"
                       onClick={() => handleUnfollow(fan)}
                     >
                       Unfollow

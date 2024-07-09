@@ -44,7 +44,9 @@ export default function SingleStoryPage() {
                 padding: "12px",
                 backgroundColor: "#ffffff33",
                 borderRadius: "12px",
-                [`&:hover, &.ps-active`]: { backgroundColor: "#ffffff !important" },
+                [`&:hover, &.ps-active`]: {
+                  backgroundColor: "#ffffff !important",
+                },
               },
             }}
             rootStyles={{ ["&>ul"]: { gap: "322px" } }}
@@ -53,7 +55,13 @@ export default function SingleStoryPage() {
             <div className="flex flex-col gap-10">
               <MenuItem
                 icon={
-                  <Img src="img_home_indigo_a200.svg" width={24} height={24} alt="home" className="h-[24px] w-[24px]" />
+                  <Img
+                    src="img_home_indigo_a200.svg"
+                    width={24}
+                    height={24}
+                    alt="home"
+                    className="h-[24px] w-[24px]"
+                  />
                 }
               />
               <MenuItem
@@ -80,7 +88,13 @@ export default function SingleStoryPage() {
               />
               <MenuItem
                 icon={
-                  <Img src="img_lock_white_a700.svg" width={24} height={24} alt="lock" className="h-[24px] w-[24px]" />
+                  <Img
+                    src="img_lock_white_a700.svg"
+                    width={24}
+                    height={24}
+                    alt="lock"
+                    className="h-[24px] w-[24px]"
+                  />
                 }
               />
               <MenuItem
@@ -122,7 +136,10 @@ export default function SingleStoryPage() {
             <div className="flex items-center justify-between gap-5 md:flex-col">
               <div className="flex w-[60%] flex-col items-center gap-[35px] md:w-full">
                 <div className="flex w-[89%] items-center justify-between gap-5 self-start md:w-full">
-                  <a href="https://www.youtube.com/embed/bv8Fxk0sz7I" target="_blank">
+                  <a
+                    href="https://www.youtube.com/embed/bv8Fxk0sz7I"
+                    target="_blank"
+                  >
                     <Button
                       size="8xl"
                       shape="round"
@@ -141,7 +158,7 @@ export default function SingleStoryPage() {
                     </Button>
                   </a>
                   <div className="flex items-center gap-2.5 pl-[5px]">
-                    <Text as="p" className="!text-white-A700">
+                    <Text as="p" className="text-primary_text">
                       Sara Scholz
                     </Text>
                     <Img
@@ -154,14 +171,28 @@ export default function SingleStoryPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-[30px] self-stretch md:flex-col">
-                  <Button size="5xl" variant="outline" shape="round" color="undefined_undefined" className="w-[48px]">
-                    <Img src="img_arrow_left_white_a700_48x48.svg" width={48} height={48} />
+                  <Button
+                    size="5xl"
+                    variant="outline"
+                    shape="round"
+                    color="undefined_undefined"
+                    className="w-[48px]"
+                  >
+                    <Img
+                      src="img_arrow_left_white_a700_48x48.svg"
+                      width={48}
+                      height={48}
+                    />
                   </Button>
                   <div className="flex w-full max-w-[540px] md:self-stretch">
                     <Slider
                       autoPlay
                       autoPlayInterval={2000}
-                      responsive={{ 0: { items: 1 }, 550: { items: 1 }, 1050: { items: 1 } }}
+                      responsive={{
+                        0: { items: 1 },
+                        550: { items: 1 },
+                        1050: { items: 1 },
+                      }}
                       disableDotsControls
                       activeIndex={sliderState}
                       onSlideChanged={(e) => {
@@ -188,7 +219,11 @@ export default function SingleStoryPage() {
                     color="undefined_undefined"
                     className="w-[48px] !border"
                   >
-                    <Img src="img_arrow_right_white_a700.svg" width={48} height={48} />
+                    <Img
+                      src="img_arrow_right_white_a700.svg"
+                      width={48}
+                      height={48}
+                    />
                   </Button>
                 </div>
                 <Input
@@ -208,7 +243,11 @@ export default function SingleStoryPage() {
               </div>
               <div className="flex w-[34%] flex-col items-center gap-[46px] rounded-bl-[32px] rounded-tl-[32px] bg-white-A700 p-[30px] md:w-full sm:p-5">
                 <div className="mr-2.5 mt-[15px] flex gap-5 self-end md:mr-0">
-                  <Button size="6xl" shape="round" className="min-w-[48px] font-sfprodisplay font-bold">
+                  <Button
+                    size="6xl"
+                    shape="round"
+                    className="min-w-[48px] font-sfprodisplay font-bold"
+                  >
                     1
                   </Button>
                   <Img
@@ -225,7 +264,10 @@ export default function SingleStoryPage() {
                   </Heading>
                   <div className="flex flex-col gap-[30px] self-stretch">
                     {data.map((d, index) => (
-                      <div key={"users" + index} className="flex flex-1 flex-col gap-[30px]">
+                      <div
+                        key={"users" + index}
+                        className="flex flex-1 flex-col gap-[30px]"
+                      >
                         <div className="flex items-center justify-between gap-5">
                           <div className="flex items-center gap-2.5">
                             <Img
@@ -238,7 +280,11 @@ export default function SingleStoryPage() {
                             <Text as="p">MadeInAmerica</Text>
                           </div>
                           <Button className="w-[28px] rounded-lg">
-                            <Img src="img_checkmark_indigo_a200.svg" width={28} height={28} />
+                            <Img
+                              src="img_checkmark_indigo_a200.svg"
+                              width={28}
+                              height={28}
+                            />
                           </Button>
                         </div>
                         <div className="flex items-center justify-between gap-5">
@@ -253,7 +299,11 @@ export default function SingleStoryPage() {
                             <Text as="p">MadeInAmerica</Text>
                           </div>
                           <Button className="w-[28px] rounded-lg">
-                            <Img src="img_checkmark_indigo_a200.svg" width={28} height={28} />
+                            <Img
+                              src="img_checkmark_indigo_a200.svg"
+                              width={28}
+                              height={28}
+                            />
                           </Button>
                         </div>
                       </div>

@@ -1,14 +1,15 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+
+import React, { useRef, useState, useEffect } from "react";
+import { DeleteOutlined, SyncOutlined } from "@ant-design/icons";
+import Avatar from "react-avatar";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { Heading, Button } from "../../components";
 import Navbar from "@/components/Nav/Navbar";
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
-import { toast } from "react-toastify";
 import api from "@/utils/axios";
-import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "@/Context/Slices/authSlice";
-import { DeleteOutlined, SyncOutlined } from "@ant-design/icons";
-import Avatar from "react-avatar";
 
 export default function SettingsPage() {
   const [open, setOpen] = useState(true);
@@ -143,74 +144,111 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="w-full bg-gray-100">
-      <div className="flex flex-row items-start justify-between gap-5 md:flex-col">
-        <Navbar open={open} setOpen={setOpen} />
-        <div
-          className={`md:hidden fixed z-50 bottom-0 transition-all duration-700 ${
-            open ? "left-[4.5rem] px-2 py-1" : "left-0 p-1"
-          }`}
+    <div className="flex w-full h-full min-h-screen bg-background">
+      {/* Nav bar */}
+      <Navbar open={open} setOpen={setOpen} />
+
+      <div
+        className={`lg:hidden fixed z-50 bottom-0 transition-all duration-700 ${
+          open ? "left-[6rem] px-2 py-1" : "left-0 p-1"
+        }`}
+      >
+        <h1
+          className="text-2xl bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
+          onClick={() => {
+            setOpen(!open);
+          }}
         >
-          <h1
-            className="text-2xl bg-gray-50 p-2 rounded-xl font-semibold transition-transform duration-700"
-            onClick={() => {
-              setOpen(!open);
-            }}
-          >
-            {open ? <RiMenuUnfold2Line /> : <RiMenuFold2Line />}
-          </h1>
-        </div>
+          {open ? <RiMenuUnfold2Line /> : <RiMenuFold2Line />}
+        </h1>
+      </div>
 
-        <div className="flex flex-col md:w-[70%] px-auto mx-auto items-center justify-between">
-          <Heading as="h1" className="!text-gray-800 !font-bold !text-3xl mb-8">
-            My Profile Information
-          </Heading>
+      <div className="flex flex-col w-[70%] px-auto mx-auto items-center justify-center gap-5 py-4 ">
+        <Heading
+          as="h1"
+          className=" text-primary_text !font-bold text-[1.5rem] sm:text-3xl "
+        >
+          My Profile Information
+        </Heading>
 
-          <form
-            className="flex flex-col gap-6 w-full mb-28"
-            onSubmit={handleSubmit}
-          >
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-full h-60 rounded-lg overflow-hidden">
-                {isClient && coverphoto?.url ? (
-                  <img
-                    src={coverphoto.url}
-                    alt="Cover Photo"
-                    className="w-full h-full object-cover"
-                  />
-                ) : isClient && final?.user?.coverphoto?.url ? (
-                  <img
-                    src={final.user.coverphoto.url}
-                    alt="Cover Photo"
-                    className="w-full h-full object-cover"
-                  />
-                ) : isClient && user?.coverphoto?.url ? (
-                  <img
-                    src={user.coverphoto.url}
-                    alt="Cover Photo"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-                    <span>Cover Photo</span>
-                  </div>
-                )}
-              </div>
-              <div className="mt-1 flex items-center">
-                <input
-                  onChange={handleCoverPhotoUpload}
-                  type="file"
-                  accept="image/*"
-                  id="coverImage"
-                  name="coverImage"
-                  ref={coverInputRef}
+        <form
+          className="flex flex-col items-center gap-y-5 sm:gap-y-10 rounded-xl p-[18px] bg-shadow "
+          onSubmit={handleSubmit}
+        >
+          {/* image form */}
+          <div className="relative flex flex-col items-start gap-4">
+            {/* upload cover photo */}
+            <div
+              className="rounded-lg overflow-hidden
+            
+            w-[17rem] sm:w-[35rem] md:w-[45rem] lg:w-[50rem] xl:w-[70rem] 2xl:w-[85rem] 
+            h-[10rem] sm:h-[15rem]  lg:h-[20rem] "
+            >
+              {isClient && coverphoto?.url ? (
+                <img
+                  src={coverphoto.url}
+                  alt="Cover Photo"
+                  className="w-full h-full object-cover"
                 />
-                <DeleteOutlined onClick={handleCoverRemove} />
-              </div>
+              ) : isClient && final?.user?.coverphoto?.url ? (
+                <img
+                  src={final.user.coverphoto.url}
+                  alt="Cover Photo"
+                  className="w-full h-full object-cover"
+                />
+              ) : isClient && user?.coverphoto?.url ? (
+                <img
+                  src={user.coverphoto.url}
+                  alt="Cover Photo"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                  <span>Cover Photo</span>
+                </div>
+              )}
             </div>
 
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-32 h-32 rounded-full overflow-hidden">
+            <div className="mt-0 flex flex-col items-start space-x-2">
+              <label
+                htmlFor="coverImage"
+                className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-2 sm:px-4 rounded-lg text-[10px] sm:text-base text-center w-1/2 sm:w-full"
+              >
+                Upload cover photo
+              </label>
+              <input
+                onChange={handleCoverPhotoUpload}
+                type="file"
+                accept="image/*"
+                id="coverImage"
+                name="coverImage"
+                ref={coverInputRef}
+                className="hidden"
+              />
+              {coverphoto && coverphoto.url && (
+                <div className="flex items-center space-x-2">
+                  <span className="mr-2">{coverphoto.name}</span>
+                  <DeleteOutlined
+                    onClick={handleCoverRemove}
+                    className="cursor-pointer text-red-500 hover:text-red-600"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* upload profile photo*/}
+            <div
+              className="flex absolute left-0 right-0 flex-col items-center gap-1
+            
+              top-[6.5rem] sm:top-[10.5rem] md:top-[8.5rem] lg:top-[13.5rem] 
+              mx-16 sm:mx-[12rem]  "
+            >
+              <div
+                className="rounded-full overflow-hidden border-4 sm:border-8 border-shadow object-cover
+              
+              w-[6rem] sm:w-[8rem] md:w-[12rem] 
+              h-[6rem] sm:h-[8rem] md:h-[12rem] "
+              >
                 {isClient && photo?.url ? (
                   <img
                     src={photo.url}
@@ -238,7 +276,13 @@ export default function SettingsPage() {
                   />
                 )}
               </div>
-              <div className="mt-1 flex items-center">
+              <div className="mt-0 flex items-center justify-center  space-x-2">
+                <label
+                  htmlFor="profileImage"
+                  className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-2 md:px-4 rounded-lg text-[10px] sm:text-base text-center w-full"
+                >
+                  Upload profile photo
+                </label>
                 <input
                   onChange={handlePhotoUpload}
                   type="file"
@@ -246,96 +290,108 @@ export default function SettingsPage() {
                   id="profileImage"
                   name="profileImage"
                   ref={photoInputRef}
+                  className="hidden"
                 />
-                <DeleteOutlined onClick={handlePhotoRemove} />
+                {photo && photo.url && (
+                  <div className="flex items-center space-x-2">
+                    <span className="mr-2">{photo.name}</span>
+                    <DeleteOutlined
+                      onClick={handlePhotoRemove}
+                      className="cursor-pointer text-red-500 hover:text-red-600"
+                    />
+                  </div>
+                )}
               </div>
             </div>
+          </div>
 
-            <div>
-              <Heading size="small" className="!text-gray-600">
+          {/* text form */}
+          <div className="flex flex-col pt-5 sm:pt-10 md:pt-16 w-full gap-y-5 sm:gap-y-10">
+            <div className=" flex flex-col gap-y-2">
+              <Heading size="small" className="!text-primary_text">
                 Full Name
               </Heading>
               <input
                 shape="rounded"
                 type="text"
                 name="fullName"
-                placeholder="Rohan Gill..."
-                className="w-full"
+                placeholder={user.name}
+                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-            <div>
-              <Heading size="small" className="!text-gray-600">
+            <div className=" flex flex-col gap-y-2">
+              <Heading size="small" className="!text-primary_text">
                 Email Address
               </Heading>
               <input
                 shape="rounded"
                 type="email"
                 name="email"
-                placeholder="rohangill@gmail.com..."
-                className="w-full"
+                placeholder={user.email}
+                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div>
-              <Heading size="small" className="!text-gray-600">
+            <div className=" flex flex-col gap-y-2">
+              <Heading size="small" className="!text-primary_text">
                 Old Password
               </Heading>
               <input
                 shape="rounded"
                 type="password"
                 name="oldpassword"
-                placeholder="Rohan@12345..."
-                className="w-full"
+                placeholder="***********"
+                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
               />
             </div>
-            <div>
-              <Heading size="small" className="!text-gray-600">
+            <div className=" flex flex-col gap-y-2">
+              <Heading size="small" className="!text-primary_text">
                 New Password
               </Heading>
               <input
                 shape="rounded"
                 type="password"
                 name="newpassword"
-                placeholder="Rohan@98765..."
-                className="w-full"
+                placeholder="***********"
+                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <div>
-              <Heading size="small" className="!text-gray-600">
+            <div className=" flex flex-col gap-y-2">
+              <Heading size="small" className="!text-primary_text">
                 About
               </Heading>
-              <input
+              <textarea
                 shape="rounded"
                 type="text"
                 name="about"
-                placeholder="3517 Prabhakar St., Patna, India..."
-                className="w-full"
+                placeholder={user.about}
+                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none h-[70px]"
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
               />
             </div>
+          </div>
 
-            <Button
-              type="submit"
-              size="3xl"
-              className="w-auto !bg-indigo-400"
-              disabled={loading}
-            >
-              {loading ? (
-                <SyncOutlined spin className="py-1" />
-              ) : (
-                "Update Profile"
-              )}
-            </Button>
-          </form>
-        </div>
+          {/* update button */}
+          <button
+            type="submit"
+            className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-4 rounded-lg text-[13px] sm:text-base"
+            disabled={loading}
+          >
+            {loading ? (
+              <SyncOutlined spin className="py-1" />
+            ) : (
+              "Update Profile"
+            )}
+          </button>
+        </form>
       </div>
     </div>
   );

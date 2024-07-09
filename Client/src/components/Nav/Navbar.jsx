@@ -101,14 +101,6 @@ const Navbar = ({ open, setOpen, socket, myId }) => {
               className="flex flex-col items-center justify-center relative group w-full"
               onClick={link.action === "logout" ? handleLogout : undefined}
             >
-              <div className="absolute top-[-27px] hidden group-hover:flex">
-                <div className="bg-highlight relative flex text-primary_text items-center p-[6px] rounded-[3px]">
-                  <div className="text-[12px] leading-none font-semibold capitalize flex-grow text-center relative">
-                    {link.name}
-                    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-solid border-t-[10px] border-t-highlight border-x-[8px] border-x-transparent"></div>
-                  </div>
-                </div>
-              </div>
               <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg text-2xl text-primary_text hover:text-highlight">
                 {link.icon}
               </div>

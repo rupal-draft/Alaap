@@ -54,18 +54,18 @@ const Home = () => {
         </li>
         <li style={{ marginBottom: "10px" }}>
           <Link
-            href="/directmessage"
+            href="/mygallery"
             style={{ color: "#87CEFA", textDecoration: "none" }}
           >
-            DirectMessage
+            MyGallery
           </Link>
         </li>
         <li style={{ marginBottom: "10px" }}>
           <Link
-            href="/gallery"
+            href="/directmessage"
             style={{ color: "#87CEFA", textDecoration: "none" }}
           >
-            Gallery
+            DirectMessage
           </Link>
         </li>
         <li style={{ marginBottom: "10px" }}>

@@ -45,7 +45,9 @@ export default function SearchResultsPage() {
               padding: "12px",
               backgroundColor: "#ffffff33",
               borderRadius: "12px",
-              [`&:hover, &.ps-active`]: { backgroundColor: "#ffffff !important" },
+              [`&:hover, &.ps-active`]: {
+                backgroundColor: "#ffffff !important",
+              },
             },
           }}
           rootStyles={{ ["&>ul"]: { gap: "322px" } }}
@@ -54,7 +56,13 @@ export default function SearchResultsPage() {
           <div className="flex flex-col gap-10">
             <MenuItem
               icon={
-                <Img src="img_close_indigo_a200.svg" width={24} height={24} alt="close" className="h-[24px] w-[24px]" />
+                <Img
+                  src="img_close_indigo_a200.svg"
+                  width={24}
+                  height={24}
+                  alt="close"
+                  className="h-[24px] w-[24px]"
+                />
               }
             />
             <MenuItem
@@ -69,21 +77,49 @@ export default function SearchResultsPage() {
               }
             />
             <MenuItem
-              icon={<Img src="img_lock.svg" width={24} height={24} alt="lock" className="h-[24px] w-[24px]" />}
-            />
-            <MenuItem
               icon={
-                <Img src="img_lock_white_a700.svg" width={24} height={24} alt="lock" className="h-[24px] w-[24px]" />
+                <Img
+                  src="img_lock.svg"
+                  width={24}
+                  height={24}
+                  alt="lock"
+                  className="h-[24px] w-[24px]"
+                />
               }
             />
             <MenuItem
-              icon={<Img src="img_search.svg" width={24} height={24} alt="search" className="h-[24px] w-[24px]" />}
+              icon={
+                <Img
+                  src="img_lock_white_a700.svg"
+                  width={24}
+                  height={24}
+                  alt="lock"
+                  className="h-[24px] w-[24px]"
+                />
+              }
+            />
+            <MenuItem
+              icon={
+                <Img
+                  src="img_search.svg"
+                  width={24}
+                  height={24}
+                  alt="search"
+                  className="h-[24px] w-[24px]"
+                />
+              }
             />
           </div>
           <div className="flex flex-col">
             <MenuItem
               icon={
-                <Img src="img_arrow_left.svg" width={24} height={24} alt="arrowleft" className="h-[24px] w-[24px]" />
+                <Img
+                  src="img_arrow_left.svg"
+                  width={24}
+                  height={24}
+                  alt="arrowleft"
+                  className="h-[24px] w-[24px]"
+                />
               }
             />
           </div>
@@ -93,7 +129,13 @@ export default function SearchResultsPage() {
         <div className="mt-10 flex flex-1 flex-col items-start gap-[55px] md:self-stretch sm:gap-[27px]">
           <div className="flex items-center gap-2.5 self-stretch rounded-[12px] bg-white-A700 p-[13px]">
             <div className="flex flex-1 items-center gap-[15px] bg-white-A700 py-[7px]">
-              <Img src="img_rewind_indigo_a200.svg" width={18} height={18} alt="rewind" className="h-[18px] w-[18px]" />
+              <Img
+                src="img_rewind_indigo_a200.svg"
+                width={18}
+                height={18}
+                alt="rewind"
+                className="h-[18px] w-[18px]"
+              />
               <Text as="p" className="!text-gray-900">
                 Nass
               </Text>
@@ -106,7 +148,10 @@ export default function SearchResultsPage() {
               >
                 Filters
               </Heading>
-              <Button size="md" className="min-w-[28px] rounded-lg font-sfprodisplay font-bold">
+              <Button
+                size="md"
+                className="min-w-[28px] rounded-lg font-sfprodisplay font-bold"
+              >
                 1
               </Button>
             </div>
@@ -216,16 +261,26 @@ export default function SearchResultsPage() {
                   className="h-[150px] w-full rounded-lg object-cover md:h-auto"
                 />
                 <div className="mt-5 flex flex-col gap-[15px] self-stretch">
-                  <Heading size="lg" as="h6" className="leading-[22px] !text-gray-900">
-                    The Best Fashion Instagrams of the Week: Céline Dion, Lizzo, and More
+                  <Heading
+                    size="lg"
+                    as="h6"
+                    className="leading-[22px] !text-gray-900"
+                  >
+                    The Best Fashion Instagrams of the Week: Céline Dion, Lizzo,
+                    and More
                   </Heading>
                   <Text as="p" className="leading-5">
-                    If you are looking for a break from the cold, take a cue from Lizzo: This week, the singer headed to
-                    Disneyland in warm and sunny California.
+                    If you are looking for a break from the cold, take a cue
+                    from Lizzo: This week, the singer headed to Disneyland in
+                    warm and sunny California.
                   </Text>
                 </div>
                 <Link href="#" className="mt-[9px]">
-                  <Heading size="s" as="p" className="uppercase tracking-[1.00px] !text-gray-500">
+                  <Heading
+                    size="s"
+                    as="p"
+                    className="uppercase tracking-[1.00px] !text-gray-500"
+                  >
                     Read More
                   </Heading>
                 </Link>
@@ -261,7 +316,13 @@ export default function SearchResultsPage() {
                   <Text as="p" className="!text-gray-900">
                     Share
                   </Text>
-                  <Img src="img_question.svg" width={14} height={14} alt="question" className="h-[14px] w-[14px]" />
+                  <Img
+                    src="img_question.svg"
+                    width={14}
+                    height={14}
+                    alt="question"
+                    className="h-[14px] w-[14px]"
+                  />
                 </div>
               </div>
             </div>
@@ -328,7 +389,10 @@ export default function SearchResultsPage() {
                           alt="camera"
                           className="h-[14px] w-[14px]"
                         />
-                        <Text as="p" className="!font-sfprodisplay !text-white-A700">
+                        <Text
+                          as="p"
+                          className="!font-sfprodisplay text-primary_text"
+                        >
                           17
                         </Text>
                       </div>
@@ -367,7 +431,13 @@ export default function SearchResultsPage() {
                   <Text as="p" className="!text-gray-900">
                     Share
                   </Text>
-                  <Img src="img_question.svg" width={14} height={14} alt="question" className="h-[14px] w-[14px]" />
+                  <Img
+                    src="img_question.svg"
+                    width={14}
+                    height={14}
+                    alt="question"
+                    className="h-[14px] w-[14px]"
+                  />
                 </div>
               </div>
             </div>
@@ -376,8 +446,15 @@ export default function SearchResultsPage() {
         <div className="h-[1024px] w-[36%] bg-[url(/images/img_indicator_gray_500.svg)] bg-cover bg-no-repeat pl-5 md:h-auto md:w-full">
           <div className="flex flex-col items-end gap-[45px] rounded-bl-[32px] rounded-tl-[32px] bg-gray-900 p-10 sm:p-5">
             <div className="mt-[5px] flex gap-5">
-              <a href="https://www.youtube.com/embed/bv8Fxk0sz7I" target="_blank">
-                <Button size="6xl" shape="round" className="min-w-[48px] font-sfprodisplay font-bold">
+              <a
+                href="https://www.youtube.com/embed/bv8Fxk0sz7I"
+                target="_blank"
+              >
+                <Button
+                  size="6xl"
+                  shape="round"
+                  className="min-w-[48px] font-sfprodisplay font-bold"
+                >
                   1
                 </Button>
               </a>
@@ -408,7 +485,10 @@ export default function SearchResultsPage() {
                         </Heading>
                         <div className="h-[19px] w-[19px] rounded-[9px] bg-gray-900_33" />
                       </div>
-                      <Text as="p" className="mt-1.5 w-full !font-normal leading-[22px] !text-white-A700">
+                      <Text
+                        as="p"
+                        className="mt-1.5 w-full !font-normal leading-[22px] text-primary_text"
+                      >
                         <>
                           Try premium membership and enjoy
                           <br />a full experience of our community.
@@ -450,13 +530,17 @@ export default function SearchResultsPage() {
                       />
                       <div className="flex flex-col items-start gap-[3px]">
                         <Heading as="h4">Cammy Hedling</Heading>
-                        <Text size="s" as="p" className="!text-white-A700">
+                        <Text size="s" as="p" className="text-primary_text">
                           Los Angeles, CA
                         </Text>
                       </div>
                     </div>
                     <Button className="w-[28px] self-end rounded-lg">
-                      <Img src="img_settings_white_a700_28x28.svg" width={28} height={28} />
+                      <Img
+                        src="img_settings_white_a700_28x28.svg"
+                        width={28}
+                        height={28}
+                      />
                     </Button>
                   </div>
                   <div className="flex flex-1 items-center gap-2.5">
@@ -470,12 +554,16 @@ export default function SearchResultsPage() {
                     <div className="flex flex-1 items-center justify-between gap-5">
                       <div className="flex flex-col items-start gap-[3px]">
                         <Heading as="h5">Cammy Hedling</Heading>
-                        <Text size="s" as="p" className="!text-white-A700">
+                        <Text size="s" as="p" className="text-primary_text">
                           Los Angeles, CA
                         </Text>
                       </div>
                       <Button className="w-[28px] rounded-lg">
-                        <Img src="img_settings_white_a700_28x28.svg" width={28} height={28} />
+                        <Img
+                          src="img_settings_white_a700_28x28.svg"
+                          width={28}
+                          height={28}
+                        />
                       </Button>
                     </div>
                   </div>
@@ -489,12 +577,16 @@ export default function SearchResultsPage() {
                     />
                     <div className="ml-2.5 flex flex-col items-start gap-[3px]">
                       <Heading as="h6">Cammy Hedling</Heading>
-                      <Text size="s" as="p" className="!text-white-A700">
+                      <Text size="s" as="p" className="text-primary_text">
                         Los Angeles, CA
                       </Text>
                     </div>
                     <Button className="ml-10 w-[28px] self-end rounded-lg">
-                      <Img src="img_settings_white_a700_28x28.svg" width={28} height={28} />
+                      <Img
+                        src="img_settings_white_a700_28x28.svg"
+                        width={28}
+                        height={28}
+                      />
                     </Button>
                   </div>
                 </div>
@@ -521,7 +613,10 @@ export default function SearchResultsPage() {
                 </Heading>
                 <div className="flex flex-col gap-[30px] self-stretch">
                   {data1.map((d, index) => (
-                    <div key={"listmadeinameri" + index} className="flex flex-1 items-center justify-between gap-5">
+                    <div
+                      key={"listmadeinameri" + index}
+                      className="flex flex-1 items-center justify-between gap-5"
+                    >
                       <div className="flex items-center gap-2.5">
                         <Img
                           src={d.madeinamerica}
@@ -530,12 +625,16 @@ export default function SearchResultsPage() {
                           alt="madeinamerica"
                           className="h-[38px] w-[38px] rounded-[12px] object-cover"
                         />
-                        <Text as="p" className="!text-white-A700">
+                        <Text as="p" className="text-primary_text">
                           MadeInAmerica
                         </Text>
                       </div>
                       <Button className="w-[28px] rounded-lg">
-                        <Img src="img_checkmark_white_a700.svg" width={28} height={28} />
+                        <Img
+                          src="img_checkmark_white_a700.svg"
+                          width={28}
+                          height={28}
+                        />
                       </Button>
                     </div>
                   ))}
