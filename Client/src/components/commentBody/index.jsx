@@ -6,6 +6,13 @@ import { formatDistanceToNow } from "date-fns";
 import api from "@/utils/axios";
 import { io } from "socket.io-client";
 import { DeleteFilled } from "@ant-design/icons";
+import {
+  ADD_COMMENT_MUTATION,
+  REMOVE_COMMENT_MUTATION,
+} from "@/graphql/mutation";
+import { useMutation, useQuery } from "@apollo/client";
+import { toast } from "react-toastify";
+import { GET_POST_COMMENTS_QUERY } from "@/graphql/query";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
@@ -14,39 +21,58 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
 const CommentBody = ({ postID, loadPosts, user }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+  const { data, loading, error, refetch } = useQuery(GET_POST_COMMENTS_QUERY, {
+    variables: { postId: postID },
+  });
+
+  const loadComments = async () => {
+    await refetch();
+  };
   useEffect(() => {
     loadComments();
-  }, []);
-  const loadComments = async () => {
-    const { data } = await api.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/all-comments`,
-      { params: { postId: postID } }
-    );
-    setComments(data);
-  };
-  const addComment = async (e) => {
+  }, [postID, refetch]);
+
+  useEffect(() => {
+    if (data) {
+      setComments(data.getPostComments);
+    }
+  }, [data]);
+  const [addComment] = useMutation(ADD_COMMENT_MUTATION);
+  const [removeComment] = useMutation(REMOVE_COMMENT_MUTATION);
+
+  const handleAddComment = async (e) => {
     e.preventDefault();
-    const { data } = await api.put(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/add-comment`,
-      { postId: postID, comment }
-    );
-    socket.emit("new-notification", data);
-    loadComments();
-    setComment("");
-    loadPosts();
-  };
-  const deleteComment = async (id) => {
     try {
-      await api.put(`${process.env.NEXT_PUBLIC_SERVER_URL}/remove-comment`, {
-        postId: postID,
-        commentId: id,
+      const { data } = await addComment({
+        variables: { postId: postID, comment },
       });
+      socket.emit("new-notification", data.addComment);
       loadComments();
-    } catch (e) {
-      console.error(e);
+      setComment("");
+      loadPosts();
+    } catch (err) {
+      console.log(err);
+      toast.error("Error adding comment");
     }
   };
-  // console.log(user);
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const { data } = await removeComment({
+        variables: { postId: postID, commentId },
+      });
+      if (data.removeComment.ok) {
+        loadComments();
+        loadPosts();
+      } else {
+        toast.error("Error removing comment");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Error removing comment");
+    }
+  };
+  // console.log(comments);
   return (
     <div className="flex flex-col items-start gap-y-3">
       <h1 className="!text-primary_text text-[17px] sm:text-[1.2rem] xl:text-[1.5rem] font-bold">
@@ -54,7 +80,10 @@ const CommentBody = ({ postID, loadPosts, user }) => {
       </h1>
       <div className="flex flex-col gap-8 self-stretch">
         <div className="flex flex-col items-center justify-center gap-y-3">
-          <form className="w-full self-stretch relative" onSubmit={addComment}>
+          <form
+            className="w-full self-stretch relative"
+            onSubmit={handleAddComment}
+          >
             <textarea
               name="comment"
               placeholder={`Write a comment…`}
@@ -98,13 +127,13 @@ const CommentBody = ({ postID, loadPosts, user }) => {
                     </div>
                   </div>
                   <p className="text-xs text-right text-highlight">
-                    {formatDistanceToNow(new Date(content.created), {
+                    {formatDistanceToNow(new Date(parseInt(content.created)), {
                       addSuffix: true,
                     })}
                   </p>
                   {content.postedBy?._id === user?._id && (
                     <DeleteFilled
-                      onClick={() => deleteComment(content._id)}
+                      onClick={() => handleDeleteComment(content._id)}
                       className="text-xs text-right hover:underline cursor-pointer text-red-500"
                     />
                   )}

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { SyncOutlined } from "@ant-design/icons";
-import api from "@/utils/axios";
+import { useMutation } from "@apollo/client";
+import { REGISTER_MUTATION } from "@/graphql/mutation";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -14,23 +15,9 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const { data } = await api.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/register`,
-        {
-          name,
-          email,
-          password,
-        }
-      );
-
-      if (data.error) {
-        toast.error(data.error);
-        setLoading(false);
-      } else {
+  const [register] = useMutation(REGISTER_MUTATION, {
+    onCompleted: (data) => {
+      if (data.register.ok) {
         setName("");
         setEmail("");
         setPassword("");
@@ -38,10 +25,17 @@ export default function SignupPage() {
         toast.success("Successfully registered!!");
         router.push("/login");
       }
-    } catch (err) {
-      toast.error(err.response.data);
+    },
+    onError: (error) => {
+      toast.error(error.message);
       setLoading(false);
-    }
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    register({ variables: { name, email, password } });
   };
 
   return (

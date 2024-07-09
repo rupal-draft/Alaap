@@ -13,6 +13,7 @@ import { BsSendFill, BsArrowLeftShort } from "react-icons/bs";
 import { IoIosNotifications, IoIosSettings, IoIosLogOut } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { logout } from "@/Context/Slices/authSlice";
+import { resetClient } from "@/utils/graphql";
 
 export const navData = [
   { name: "Home", path: "/home1", icon: <FaHome /> },
@@ -30,16 +31,18 @@ export const navData1 = [
   { name: "Logout", path: "/login", icon: <IoIosLogOut />, action: "logout" },
 ];
 
+export const handleLogout = () => {
+  resetClient();
+  dispatch(logout());
+  dispatch({
+    type: "LOGOUT_SUCCESS",
+  });
+  if (socket && myId) socket.current.emit("logout", myId);
+};
+
 const Navbar = ({ open, setOpen, socket, myId }) => {
   const [collapsed, setCollapsed] = React.useState(false);
   const dispatch = useDispatch();
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch({
-      type: "LOGOUT_SUCCESS",
-    });
-    if (socket && myId) socket.current.emit("logout", myId);
-  };
 
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const notificationRef = useRef(null);
