@@ -418,7 +418,8 @@ const MessagesIndexPage = () => {
                                   : "font-normal"
                               }
                             >
-                              {friend.msgInfo?.message?.text?.slice(0, 10) || ""}
+                              {friend.msgInfo?.message?.text?.slice(0, 10) ||
+                                ""}
                               ...
                             </span>
                             <span className="ml-2">
