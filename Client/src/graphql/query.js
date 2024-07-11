@@ -92,3 +92,39 @@ export const GET_STORY_FEED_QUERY = gql`
     }
   }
 `;
+
+export const USER_PROFILE_QUERY = gql`
+  query UserProfile($id: ID!) {
+    userProfile(id: $id) {
+      id
+      name
+      photo {
+        url
+      }
+      coverphoto {
+        url
+      }
+      about
+      followers {
+        id
+        name
+        photo {
+          url
+        }
+      }
+    }
+  }
+`;
+
+// export const POSTS_BY_USER_QUERY = gql`
+//   query PostsByUser($id: ID!) {
+//     postsByUser(id: $id) {
+//       id
+//       image {
+//         url
+//       }
+//       title
+//       content
+//     }
+//   }
+// `;

@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "../../components";
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
@@ -94,7 +95,7 @@ export default function MyProfilePage() {
 
             <div className="flex flex-col items-center gap-y-10 rounded-xl p-[18px] bg-shadow">
               {/* 0th part */}
-              <div className="flex flex-col items-center justify-center">
+              <div className="flex  flex-col items-center justify-center">
                 {isClient && user?.coverphoto?.url ? (
                   <img
                     src={user.coverphoto.url}
@@ -109,7 +110,7 @@ export default function MyProfilePage() {
                     className=" rounded-xl object-cover bg-gray-300 flex items-center justify-center
                   
                   w-[17rem] sm:w-[35rem] md:w-[45rem] lg:w-[50rem] xl:w-[70rem] 2xl:w-[85rem] 
-            h-[10rem] sm:h-[15rem]  lg:h-[20rem]"
+                  h-[10rem] sm:h-[15rem]  lg:h-[20rem]"
                   >
                     <span>Cover Photo</span>
                   </div>
@@ -139,9 +140,10 @@ export default function MyProfilePage() {
                         <Avatar
                           name={isClient && user?.name ? user.name : "User"}
                           size="192"
-                          round={true}
-                          className="cursor-pointer rounded-full w-full h-full object-cover border-2 border-shadow"
-                          style={{ border: "0px" }}
+                          round
+                          className="cursor-pointer"
+                          // className="cursor-pointer rounded-full w-full h-full object-cover border-2 border-shadow"
+                          // style={{ border: "0px" }}
                         />
                       )}
                     </div>
@@ -205,6 +207,7 @@ export default function MyProfilePage() {
                         <div
                           key={"listavatarone" + index}
                           className="flex gap-[25px]"
+                          onClick={() => router.push(`/user/${follower.id}`)} // Redirect to follower's profile
                         >
                           {follower.photo && follower.photo.url ? (
                             <img
@@ -213,9 +216,6 @@ export default function MyProfilePage() {
                               height={110}
                               alt="Meow"
                               className="rounded-full w-[8rem] h-[8rem] object-cover cursor-pointer"
-                              onClick={() =>
-                                console.log("User profile redirected")
-                              }
                             />
                           ) : (
                             <Avatar
