@@ -10,6 +10,8 @@ import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "@/graphql/mutation";
 import { resetClient } from "@/utils/graphql";
 
+import landingBgImg from "../../../public/images/landingbg.jpg";
+
 export default function LoginPage() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -138,7 +140,66 @@ export default function LoginPage() {
     //   </div>
     // </div>
     <section className="min-h-screen flex items-center justify-center bg-background">
-      <div className="flex flex-col items-center justify-center gap-y-4  w-full">
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${landingBgImg.src})`, // Use the URL format
+          filter: "blur(5px)",
+          zIndex: 0,
+        }}
+      ></div>
+      <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
+
+      <div className="flex absolute z-10 left-5  top-2 items-center gap-x-3 justify-center">
+        <Link
+          href="/"
+          className=" flex  items-center justify-center gap-x-2 cursor-pointer"
+        >
+          {" "}
+          <Img
+            src="sociofyLogoTemp.png"
+            width={50}
+            height={50}
+            alt="headerlogo"
+            className="h-[50px] w-[50px] object-cover rounded-full"
+          />
+        </Link>
+        <h2 className="text-4xl text-primary_text font-logo_text  font-bold ">
+          Sociofy
+        </h2>
+      </div>
+
+      <div className="flex absolute z-10 right-5 bottom-2 items-center justify-between ">
+        <div className="flex flex-col  items-center justify-center">
+          <div className="flex items-center justify-center gap-x-2 font-bold  text-base sm:text-xs md:text-base lg:text-lg font-lato">
+            <Link
+              className="text-highlight hover:text-highlight_hover"
+              href="/privacy"
+            >
+              Privacy
+            </Link>
+            <p>|</p>
+            <Link
+              className="text-highlight hover:text-highlight_hover"
+              href="/disclaimer"
+            >
+              Disclaimer
+            </Link>
+            <p>|</p>
+            <Link
+              className="text-highlight hover:text-highlight_hover"
+              href="/sitemap"
+            >
+              Sitemap
+            </Link>
+          </div>
+          <div className=" text-primary_text text-base sm:text-sm lg:text-base text-primary-text font-semibold font-open_sans text-center">
+            <p>© 2024 Sociofy. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col items-center justify-center gap-y-4 z-10  w-full">
         <Link
           href="/"
           className=" flex flex-col items-center justify-center gap-y-2 cursor-pointer"
@@ -149,11 +210,11 @@ export default function LoginPage() {
             width={75}
             height={75}
             alt="headerlogo"
-            className="h-[75px] w-[75px] object-contain"
+            className="h-[75px] w-[75px] object-cover rounded-full "
           />
-          <h2 className="text-5xl text-primary_text font-montserrat  font-bold mb-4">
+          {/* <h2 className="text-5xl text-primary_text font-montserrat  font-bold mb-4">
             Sociofy
-          </h2>
+          </h2> */}
         </Link>
 
         <div className="relative  p-3 px-5 rounded-lg shadow-lg w-full max-w-xl">
@@ -206,8 +267,9 @@ export default function LoginPage() {
               </div>
               <div className="flex flex-col items-center text-center gap-y-4">
                 <button
-                  type="button"
+                  type="submit"
                   className="px-4 text-white py-2 rounded-lg bg-highlight hover:bg-hover_highlight focus:outline-none font-ubuntu  focus:ring-highlight"
+                  onClick={() => router.push("/login")}
                 >
                   Login
                 </button>
