@@ -10,24 +10,29 @@ const Home = () => {
         color: "white",
       }}
     >
+      <div className="flex items-center justify-between">
+        <div>Sociofy</div>
+        <div className="flex items-center justify-between gap-x-3">
+          <div>
+            <Link
+              href="/login"
+              style={{ color: "#87CEFA", textDecoration: "none" }}
+            >
+              Login
+            </Link>{" "}
+          </div>
+          <div>
+            <Link
+              href="/signup"
+              style={{ color: "#87CEFA", textDecoration: "none" }}
+            >
+              Signup
+            </Link>
+          </div>
+        </div>
+      </div>
       <h1 style={{ fontSize: "48px", marginBottom: "20px" }}>Homepage</h1>
       <ul style={{ listStyle: "none", padding: "0" }}>
-        <li style={{ marginBottom: "10px" }}>
-          <Link
-            href="/login"
-            style={{ color: "#87CEFA", textDecoration: "none" }}
-          >
-            Login
-          </Link>
-        </li>
-        <li style={{ marginBottom: "10px" }}>
-          <Link
-            href="/signup"
-            style={{ color: "#87CEFA", textDecoration: "none" }}
-          >
-            Signup
-          </Link>
-        </li>
         <li style={{ marginBottom: "10px" }}>
           <Link
             href="/home1"

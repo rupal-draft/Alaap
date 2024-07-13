@@ -31,7 +31,14 @@ module.exports = {
         green: { 400: "#53d769" },
       },
       boxShadow: {},
-      fontFamily: { inter: "Inter", sfprodisplay: "SF Pro Display" },
+      fontFamily: {
+        open_sans: ["Open Sans", "sans-serif"], // normal text
+        roboto: ["Roboto", "sans-serif"],
+        lato: ["Lato", "sans-serif"], // secondary heading
+        montserrat: ["Montserrat", "sans-serif"], // primary heading
+        ubuntu: ["Ubuntu", "sans-serif"], // buttons
+        logo_text: ["Macondo", "cursive"],
+      },
       backgroundImage: {
         gradient: "linear-gradient(180deg, #1e1f2000,#1e1f20cc)",
       },
