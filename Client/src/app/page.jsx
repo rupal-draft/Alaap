@@ -1,5 +1,9 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { Img } from "@/components";
+
 const Home = () => {
   return (
     <div
@@ -11,12 +15,23 @@ const Home = () => {
       }}
     >
       <div className="flex items-center justify-between">
-        <div>Sociofy</div>
+        <div className=" flex  items-center justify-center gap-x-2">
+          <Img
+            src="sociofyLogoTemp.png"
+            width={50}
+            height={50}
+            alt="headerlogo"
+            className="h-[50px] w-[50px] object-contain rounded-full"
+          />
+          <h2 className="text-4xl text-primary_text font-montserrat  font-bold ">
+            Sociofy
+          </h2>
+        </div>
         <div className="flex items-center justify-between gap-x-3">
           <div>
             <Link
               href="/login"
-              style={{ color: "#87CEFA", textDecoration: "none" }}
+              className="px-4 text-white py-2 rounded-lg bg-highlight hover:bg-hover_highlight focus:outline-none font-ubuntu  focus:ring-highlight"
             >
               Login
             </Link>{" "}
@@ -24,7 +39,7 @@ const Home = () => {
           <div>
             <Link
               href="/signup"
-              style={{ color: "#87CEFA", textDecoration: "none" }}
+              className="px-4 text-white py-2 rounded-lg bg-highlight hover:bg-hover_highlight focus:outline-none font-ubuntu  focus:ring-highlight"
             >
               Signup
             </Link>

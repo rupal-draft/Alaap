@@ -139,7 +139,11 @@ export default function LoginPage() {
     // </div>
     <section className="min-h-screen flex items-center justify-center bg-background">
       <div className="flex flex-col items-center justify-center gap-y-4  w-full">
-        <div className=" flex flex-col items-center justify-center gap-y-2">
+        <Link
+          href="/"
+          className=" flex flex-col items-center justify-center gap-y-2 cursor-pointer"
+        >
+          {" "}
           <Img
             src="sociofyLogoTemp.png"
             width={75}
@@ -150,7 +154,7 @@ export default function LoginPage() {
           <h2 className="text-5xl text-primary_text font-montserrat  font-bold mb-4">
             Sociofy
           </h2>
-        </div>
+        </Link>
 
         <div className="relative  p-3 px-5 rounded-lg shadow-lg w-full max-w-xl">
           <div className="absolute inset-0 backdrop-blur-xl  bg-white-A700/10 shadow-lg shadow-highlight rounded-lg"></div>
