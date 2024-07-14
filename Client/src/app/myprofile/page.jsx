@@ -2,7 +2,7 @@ import React from "react";
 import Page from ".";
 
 export const metadata = {
-  title: "214_ankit chakladar_cse2a's Application2",
+  title: "Sociofy",
   description: "Web site created using create-react-app",
   //ogTitle:'...'
 };
