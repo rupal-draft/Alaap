@@ -35,12 +35,12 @@ Sociofy is a modern social media application designed to connect people and fost
 
 #### To clone the repository run the following command in your terminal - 
 ```
-    git clone https://github.com/rupal-draft/Sociofy.git
+git clone https://github.com/rupal-draft/Sociofy.git
 ```
 
 #### Navigate into the project directory:
 ```
-    cd Sociofy
+cd Sociofy
 ```
 
 #### Split the terminal. On one side write -
@@ -55,7 +55,7 @@ cd Client
 
 #### Install dependencies for both the server and client side using the following command:
 ```
-    npm install
+npm install
 ```
 
 #### Create your .env file based on the provided .env.example, and fill in your environment variables.
@@ -94,7 +94,7 @@ NEXT_PUBLIC_SERVER_GRAPHQL=
 
 To start the client and the server -
 ```
-    npm run dev
+npm run dev
 ```
 
 Now enjoy Sociofy! on your localhost:3000. 🥳🥳
