@@ -1,41 +1,53 @@
 // pages/user/[id].js
+"use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
-import { POST_BY_USER_QUERY, USER_PROFILE_QUERY } from "@/graphql/query";
 import Avatar from "react-avatar";
 import Navbar from "@/components/Nav/Navbar";
 import { Post } from "@/components/Postcard/Posts";
+import api from "@/utils/axios";
+import { USER_POSTS_QUERY } from "@/graphql/query";
+import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
+import Link from "next/link";
 
-export default function UserProfilePage() {
+export default function UserProfilePage({ params }) {
   const maxDisplayedPhotos = 8;
   const maxDisplayedFollowers = 8;
   const router = useRouter();
-  const { id } = router.query;
-
+  const { id } = params;
+  const [userProfile, setUserProfile] = useState({});
+  const [posts, setPosts] = useState([]);
   const [open, setOpen] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const { user } = useSelector((state) => state.user);
 
-  const {
-    data: userData,
-    loading: userLoading,
-    error: userError,
-  } = useQuery(USER_PROFILE_QUERY, {
+  useEffect(() => {
+    if (user) loadUser();
+  }, [user]);
+  const loadUser = async () => {
+    const { data } = await api.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/user/${id}`
+    );
+    setUserProfile(data);
+  };
+  const { data, loading, error, refetch } = useQuery(USER_POSTS_QUERY, {
     variables: { id },
+    skip: !user,
   });
 
-  const {
-    data: postsData,
-    loading: postsLoading,
-    error: postsError,
-  } = useQuery(POSTS_BY_USER_QUERY, {
-    variables: { id },
-  });
+  useEffect(() => {
+    if (user) {
+      refetch({ id });
+    }
+  }, [user, refetch]);
 
-  const userProfile = userData?.userProfile;
-  const posts = postsData?.postsByUser;
+  useEffect(() => {
+    if (data) {
+      setPosts(data.userPosts);
+    }
+  }, [data]);
 
   useEffect(() => {
     setIsClient(true);
@@ -53,13 +65,10 @@ export default function UserProfilePage() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  if (userLoading || postsLoading) return <div>Loading...</div>;
-  if (userError || postsError)
-    return <div>Error: {userError?.message || postsError?.message}</div>;
-
+  console.log(posts);
   return (
     <div className="flex w-full h-full mt-5 sm:mt-0 gap-4 min-h-screen bg-background">
+      {/* {JSON.stringify(userProfile, null, 4)} */}
       <Navbar open={open} setOpen={setOpen} />
 
       <div
@@ -180,7 +189,9 @@ export default function UserProfilePage() {
                         <div
                           key={"listavatarone" + index}
                           className="flex gap-[25px]"
-                          onClick={() => router.push(`/user/${follower.id}`)}
+                          onClick={() =>
+                            router.push(`/userprofile/${follower._id}`)
+                          }
                         >
                           {follower.photo && follower.photo.url ? (
                             <img
@@ -201,7 +212,7 @@ export default function UserProfilePage() {
                         </div>
                       ))}
                 </div>
-                {userProfile.followers.length > maxDisplayedFollowers && (
+                {userProfile.followers?.length > maxDisplayedFollowers && (
                   <Link
                     href="/myfriends"
                     className="font-semibold text-secondary_text hover:text-primary_text"

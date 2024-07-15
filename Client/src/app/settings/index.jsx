@@ -311,29 +311,33 @@ export default function SettingsPage() {
               <Heading size="small" className="!text-primary_text">
                 Full Name
               </Heading>
-              <input
-                shape="rounded"
-                type="text"
-                name="fullName"
-                placeholder={user.name}
-                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+              {isClient && (
+                <input
+                  shape="rounded"
+                  type="text"
+                  name="fullName"
+                  placeholder={user.name}
+                  className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              )}
             </div>
             <div className=" flex flex-col gap-y-2">
               <Heading size="small" className="!text-primary_text">
                 Email Address
               </Heading>
-              <input
-                shape="rounded"
-                type="email"
-                name="email"
-                placeholder={user.email}
-                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              {isClient && (
+                <input
+                  shape="rounded"
+                  type="email"
+                  name="email"
+                  placeholder={user.email}
+                  className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              )}
             </div>
             <div className=" flex flex-col gap-y-2">
               <Heading size="small" className="!text-primary_text">
@@ -367,15 +371,17 @@ export default function SettingsPage() {
               <Heading size="small" className="!text-primary_text">
                 About
               </Heading>
-              <textarea
-                shape="rounded"
-                type="text"
-                name="about"
-                placeholder={user.about}
-                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none h-[70px]"
-                value={about}
-                onChange={(e) => setAbout(e.target.value)}
-              />
+              {isClient && (
+                <textarea
+                  shape="rounded"
+                  type="text"
+                  name="about"
+                  placeholder={user.about}
+                  className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none transition-all resize-none h-[70px]"
+                  value={about}
+                  onChange={(e) => setAbout(e.target.value)}
+                />
+              )}
             </div>
           </div>
 

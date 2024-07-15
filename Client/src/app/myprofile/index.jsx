@@ -11,11 +11,12 @@ import Avatar from "react-avatar";
 import { POSTS_BY_USER_QUERY } from "@/graphql/query";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function MyProfilePage() {
   const maxDisplayedPhotos = 8;
   const maxDisplayedFollowers = 8;
-
+  const router = useRouter();
   const [collapsed, setCollapsed] = React.useState(false);
   const [open, setOpen] = useState(true);
   const [posts, setPosts] = useState([]);
@@ -171,7 +172,6 @@ export default function MyProfilePage() {
                     <Link
                       // type="button"
                       href="/settings"
-                      onClick={console.log("Feature is coming!")}
                       className="flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] px-5 py-2 font-semibold"
                     >
                       Edit Profile
@@ -207,7 +207,9 @@ export default function MyProfilePage() {
                         <div
                           key={"listavatarone" + index}
                           className="flex gap-[25px]"
-                          onClick={() => router.push(`/user/${follower.id}`)} // Redirect to follower's profile
+                          onClick={() =>
+                            router.push(`/userprofile/${follower._id}`)
+                          }
                         >
                           {follower.photo && follower.photo.url ? (
                             <img

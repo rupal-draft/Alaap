@@ -30,17 +30,17 @@ const postResolvers = {
       }
     },
 
-    userPost: async (_, { id }) => {
+    userPosts: async (_, { id }) => {
       try {
-        return await Post.findById(id)
+        return await Post.find({ postedBy: id })
           .populate("postedBy", "_id name photo")
-          .populate("comments.postedBy", "_id name photo");
+          .sort({ createdAt: -1 })
+          .limit(10);
       } catch (err) {
         console.log(err);
-        throw new Error("Error fetching the post");
+        throw new Error("Error fetching the posts");
       }
     },
-
     getPostComments: async (_, { postId }) => {
       try {
         const post = await Post.findById(postId)
@@ -145,16 +145,23 @@ const postResolvers = {
         if (!user) {
           throw new Error("User not found");
         }
-        const notificationMessage = `${user.name} liked your post`;
-        await User.findByIdAndUpdate(post.postedBy, {
-          $push: {
-            notifications: {
-              text: notificationMessage,
-              user: userId,
-              post: postId,
+        let notificationMessage = "";
+
+        if (post.postedBy.equals(userId)) {
+          notificationMessage = "You liked your own post";
+        } else {
+          notificationMessage = `${user.name} liked your post`;
+
+          await User.findByIdAndUpdate(post.postedBy, {
+            $push: {
+              notifications: {
+                text: notificationMessage,
+                user: userId,
+                post: postId,
+              },
             },
-          },
-        });
+          });
+        }
         const notification = {
           text: notificationMessage,
           user: user,
@@ -198,16 +205,23 @@ const postResolvers = {
         if (!user) {
           throw new Error("User not found");
         }
-        const notificationMessage = `${user.name} commented on your post`;
-        await User.findByIdAndUpdate(post.postedBy, {
-          $push: {
-            notifications: {
-              text: notificationMessage,
-              user: userId,
-              post: postId,
+        let notificationMessage = "";
+
+        if (post.postedBy.equals(userId)) {
+          notificationMessage = "You commented on your own post";
+        } else {
+          notificationMessage = `${user.name} commented on your post`;
+
+          await User.findByIdAndUpdate(post.postedBy, {
+            $push: {
+              notifications: {
+                text: notificationMessage,
+                user: userId,
+                post: postId,
+              },
             },
-          },
-        });
+          });
+        }
         const notification = {
           text: notificationMessage,
           user: user,

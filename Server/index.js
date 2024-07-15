@@ -20,9 +20,6 @@ import { authenticateUser } from "./Middleware/verify.js";
 
 const customLoggingPlugin = {
   requestDidStart(requestContext) {
-    console.log("Request started! Query:\n" + requestContext.request.query);
-    console.log("Variables:", requestContext.request.variables);
-
     return {
       willSendResponse(requestContext) {
         console.log("Response:", requestContext.response);
@@ -59,7 +56,7 @@ const apolloServer = new ApolloServer({
       throw error;
     }
   },
-  // plugins: [customLoggingPlugin],
+  plugins: [customLoggingPlugin],
 });
 
 await apolloServer.start();

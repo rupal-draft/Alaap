@@ -3,7 +3,7 @@ import { gql } from "apollo-server-express";
 const postTypeDefs = gql`
   type Query {
     postsByUser: [Post!]!
-    userPost(id: ID!): Post!
+    userPosts(id: ID!): [Post!]!
     newsFeed: [Post!]!
     getPosts: [Post]
     getPostComments(postId: ID!): [Comment!]!

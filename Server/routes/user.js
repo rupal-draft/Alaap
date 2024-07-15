@@ -23,7 +23,7 @@ router.put("/user-unfollow", requireSignin, removeFollower, userUnfollow);
 router.get("/get/user-followings", requireSignin, userFollowing);
 router.get("/get/user-followers", requireSignin, userFollower);
 router.get("/search-user/:query", requireSignin, searchUser);
-router.get("/user/:name", getUser);
+router.get("/user/:id", getUser);
 router.get("/notifications", requireSignin, getUserNotifications);
 
 export default router;

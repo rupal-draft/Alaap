@@ -12,6 +12,7 @@ import { UserAddOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import { setCredentials } from "@/Context/Slices/authSlice";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
@@ -20,10 +21,10 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
 export default function MyFriendsPage() {
   const [collapsed, setCollapsed] = React.useState(false);
   const [open, setOpen] = useState(true);
+  const router = useRouter();
   const [following, setFollowing] = useState([]);
   const [follower, setFollower] = useState([]);
   const [unfollowing, setUnFollowing] = useState([]);
-  const [isFollowing, setIsFollowing] = useState(false);
   const [query, setQuery] = useState("");
   const [result, setResult] = useState([]);
   const dispatch = useDispatch();
@@ -99,7 +100,6 @@ export default function MyFriendsPage() {
       socket.emit("new-follower", data.follower);
       let filtered = unfollowing.filter((p) => p._id !== unfollower._id);
       setUnFollowing(filtered);
-      setIsFollowing(true);
       loadFollowings();
       toast.success(`Following ${unfollower.name}`);
     } catch (err) {
@@ -117,7 +117,6 @@ export default function MyFriendsPage() {
       dispatch(setCredentials({ user: data }));
       let filtered = unfollowing.filter((p) => p._id !== fan._id);
       setUnFollowing(filtered);
-      setIsFollowing(false);
       loadFollowings();
       toast.error(`Unfollowed ${fan.name}`);
     } catch (err) {
@@ -186,6 +185,9 @@ export default function MyFriendsPage() {
                     {result.map((search, index) => (
                       <div
                         key={"myfriends" + index}
+                        onClick={() =>
+                          router.push(`/userprofile/${search._id}`)
+                        }
                         className="flex w-full flex-col items-center justify-center rounded-[12px] bg-white-A700 p-[37px] sm:p-5"
                       >
                         {search.photo ? (
@@ -219,9 +221,14 @@ export default function MyFriendsPage() {
                             />
                           }
                           className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 text-primary_text rounded font-medium"
-                          onClick={() => handleFollow(search)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleFollow(search);
+                          }}
                         >
-                          {isFollowing ? "Following" : "Follow Back!!"}
+                          {user.following.includes(search._id)
+                            ? "Following"
+                            : "Follow Back!!"}
                         </Button>
                       </div>
                     ))}
@@ -241,6 +248,7 @@ export default function MyFriendsPage() {
                   follower.map((follow, index) => (
                     <div
                       key={"myfriends" + index}
+                      onClick={() => router.push(`/userprofile/${follow._id}`)}
                       className="flex w-full flex-col items-center justify-center bg-white-A700 p-[37px] sm:p-5"
                     >
                       {follow.photo ? (
@@ -272,9 +280,14 @@ export default function MyFriendsPage() {
                           />
                         }
                         className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 text-primary_text rounded font-medium"
-                        onClick={() => handleFollow(follow)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFollow(follow);
+                        }}
                       >
-                        {isFollowing ? "Following" : "Follow Back!!"}
+                        {user.following.includes(follow._id)
+                          ? "Following"
+                          : "Follow Back!!"}
                       </Button>
                     </div>
                   ))}
@@ -290,6 +303,7 @@ export default function MyFriendsPage() {
                 {following.map((fan, index) => (
                   <div
                     key={"myfriends" + index}
+                    onClick={() => router.push(`/userprofile/${fan._id}`)}
                     className="flex w-full flex-col items-center justify-center rounded-[12px] bg-white-A700 p-[37px] sm:p-5"
                   >
                     {fan.photo ? (
@@ -325,7 +339,10 @@ export default function MyFriendsPage() {
                         />
                       }
                       className="mt-[15px] min-w-[84px] gap-[3px] bg-indigo-400 text-primary_text rounded font-medium"
-                      onClick={() => handleUnfollow(fan)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleUnfollow(fan);
+                      }}
                     >
                       Unfollow
                     </Button>
@@ -345,6 +362,9 @@ export default function MyFriendsPage() {
                 unfollowing.map((unfollower, index) => (
                   <div
                     key={"myfriends" + index}
+                    onClick={() =>
+                      router.push(`/userprofile/${unfollower._id}`)
+                    }
                     className="flex w-full flex-row items-center justify-between rounded-[12px] bg-white-A700  sm:p-5"
                   >
                     <div className="flex items-center gap-2.5">
@@ -378,7 +398,10 @@ export default function MyFriendsPage() {
                     <Tooltip title="Follow">
                       <Button
                         className="w-[28px] self-end rounded-lg bg-indigo-400"
-                        onClick={() => handleFollow(unfollower)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFollow(unfollower);
+                        }}
                       >
                         <UserAddOutlined />
                       </Button>
