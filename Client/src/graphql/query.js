@@ -116,15 +116,30 @@ export const USER_PROFILE_QUERY = gql`
   }
 `;
 
-// export const POSTS_BY_USER_QUERY = gql`
-//   query PostsByUser($id: ID!) {
-//     postsByUser(id: $id) {
-//       id
-//       image {
-//         url
-//       }
-//       title
-//       content
-//     }
-//   }
-// `;
+export const USER_POSTS_QUERY = gql`
+  query userPosts($id: ID!) {
+    userPosts(id: $id) {
+      _id
+      content
+      postedBy {
+        _id
+        name
+        photo {
+          url
+        }
+      }
+      image {
+        url
+      }
+      video_link {
+        Location
+      }
+      likes
+      comments {
+        _id
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

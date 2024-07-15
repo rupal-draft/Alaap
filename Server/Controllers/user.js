@@ -204,12 +204,16 @@ export const searchUser = async (req, res) => {
 
 export const getUser = async (req, res) => {
   try {
-    const user = await User.findOne({ name: req.params.name }).select(
-      "-password"
-    );
+    const user = await User.findById(req.params.id)
+      .select("-password")
+      .populate({
+        path: "followers",
+        select: "_id name photo.url",
+      });
     res.json(user);
   } catch (err) {
     console.log(err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -230,9 +234,19 @@ export const getUserNotifications = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    const currentDate = new Date();
+    const cutoffDate = new Date(
+      currentDate.setDate(currentDate.getDate() - 15)
+    );
+    user.notifications = user.notifications.filter((notification) => {
+      return notification.createdAt >= cutoffDate;
+    });
+
+    await user.save();
+
     res.json(user.notifications);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res
       .status(500)
       .json({ error: "Server error while fetching notifications" });
