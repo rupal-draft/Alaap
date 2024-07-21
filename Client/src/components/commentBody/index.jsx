@@ -40,16 +40,30 @@ const CommentBody = ({ postID, loadPosts, user }) => {
   const [addComment] = useMutation(ADD_COMMENT_MUTATION);
   const [removeComment] = useMutation(REMOVE_COMMENT_MUTATION);
 
+/*   const checkCommentToxicity = async (comment) => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_MLMODEL_URL}/predict?comment=${comment}`
+    );
+    return response.data.toxic === true;
+  }; */
+
   const handleAddComment = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await addComment({
-        variables: { postId: postID, comment },
-      });
-      socket.emit("new-notification", data.addComment);
-      loadComments();
-      setComment("");
-      loadPosts();
+//      const isToxic = await checkCommentToxicity(comment);
+//      if (!isToxic) {
+        const { data } = await addComment({
+          variables: { postId: postID, comment },
+        });
+        socket.emit("new-notification", data.addComment);
+        loadComments();
+        setComment("");
+        loadPosts();
+//      }
+//      else {
+//        toast.warning("Your comment is identified to be vulgar !!");
+//        setComment("");
+//      }
     } catch (err) {
       console.log(err);
       toast.error("Error adding comment");
