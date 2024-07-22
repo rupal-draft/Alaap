@@ -37,32 +37,32 @@ const Popup = ({ setIsOpenPopup, position }) => {
   return (
     <div
       onClick={setIsOpenPopup.bind(this, false)}
-      className="fixed inset-0 bg-black bg-opacity-60 flex items-start justify-start"
+      className="fixed inset-0  flex items-start justify-start"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="absolute bg-red-50 rounded-lg w-[400px] max-h-[400px] overflow-visible"
+        className="absolute bg-background2 rounded-lg w-[250px] sm:w-[400px] max-h-[400px] overflow-visible z-50 "
         style={{
           animation: "dropTop .3s linear",
           top: `${position.top}px`,
           left: `${position.left}px`,
         }}
       >
-        <div className="fixed bg-white-A700 w-[400px] text-center rounded-r-lg  p-3 self-stretch justify-between items-center flex">
-          <h1 className="">Notification</h1>
+        <div className="fixed bg-background2 text-primary_text w-[250px] sm:w-[400px] text-lg font-semibold font-ubuntu text-center rounded-tr-lg  border-b-hover_highlight border-b-[1px]  p-3 self-stretch justify-between items-center flex">
+          <h1 className="">Notifications</h1>
           <div
             onClick={setIsOpenPopup.bind(this, false)}
-            className="cursor-pointer absolute top-0 right-0"
+            className="cursor-pointer absolute  right-3"
           >
             <AiOutlineClose />
           </div>
         </div>
-        <div className="absolute top-2 -left-3 transform -translate-y-1/2 w-0 h-0 border-solid border-t-[16px] border-t-white-A700 border-l-[15px] border-l-transparent"></div>
+        <div className="absolute top-2 -left-3 transform -translate-y-1/2 w-0 h-0 border-solid border-t-[16px] border-t-background2 border-l-[15px] border-l-transparent"></div>
 
         {/* Content wrapper with overflow-y-auto */}
         <div className="max-h-[400px] overflow-y-auto">
           {/* body */}
-          <div className="gap-y-3 my-10">
+          <div className=" pt-11">
             {notifications.map((notification, index) => {
               const imageUrl =
                 notification.post?.image?.url || notification.user?.photo?.url;
@@ -70,34 +70,26 @@ const Popup = ({ setIsOpenPopup, position }) => {
               return (
                 <div
                   key={index}
-                  className="flex items-center justify-center gap-x-2 py-2"
+                  className="flex text-secondary_text hover:text-primary_text hover:bg-hover_highlight  items-center gap-x-2 p-2"
                 >
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center ">
                     {imageUrl ? (
                       <img
                         src={imageUrl}
-                        width={70}
-                        height={70}
                         alt="sidebarlogo"
-                        className="rounded-full"
+                        className="rounded-full w-12 h-12 sm:w-20 sm:h-20"
                       />
                     ) : (
                       <Avatar
                         name={notification.user?.name}
-                        size="70"
-                        round={true}
+                        // size="70"
+                        // round={true}
+                        className="rounded-full w-12 h-12 sm:w-20 sm:h-20"
                       />
                     )}
                   </div>
-                  <div className="flex flex-col">
-                    <div className="flex w-full">
-                      <p>{notification.text}</p>
-                    </div>
-                    <p>
-                      {/* {formatDistanceToNow(new Date(notification.createdAt), {
-                        addSuffix: true,
-                      })} */}
-                    </p>
+                  <div className="flex w-[170px] sm:w-[320px]  text-sm sm:text-base flex-col font-medium font-lato ">
+                    <p>{notification.text}</p>
                   </div>
                 </div>
               );

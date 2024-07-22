@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../Nav/Navbar";
 
 const MessageLayout = ({ children }) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {

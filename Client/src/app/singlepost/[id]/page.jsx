@@ -10,7 +10,7 @@ import ReactPlayer from "react-player";
 
 export default function SinglePostPage({ params }) {
   const [post, setPost] = useState({});
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const { id } = params;
   useEffect(() => {
     loadPost();

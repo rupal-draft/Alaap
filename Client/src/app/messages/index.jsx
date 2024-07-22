@@ -321,7 +321,7 @@ const MessagesIndexPage = () => {
     }
   }, [socketMessage]);
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {

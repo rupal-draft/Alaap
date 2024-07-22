@@ -8,7 +8,7 @@ import Posts from "@/components/Postcard/Posts";
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
 
 export default function Home1Page() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     const handleResize = () => {
       if (window.matchMedia("(min-width: 768px)").matches) {
@@ -34,7 +34,7 @@ export default function Home1Page() {
       <Navbar open={open} setOpen={setOpen} />
 
       <div
-        className={`lg:hidden fixed z-50 bottom-0 transition-all duration-700 ${
+        className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
           open ? "left-[6rem] px-2 py-1" : "left-0 p-1"
         }`}
       >

@@ -10,7 +10,7 @@ import Avatar from "react-avatar";
 import Link from "next/link";
 
 export default function MyProfilePage() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
