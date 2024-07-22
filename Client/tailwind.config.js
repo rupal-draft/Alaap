@@ -10,6 +10,7 @@ module.exports = {
     extend: {
       colors: {
         background: "#222831",
+        background2: "#2a3545",
         shadow: "#31363F",
         highlight: "#76ABAE",
         hover_highlight: "#537e80",

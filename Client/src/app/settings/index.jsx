@@ -12,7 +12,7 @@ import api from "@/utils/axios";
 import { setCredentials } from "@/Context/Slices/authSlice";
 
 export default function SettingsPage() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [photo, setPhoto] = useState({});
   const [coverphoto, setCoverPhoto] = useState({});
   const [name, setName] = useState("");
@@ -149,7 +149,7 @@ export default function SettingsPage() {
       <Navbar open={open} setOpen={setOpen} />
 
       <div
-        className={`lg:hidden fixed z-50 bottom-0 transition-all duration-700 ${
+        className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
           open ? "left-[6rem] px-2 py-1" : "left-0 p-1"
         }`}
       >

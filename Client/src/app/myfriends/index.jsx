@@ -20,7 +20,7 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
 
 export default function MyFriendsPage() {
   const [collapsed, setCollapsed] = React.useState(false);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const router = useRouter();
   const [following, setFollowing] = useState([]);
   const [follower, setFollower] = useState([]);
