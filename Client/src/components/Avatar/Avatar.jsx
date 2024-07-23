@@ -1,13 +1,24 @@
 import React from "react";
 
-const Avatar = ({ imageUrl, name, width, height }) => {
+const Avatar = ({ imageUrl, name, width, height, round }) => {
   return (
-    <div className="avatar" style={{ width, height }}>
+    <div
+      className={`avatar w-full ${round ? "rounded-full" : ""}`}
+      style={{ width, height }}
+    >
       {imageUrl ? (
-        <img src={imageUrl} alt={name} className="rounded-full" />
+        <img
+          src={imageUrl}
+          alt={name}
+          className={`w-full h-full object-cover ${
+            round ? "rounded-full" : ""
+          }`}
+        />
       ) : (
         <div
-          className="bg-gray-200 rounded-full flex items-center justify-center"
+          className={`bg-secondary_text text-background w-full h-full ${
+            round ? "rounded-full" : ""
+          } flex items-center justify-center`}
           style={{ width, height }}
         >
           {name[0]}
