@@ -20,6 +20,8 @@ import {
   SendOutlined,
   SyncOutlined,
 } from "@ant-design/icons";
+import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
+
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 import notificationSound from "./../../../public/audio/notification.mp3";
@@ -352,6 +354,24 @@ const MessagesIndexPage = () => {
         socket={socket}
         myId={user?._id}
       />
+
+      {/* <Navbar open={open} setOpen={setOpen} /> */}
+
+      <div
+        className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
+          open ? "left-[6rem] px-2 py-1" : "left-0 p-1"
+        }`}
+      >
+        <h1
+          className="text-2xl bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
+          onClick={() => {
+            setOpen(!open);
+          }}
+        >
+          {open ? <RiMenuUnfold2Line /> : <RiMenuFold2Line />}
+        </h1>
+      </div>
+
       <div className="w-[70px] lg:w-[300px] hidden lg:block">
         <div className="flex flex-col  w-full h-full gap-2 bg-shadow">
           <div className="flex justify-center items-center pt-3">
