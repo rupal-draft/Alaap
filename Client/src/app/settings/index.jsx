@@ -29,6 +29,25 @@ export default function SettingsPage() {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    const handleResize = () => {
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        setOpen(true);
+      } else {
+        setOpen(false);
+      }
+    };
+
+    // Set initial state based on screen size
+    handleResize();
+
+    // Update state on resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
     setIsClient(true);
   }, []);
 
