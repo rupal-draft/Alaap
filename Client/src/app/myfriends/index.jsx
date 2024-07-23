@@ -166,7 +166,7 @@ export default function MyFriendsPage() {
       </div>
 
       {/* <div className="flex justify-between gap-5"> */}
-      <div className="flex flex-col  w-full items-center md:items-start justify-center p-5 md:p-10 gap-5">
+      <div className="flex flex-col  w-full items-center md:items-start justify-center p-5 pt-10 gap-5">
         {/* search button + search results */}
         <div className="flex flex-col w-full items-center md:items-start justify-center gap-5">
           <form
@@ -393,15 +393,15 @@ export default function MyFriendsPage() {
           <h1 className="text-primary_text font-montserrat text-3xl font-bold">
             Whom to follow
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-5 text-primary_text">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 text-primary_text">
             {unfollowing &&
               unfollowing.map((unfollower, index) => (
                 <div
                   key={"myfriends" + index}
                   onClick={() => router.push(`/userprofile/${unfollower._id}`)}
-                  className="flex w-full items-center justify-between rounded-lg bg-shadow p-5  gap-2"
+                  className="flex w-full flex-wrap items-center justify-between rounded-lg bg-shadow p-5  gap-x-2 gap-y-2"
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
                     {unfollower.photo ? (
                       <img
                         src={unfollower.photo.url}
@@ -411,30 +411,29 @@ export default function MyFriendsPage() {
                     ) : (
                       <Avatar
                         name={unfollower.name}
-                        size="45"
+                        size="80"
                         className="
-                        h-full max-h-[45px] 
-                        w-full max-w-[45px] 
+                        h-full max-h-[75px] sm:max-h-[50px] lg:max-h-[80px] 
+                        w-full max-w-[75px] sm:max-w-[50px] lg:max-w-[80px] 
                         
                         
                         
                         rounded-xl object-cover"
                       />
                     )}
-                    <div className="flex flex-col items-start gap-1">
-                      <h1
-                        as="p"
-                        className="text-primary_text font-medium font-lato text-xl break-words text-center"
-                      >
-                        {unfollower && unfollower.name}
-                      </h1>
-                      {unfollower.about && (
-                        <p className="text-secondary_text font-normal font-roboto text-base break-words text-center">
-                          {unfollower.about}
-                        </p>
-                      )}
-                    </div>
                   </div>
+
+                  <div className="flex flex-col items-start gap-1">
+                    <h1 className="text-primary_text font-medium font-lato text-xl break-words text-center">
+                      {unfollower && unfollower.name}
+                    </h1>
+                    {unfollower.about && (
+                      <p className="text-secondary_text font-normal font-roboto text-base break-words text-center">
+                        {unfollower.about}
+                      </p>
+                    )}
+                  </div>
+
                   <Tooltip title="Follow">
                     <Button
                       className="w-[28px]  rounded-lg bg-indigo-400"
