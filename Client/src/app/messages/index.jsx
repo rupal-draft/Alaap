@@ -510,16 +510,16 @@ const MessagesIndexPage = () => {
 
       <div
         className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
-          sidebarOpen ? "left-[25rem] px-2 py-1" : "left-[17rem] p-1"
+          sidebarOpen ? "right-0 px-2 py-1" : "right-0 p-1"
         }`}
       >
         <h1
-          className="text-2xl bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
+          className="text-base bg-highlight text-shadow px-2 py-1 rounded-lg font-semibold transition-transform duration-700"
           onClick={() => {
             setSidebarOpen(!sidebarOpen);
           }}
         >
-          {sidebarOpen ? <RiMenuUnfold2Line /> : <RiMenuFold2Line />}
+          {sidebarOpen ? "Close Chat Slider" : "Open Chat Slider"}
         </h1>
       </div>
 
