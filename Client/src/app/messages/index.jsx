@@ -66,13 +66,16 @@ const MessagesIndexPage = () => {
   const [notificationPlay] = useSound(notificationSound);
   const [sendingPlay] = useSound(sendingSound);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
+  // Scroll to bottom when messages change
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const handleSearchUser = async () => {
     const URL = `${process.env.NEXT_PUBLIC_SERVER_URL}/search-user`;
@@ -501,7 +504,8 @@ const MessagesIndexPage = () => {
           </Link>
 
           {/* show messages */}
-          <div className="flex flex-col w-full h-full justify-end overflow-y-auto p-2 ">
+
+          <div className="flex-grow overflow-y-auto p-2">
             {(!messages || messages.length === 0) && !messageLoading && (
               <div className="flex flex-col items-center justify-center mt-10">
                 {currentFriend.photo?.url ? (
@@ -531,61 +535,59 @@ const MessagesIndexPage = () => {
             )}
             {messages &&
               messages.length > 0 &&
-              messages.map((message, index) => {
-                return (
-                  <React.Fragment key={index}>
-                    <div
-                      className={`flex mb-2 ${
-                        message.senderId === user?._id
-                          ? "justify-end"
-                          : "justify-start"
-                      }`}
-                    >
-                      {message.senderId !== user?._id && (
+              messages.map((message, index) => (
+                <React.Fragment key={index}>
+                  <div
+                    className={`flex mb-2 ${
+                      message.senderId === user?._id
+                        ? "justify-end"
+                        : "justify-start"
+                    }`}
+                  >
+                    {message.senderId !== user?._id && (
+                      <img
+                        src={currentFriend.photo?.url}
+                        alt="avatar"
+                        className="w-8 h-8 rounded-full mr-2"
+                      />
+                    )}
+                    {message.message?.image ? (
+                      <div className="p-2 rounded max-w-xs">
                         <img
-                          src={currentFriend.photo?.url}
-                          alt="avatar"
-                          className="w-8 h-8 rounded-full mr-2"
+                          src={message.message.image}
+                          alt="message-image"
+                          className="w-full rounded"
                         />
-                      )}
-                      {message.message?.image ? (
-                        <div className="p-2 rounded max-w-xs">
-                          <img
-                            src={message.message.image}
-                            alt="message-image"
-                            className="w-full rounded"
-                          />
-                        </div>
-                      ) : (
-                        <div
-                          className={`p-2 rounded break-words max-w-xs ${
-                            message.senderId === user?._id
-                              ? "bg-blue-500 text-white"
-                              : "bg-gray-500 text-white"
-                          }`}
-                        >
-                          {message.message?.text}
-                        </div>
-                      )}
-                      {message.senderId === user?._id && (
-                        <img
-                          src={user?.photo?.url}
-                          alt="avatar"
-                          className="w-8 h-8 rounded-full ml-2"
-                        />
-                      )}
-                    </div>
-                    {index === messages.length - 1 &&
-                      message.senderId === user?._id && (
-                        <div className="text-xs text-gray-500 text-right pr-10">
-                          {message.status === "seen" && "Seen"}
-                          {message.status === "delivered" && "Delivered"}
-                          {message.status === "unseen" && "Sent"}
-                        </div>
-                      )}
-                  </React.Fragment>
-                );
-              })}
+                      </div>
+                    ) : (
+                      <div
+                        className={`p-2 rounded break-words max-w-xs ${
+                          message.senderId === user?._id
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-500 text-white"
+                        }`}
+                      >
+                        {message.message?.text}
+                      </div>
+                    )}
+                    {message.senderId === user?._id && (
+                      <img
+                        src={user?.photo?.url}
+                        alt="avatar"
+                        className="w-8 h-8 rounded-full ml-2"
+                      />
+                    )}
+                  </div>
+                  {index === messages.length - 1 &&
+                    message.senderId === user?._id && (
+                      <div className="text-xs text-gray-500 text-right pr-10">
+                        {message.status === "seen" && "Seen"}
+                        {message.status === "delivered" && "Delivered"}
+                        {message.status === "unseen" && "Sent"}
+                      </div>
+                    )}
+                </React.Fragment>
+              ))}
             {typingMessage &&
               typingMessage.msg &&
               typingMessage.senderId === currentFriend.id && (
