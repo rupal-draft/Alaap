@@ -1,5 +1,6 @@
 "use client";
 import Logo from "../../../public/images/sociofyLogoTemp.png";
+import MessageImg from "../../../public/images/sociofyMessage1.png";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/Nav/Navbar";
@@ -338,42 +339,48 @@ const MessagesIndexPage = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  // console.log(displayUsers);
-  // console.log(activeUsers);
-  // console.log(messages);
+
   return (
     <div className="flex h-screen max-h-screen">
       <Navbar
         open={open}
         setOpen={setOpen}
-        className="w-[70px] lg:w-[240px] px-4 py-4"
+        // className="w-[70px] lg:w-[240px] px-4 py-4"
         socket={socket}
         myId={user?._id}
       />
-      <div className="w-[70px] lg:w-[240px] hidden lg:block">
-        <div className="flex flex-col items-center justify-center w-full h-full bg-gray-800">
-          <div className="h-16 flex items-center">
-            <h2 className="text-xl font-bold p-4 text-white">Your Chats</h2>
+      <div className="w-[70px] lg:w-[300px] hidden lg:block">
+        <div className="flex flex-col  w-full h-full gap-2 bg-shadow">
+          <div className="flex justify-center items-center pt-3">
+            <h2 className="text-3xl font-bold text-primary_text font-montserrat">
+              Your Chats
+            </h2>
           </div>
 
           {/* Search */}
+
           <div className="flex items-center gap-2 px-2 w-full">
-            <div className="relative w-full">
+            <div className="relative w-full flex items-center gap-x-5">
               <input
                 type="text"
                 placeholder="Search in social…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full py-2 pl-10 pr-4 bg-[#cdcdcd] rounded-full text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
+                className="w-full text-primary_text bg-shadow rounded-lg focus:outline-none focus:border focus:border-highlight 
+            
+                   text-base sm:text-base 
+                   pl-10 sm:pl-10  
+                   py-1 sm:py-2
+                   sm:px-4"
               />
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer" />
+              <FaSearch className="absolute left-3 text-primary_text w-4 h-4" />
             </div>
           </div>
 
-          <div className="flex-1 overflow-x-hidden overflow-y-auto scrollbar">
+          <div className="flex flex-col overflow-x-hidden overflow-y-auto scrollbar">
             {loading && (
-              <div className="mt-12">
-                <SyncOutlined spin className="py-1" />
+              <div className="flex items-center justify-center">
+                <SyncOutlined spin className="py-3" />
               </div>
             )}
 
@@ -386,14 +393,15 @@ const MessagesIndexPage = () => {
                   <div
                     onClick={() => setCurrentFriend(userInfo)}
                     key={userInfo._id}
-                    className="flex items-center gap-2 py-3 px-2 border border-transparent hover:border-primary rounded hover:bg-red-500 cursor-pointer w-full relative"
+                    className="flex items-center justify-start gap-2 py-3 px-2 border border-transparent hover:border-primary rounded hover:bg-hover_highlight  cursor-pointer relative"
                   >
                     <div className="relative">
                       <Avatar1
                         imageUrl={userInfo?.photo?.url}
                         name={userInfo.name}
-                        width={40}
-                        height={40}
+                        width={50}
+                        height={50}
+                        round={true}
                       />
 
                       {activeUsers.some(
@@ -402,20 +410,20 @@ const MessagesIndexPage = () => {
                         <div className="absolute top-0 right-0 -mt-1 -mr-1 bg-green-500 rounded-full w-4 h-4 border-2 border-white"></div>
                       )}
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-white font-semibold text-base break-words">
+                    <div className="flex flex-col items-start  ">
+                      <h3 className="text-primary_text font-semibold text-base break-words">
                         {userInfo?.name}
                       </h3>
 
-                      <div>
+                      <div className="text-secondary_text ">
                         {friend.msgInfo && friend.msgInfo?.message?.text ? (
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center ">
                             <span
                               className={
                                 friend.msgInfo?.senderId !== user?._id &&
                                 friend.msgInfo?.status !== "seen"
-                                  ? "text-black font-bold"
-                                  : "font-normal"
+                                  ? "font-bold"
+                                  : "font-normal "
                               }
                             >
                               {friend.msgInfo?.message?.text?.slice(0, 10) ||
@@ -460,8 +468,9 @@ const MessagesIndexPage = () => {
           </div>
         </div>
       </div>
+
       {currentFriend ? (
-        <div className="flex flex-col h-full w-full">
+        <div className="flex flex-col justify-between min-h-screen  flex-1 gap-3 px-10">
           {/* individual message box header */}
           <Link
             href="/"
@@ -492,7 +501,7 @@ const MessagesIndexPage = () => {
           </Link>
 
           {/* show messages */}
-          <div className="flex-1 overflow-y-auto p-2 flex flex-col">
+          <div className="flex flex-col w-full h-full justify-end overflow-y-auto p-2 ">
             {(!messages || messages.length === 0) && !messageLoading && (
               <div className="flex flex-col items-center justify-center mt-10">
                 {currentFriend.photo?.url ? (
@@ -586,7 +595,7 @@ const MessagesIndexPage = () => {
                     alt="avatar"
                     className="w-8 h-8 rounded-full mr-2"
                   />
-                  <div className="p-2 rounded break-words max-w-xs bg-gray-500 text-black-500">
+                  <div className="p-2 rounded break-words max-w-xs bg-gray-500 text-primary_text">
                     Typing...
                   </div>
                 </div>
@@ -685,13 +694,24 @@ const MessagesIndexPage = () => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center h-full flex-1">
-          <h1 className="text-4xl text-white-A700">
-            Welcome to the Messages Index Page
+        <div className="flex flex-col items-center justify-center  flex-1 gap-3 px-10">
+          <div className="w-[60px] lg:w-[70px]">
+            <Image src={Logo} alt="sociofy" className="rounded-full" />
+          </div>
+
+          <h1 className="text-lg text-primary_text font-lato">
+            <b>
+              {" "}
+              Reconnect with friends, share laughter, and create unforgettable
+              memories on <em>Sociofy</em>.
+            </b>{" "}
+            Dive into endless conversations, explore shared interests, and
+            strengthen bonds with those who matter most. Experience the joy of
+            effortless connection.{" "}
           </h1>
 
-          <div className="w-[60px] py-5 lg:w-[70px]">
-            <Image src={Logo} alt="sociofy" className="rounded-full" />
+          <div className=" w-fit h-fit">
+            <Image src={MessageImg} alt="talkToPeople" className="" />
           </div>
         </div>
       )}
