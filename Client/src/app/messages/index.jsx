@@ -67,6 +67,7 @@ const MessagesIndexPage = () => {
   const [activeUsers, setActiveUsers] = useState([]);
   const [notificationPlay] = useSound(notificationSound);
   const [sendingPlay] = useSound(sendingSound);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -333,8 +334,10 @@ const MessagesIndexPage = () => {
     const handleResize = () => {
       if (window.matchMedia("(min-width: 768px)").matches) {
         setOpen(true);
+        setSidebarOpen(true);
       } else {
         setOpen(false);
+        setSidebarOpen(false);
       }
     };
 
@@ -347,15 +350,7 @@ const MessagesIndexPage = () => {
 
   return (
     <div className="flex h-screen max-h-screen">
-      <Navbar
-        open={open}
-        setOpen={setOpen}
-        // className="w-[70px] lg:w-[240px] px-4 py-4"
-        socket={socket}
-        myId={user?._id}
-      />
-
-      {/* <Navbar open={open} setOpen={setOpen} /> */}
+      <Navbar open={open} setOpen={setOpen} socket={socket} myId={user?._id} />
 
       <div
         className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
@@ -371,9 +366,10 @@ const MessagesIndexPage = () => {
           {open ? <RiMenuUnfold2Line /> : <RiMenuFold2Line />}
         </h1>
       </div>
+      {/* Messaging Sidebar */}
 
-      <div className="w-[70px] lg:w-[300px] hidden lg:block">
-        <div className="flex flex-col  w-full h-full gap-2 bg-shadow">
+      <div className="w-[70px] md:w-[220px] lg:w-[300px] hidden md:block">
+        <div className="flex flex-col w-full h-full gap-2 bg-shadow">
           <div className="flex justify-center items-center pt-3">
             <h2 className="text-3xl font-bold text-primary_text font-montserrat">
               Your Chats
@@ -381,7 +377,6 @@ const MessagesIndexPage = () => {
           </div>
 
           {/* Search */}
-
           <div className="flex items-center gap-2 px-2 w-full">
             <div className="relative w-full flex items-center gap-x-5">
               <input
@@ -390,11 +385,10 @@ const MessagesIndexPage = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full text-primary_text bg-shadow rounded-lg focus:outline-none focus:border focus:border-highlight 
-            
-                   text-base sm:text-base 
-                   pl-10 sm:pl-10  
-                   py-1 sm:py-2
-                   sm:px-4"
+                    text-base sm:text-base 
+                    pl-10 sm:pl-10  
+                    py-1 sm:py-2
+                    sm:px-4"
               />
               <FaSearch className="absolute left-3 text-primary_text w-4 h-4" />
             </div>
@@ -402,7 +396,7 @@ const MessagesIndexPage = () => {
 
           <div className="flex flex-col overflow-x-hidden overflow-y-auto scrollbar">
             {loading && (
-              <div className="flex items-center justify-center">
+              <div className="flex text-primary_text items-center justify-center">
                 <SyncOutlined spin className="py-3" />
               </div>
             )}
@@ -416,7 +410,7 @@ const MessagesIndexPage = () => {
                   <div
                     onClick={() => setCurrentFriend(userInfo)}
                     key={userInfo._id}
-                    className="flex items-center justify-start gap-2 py-3 px-2 border border-transparent hover:border-primary rounded hover:bg-hover_highlight  cursor-pointer relative"
+                    className="flex items-center justify-start gap-2 py-3 px-2 border border-transparent hover:border-primary rounded hover:bg-hover_highlight cursor-pointer relative"
                   >
                     <div className="relative">
                       <Avatar1
@@ -430,23 +424,23 @@ const MessagesIndexPage = () => {
                       {activeUsers.some(
                         (activeUser) => activeUser.userId === userInfo.id
                       ) && (
-                        <div className="absolute top-0 right-0 -mt-1 -mr-1 bg-green-500 rounded-full w-4 h-4 border-2 border-white"></div>
+                        <div className="absolute top-0 right-0 -mt-1 -mr-1 bg-green-500 rounded-full w-4 h-4 border-2 border-primary_text"></div>
                       )}
                     </div>
-                    <div className="flex flex-col items-start  ">
+                    <div className="flex flex-col items-start">
                       <h3 className="text-primary_text font-semibold text-base break-words">
                         {userInfo?.name}
                       </h3>
 
-                      <div className="text-secondary_text ">
+                      <div className="text-secondary_text">
                         {friend.msgInfo && friend.msgInfo?.message?.text ? (
-                          <div className="flex justify-between items-center ">
+                          <div className="flex justify-between items-center">
                             <span
                               className={
                                 friend.msgInfo?.senderId !== user?._id &&
                                 friend.msgInfo?.status !== "seen"
                                   ? "font-bold"
-                                  : "font-normal "
+                                  : "font-normal"
                               }
                             >
                               {friend.msgInfo?.message?.text?.slice(0, 10) ||
@@ -485,7 +479,7 @@ const MessagesIndexPage = () => {
               })
             ) : (
               <div className="mt-12">
-                <p className="text-white text-center">No users found</p>
+                <p className="text-primary_text text-center">No users found</p>
               </div>
             )}
           </div>
@@ -493,7 +487,7 @@ const MessagesIndexPage = () => {
       </div>
 
       {currentFriend ? (
-        <div className="flex flex-col justify-between min-h-screen  flex-1 gap-3 px-10">
+        <div className="flex flex-col justify-between min-h-screen  flex-1 gap-3 px-5 lg:px-10">
           {/* individual message box header */}
           <Link
             href="/"
@@ -506,14 +500,14 @@ const MessagesIndexPage = () => {
               height={40}
             />
             <div className="flex-1">
-              <h3 className="text-white-A700 font-semibold text-base break-words">
+              <h3 className="text-primary_text-A700 font-semibold text-base break-words">
                 {currentFriend?.name}
               </h3>
               <span
                 className={`text-xs rounded px-2 ${
                   activeUsers.some((user) => user?.userId === currentFriend.id)
-                    ? "bg-green-500 text-white"
-                    : "bg-red-500 text-white"
+                    ? "bg-green-500 text-primary_text"
+                    : "bg-red-500 text-primary_text"
                 }`}
               >
                 {activeUsers.some((user) => user?.userId === currentFriend.id)
@@ -543,13 +537,17 @@ const MessagesIndexPage = () => {
                   />
                 )}
                 <div className="text-center">
-                  <p className="text-lg font-semibold">{currentFriend.name}</p>
-                  <p className="text-sm text-gray-500">and you are connected</p>
+                  <p className="text-lg font-semibold text-primary_text">
+                    {currentFriend.name}
+                  </p>
+                  <p className="text-sm text-secbg-hover_highlight text-secondary_text">
+                    and you are connected
+                  </p>
                 </div>
               </div>
             )}
             {messageLoading && (
-              <div className="flex justify-center items-center mb-4">
+              <div className="flex text-primary_text justify-center items-center mb-4">
                 <SyncOutlined spin style={{ fontSize: "24px" }} />
               </div>
             )}
@@ -583,8 +581,8 @@ const MessagesIndexPage = () => {
                       <div
                         className={`p-2 rounded break-words max-w-xs ${
                           message.senderId === user?._id
-                            ? "bg-blue-500 text-white"
-                            : "bg-gray-500 text-white"
+                            ? "bg-highlight text-primary_text"
+                            : "bg-hover_highlight text-primary_text"
                         }`}
                       >
                         {message.message?.text}
@@ -600,7 +598,7 @@ const MessagesIndexPage = () => {
                   </div>
                   {index === messages.length - 1 &&
                     message.senderId === user?._id && (
-                      <div className="text-xs text-gray-500 text-right pr-10">
+                      <div className="text-xs text-secbg-hover_highlight text-right pr-10">
                         {message.status === "seen" && "Seen"}
                         {message.status === "delivered" && "Delivered"}
                         {message.status === "unseen" && "Sent"}
@@ -617,7 +615,7 @@ const MessagesIndexPage = () => {
                     alt="avatar"
                     className="w-8 h-8 rounded-full mr-2"
                   />
-                  <div className="p-2 rounded break-words max-w-xs bg-gray-500 text-primary_text">
+                  <div className="p-2 rounded break-words max-w-xs bg-hover_highlight text-primary_text">
                     Typing...
                   </div>
                 </div>
@@ -665,10 +663,10 @@ const MessagesIndexPage = () => {
                 value={newMessage}
                 onChange={inputHandle}
                 disabled={messageLoading}
-                className="w-full py-2 pl-10 pr-3 bg-[#cdcdcd] rounded-xl text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
+                className="w-full py-2 pl-10 pr-3 bg-[#cdcdcd] rounded-xl text-gray-700 focus:outline-none focus:bg-primary_text focus:border-secbg-hover_highlight"
               />
               <BsEmojiSmile
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secbg-hover_highlight"
                 onClick={() => setShowEmoji(!showEmoji)}
               />
               {showEmoji && (
@@ -699,16 +697,18 @@ const MessagesIndexPage = () => {
               }
               className={`py-2 px-4 rounded-xl focus:outline-none ${
                 image || newMessage.trim()
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  ? "bg-highlight text-primary_text"
+                  : "bg-gray-300 text-secbg-hover_highlight cursor-not-allowed"
               }`}
             >
               {imageMessageLoading ? (
-                <SyncOutlined spin className="text-white" />
+                <SyncOutlined spin className="text-primary_text" />
               ) : (
                 <SendOutlined
                   className={`${
-                    image || newMessage.trim() ? "text-white" : "text-gray-500"
+                    image || newMessage.trim()
+                      ? "text-primary_text"
+                      : "text-secbg-hover_highlight"
                   }`}
                 />
               )}
