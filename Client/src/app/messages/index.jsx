@@ -67,7 +67,6 @@ const MessagesIndexPage = () => {
   const [activeUsers, setActiveUsers] = useState([]);
   const [notificationPlay] = useSound(notificationSound);
   const [sendingPlay] = useSound(sendingSound);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -334,9 +333,25 @@ const MessagesIndexPage = () => {
     const handleResize = () => {
       if (window.matchMedia("(min-width: 768px)").matches) {
         setOpen(true);
-        setSidebarOpen(true);
       } else {
         setOpen(false);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        setSidebarOpen(true);
+      } else {
         setSidebarOpen(false);
       }
     };
@@ -368,7 +383,14 @@ const MessagesIndexPage = () => {
       </div>
       {/* Messaging Sidebar */}
 
-      <div className="w-[70px] md:w-[220px] lg:w-[300px] hidden md:block">
+      {/* w-[70px] md:w-[220px] lg:w-[300px]  */}
+      <div
+        className={` 
+      
+          fixed z-50 lg:!sticky top-0 h-full lg:h-screen self-stretch overflow-auto transition-width duration-700 ${
+            sidebarOpen ? "w-[220px] lg:w-[300px]" : "w-[0px]"
+          }`}
+      >
         <div className="flex flex-col w-full h-full gap-2 bg-shadow">
           <div className="flex justify-center items-center pt-3">
             <h2 className="text-3xl font-bold text-primary_text font-montserrat">
@@ -484,6 +506,21 @@ const MessagesIndexPage = () => {
             )}
           </div>
         </div>
+      </div>
+
+      <div
+        className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
+          sidebarOpen ? "left-[25rem] px-2 py-1" : "left-[17rem] p-1"
+        }`}
+      >
+        <h1
+          className="text-2xl bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
+          onClick={() => {
+            setSidebarOpen(!sidebarOpen);
+          }}
+        >
+          {sidebarOpen ? <RiMenuUnfold2Line /> : <RiMenuFold2Line />}
+        </h1>
       </div>
 
       {currentFriend ? (
