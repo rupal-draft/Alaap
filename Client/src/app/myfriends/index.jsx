@@ -389,6 +389,7 @@ export default function MyFriendsPage() {
           </div>
         </div>
 
+        {/* Whomto follow */}
         <div className="flex flex-col w-full items-center md:items-start justify-center gap-5">
           <h1 className="text-primary_text font-montserrat text-3xl font-bold">
             Whom to follow
