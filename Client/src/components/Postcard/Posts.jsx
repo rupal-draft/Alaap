@@ -537,16 +537,14 @@ const Posts = () => {
                   {stories.map((story, index) => (
                     <div
                       key={index}
-                      className="flex cursor-pointer flex-col items-center justify-between gap-y-1 w-[80px]"
-                      onClick={togglePopup}
+                      className="flex  flex-col items-center justify-between gap-y-1 w-[80px]"
                     >
-                      <div className="flex items-center justify-center w-full relative">
+                      <div className="flex items-center justify-center w-full relative ">
                         <img
                           src={story.image?.url}
-                          width={65}
-                          height={65}
                           alt="sidebarlogo"
-                          className="w-auto h-auto border-2 border-[#00ffff] rounded-full relative"
+                          onClick={togglePopup}
+                          className="w-20 h-20 bg-contain bg-no-repeat border-2 border-[#00ffff] rounded-full relative cursor-pointer"
                         />
                         {story.postedBy?._id === user?._id && (
                           <DeleteOutlined
@@ -1056,12 +1054,12 @@ const PopupStories = ({ onClose, content, StoryLike, StoryUnlike }) => {
                     xl:w-[550px] xl:h-[550px]
                     2xl:w-[650px] 2xl:h-[640px]"
                   >
-                    <div className="flex flex-col items-center justify-between gap-y-3 w-full">
-                      <div className="flex items-center justify-center w-full">
+                    <div className="flex flex-col p-2 items-center justify-center gap-y-3 w-full h-full">
+                      <div className="flex items-center justify-center w-full h-full max-w-[90%] max-h-[90%]">
                         <img
                           src={story.image?.url}
                           alt="User"
-                          className="w-fit h-fit  rounded-xl"
+                          className="w-full h-full bg-cover bg-no-repeat bg-center  rounded-xl"
                         />
                       </div>
                       <div className="flex items-center justify-center w-full">
