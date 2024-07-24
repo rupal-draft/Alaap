@@ -37,6 +37,7 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
 });
 
+// posts
 const Posts = () => {
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
@@ -332,9 +333,9 @@ const Posts = () => {
 
   return (
     <div className="grid gap-[30px] w-full">
-      <div className="flex flex-col xl:flex-row gap-[30px]">
+      <div className="flex flex-col xl:flex-row flex-grow flex-shrink gap-[30px]">
         {/* Create Post Section */}
-        <div className="order-2 xl:order-1 flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
+        <div className=" flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
           <form className="flex gap-2.5 w-full" onSubmit={handleSubmit}>
             <div className="flex items-start">
               {isClient && user?.photo?.url ? (
@@ -402,86 +403,121 @@ const Posts = () => {
                 >
                   Upload Video
                 </Button>
-                <button
+                {/* <button
                   type="submit"
-                  className="flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] px-2"
+                  className="mt-2 flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-xl px-5"
                 >
                   Post
-                </button>
+                </button> */}
+
+                {/* Preview Section */}
+
+                {isImageSelected && (
+                  <div className="fixed inset-0 flex items-center justify-center  bg-black bg-opacity-50 z-50">
+                    <div
+                      className="absolute top-44 flex flex-col items-center justify-center  bg-black bg-opacity-30 overflow-visible"
+                      style={{ animation: "dropTop .3s linear" }}
+                    >
+                      <img
+                        src={image}
+                        alt="preview image"
+                        className="rounded-lg object-cover 
+                  
+                        w-[20rem] lg:w-[25rem] xl:w-[30rem]
+                        h-[20rem] lg:h-[25rem] xl:h-[30rem]"
+                      />
+                      <AiOutlineClose
+                        className="absolute top-2 right-2 font-bold text-2xl text-primary_text cursor-pointer"
+                        onClick={clearImage}
+                      />
+                      <button
+                        type="submit"
+                        className="mt-2 flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-xl px-5"
+                      >
+                        Post
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {isVideoSelected && video && (
+                  <div className="fixed inset-0 flex items-center justify-center  bg-black bg-opacity-50 z-50">
+                    <div
+                      className="absolute top-44 flex flex-col items-center justify-center  bg-black bg-opacity-30 overflow-visible"
+                      style={{ animation: "dropTop .3s linear" }}
+                    >
+                      <ReactPlayer
+                        url={video}
+                        width="70%"
+                        height="70%"
+                        className="rounded-lg"
+                        controls
+                      />
+                      <AiOutlineClose
+                        className="absolute top-0 right-2 font-bold text-2xl text-primary_text cursor-pointer"
+                        onClick={clearVideo}
+                      />
+                      <button
+                        type="submit"
+                        className="mt-2 flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-xl px-5"
+                      >
+                        Post
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </form>
-
-          {/* Preview Section */}
-          {isImageSelected && image && (
-            <div className="relative mt-3">
-              <img
-                src={image}
-                width={290}
-                height={150}
-                alt="preview image"
-                className="h-[150px] w-full rounded-lg object-cover md:h-auto"
-              />
-              <AiOutlineClose
-                className="absolute top-2 right-2 text-xl text-red50 cursor-pointer"
-                onClick={clearImage}
-              />
-            </div>
-          )}
-
-          {isVideoSelected && video && (
-            <div className="relative mt-3">
-              <ReactPlayer
-                url={video}
-                width="100%"
-                height="100%"
-                className="rounded-lg"
-                controls
-              />
-              <CloseCircleOutlined
-                className="absolute top-2 right-2 text-xl text-red50 cursor-pointer"
-                onClick={clearVideo}
-              />
-            </div>
-          )}
         </div>
 
+        {/* {isVideoSelected && video && (
+          <div className="relative mt-3">
+            <ReactPlayer
+              url={video}
+              width="100%"
+              height="100%"
+              className="rounded-lg"
+              controls
+            />
+            <CloseCircleOutlined
+              className="absolute top-2 right-2 text-xl text-red50 cursor-pointer"
+              onClick={clearVideo}
+            />
+          </div>
+        )} */}
+
         {/* Stories Section */}
-        <div className="relative order-1 xl:order-2 flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
+        <div className="relative  flex flex-col items-center justify-center w-full p-5 rounded-[12px] bg-shadow ">
           <button
             onClick={scrollLeft}
-            className="absolute top-12 z-10 px-1 left-0 rounded-full text-3xl  text-highlight hover:text-hover_highlight hidden lg:flex"
+            className="absolute  z-10 px-1 left-0 rounded-full text-3xl  text-highlight hover:text-hover_highlight hidden lg:flex"
           >
             <FaChevronCircleLeft />
           </button>
 
           <button
             onClick={scrollRight}
-            className="rounded-full text-3xl font-bold  text-highlight hover:text-hover_highlight hidden absolute top-12 z-10 px-1 right-0 lg:flex"
+            className="rounded-full text-3xl font-bold  text-highlight hover:text-hover_highlight hidden absolute  z-10 px-1 right-0 lg:flex"
           >
             <FaChevronCircleRight />
           </button>
           <div className=" flex flex-col items-center justify-between w-full  bg-shadow ">
             <div
               className="relative flex items-center justify-center gap-x-3 overflow-hidden
-            w-[240px]
-            min-[360px]:w-[300px]
-            sm:w-[570px]
-            md:w-[700px]
-            lg:w-[870px] 
-            xl:w-[520px]
-            2xl:w-[610px] 
-          "
+              w-[240px]
+              min-[360px]:w-[300px]
+              sm:w-[570px]
+              md:w-[700px]
+              lg:w-[870px] 
+              xl:w-[520px]
+              2xl:w-[610px] "
             >
-              <div
-                ref={sliderRef}
-                className="flex overflow-x-auto gap-[2rem] cursor-pointer"
-              >
+              <div ref={sliderRef} className="flex  gap-x-3 ">
                 {showPlusSign && (
-                  <div className="flex-shrink-0 flex items-center justify-center w-[80px] h-[80px] bg-gray-200 border-2 border-gray-300 rounded-full cursor-pointer">
+                  <div className="flex-shrink-0 flex items-center justify-center w-[80px] h-[80px] bg-hover_highlight hover:bg-highlight border-2 border-gray-300 rounded-full cursor-pointer">
                     <label
                       htmlFor="fileInput"
-                      className="flex items-center justify-center w-full h-full"
+                      className="flex items-center cursor-pointer justify-center text-primary_text w-full h-full"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <input
@@ -497,24 +533,22 @@ const Posts = () => {
                     </label>
                   </div>
                 )}
-                <div className="flex-shrink-0 flex gap-x-2">
+                <div className=" flex gap-x-2">
                   {stories.map((story, index) => (
                     <div
                       key={index}
-                      className="flex flex-col items-center justify-between gap-y-1 w-[80px]"
-                      onClick={togglePopup}
+                      className="flex  flex-col items-center justify-between gap-y-1 w-[80px]"
                     >
-                      <div className="flex items-center justify-center w-full relative">
+                      <div className="flex items-center justify-center w-full relative ">
                         <img
                           src={story.image?.url}
-                          width={65}
-                          height={65}
                           alt="sidebarlogo"
-                          className="w-full h-auto border-2 border-[#00ffff] rounded-full relative"
+                          onClick={togglePopup}
+                          className="w-20 h-20 bg-contain bg-no-repeat border-2 border-[#00ffff] rounded-full relative cursor-pointer"
                         />
                         {story.postedBy?._id === user?._id && (
                           <DeleteOutlined
-                            className="absolute top-0 left-0 cursor-pointer text-red-500"
+                            className="absolute bottom-0 left-0 cursor-pointer text-red-500 duration-500   transition-transform hover:scale-125"
                             onClick={() => handleDeleteStory(story._id)}
                           />
                         )}
@@ -652,19 +686,16 @@ export const Post = ({
             />
           )}
           <div className="flex flex-col items-start gap-[2px]">
-            <Heading
-              as="h3"
-              className="!text-primary_text font-serif text-[17px] sm:text-[1.6rem]"
-            >
+            <h1 className="!text-primary_text font-serif font-bold text-[17px] sm:text-[1.6rem]">
               {post.postedBy?.name}
-            </Heading>
-            <Text
+            </h1>
+            <p
               size="s"
               as="p"
               className="!text-secondary_text text-[10px] md:text-sm font-semibold"
             >
               {formattedDate}
-            </Text>
+            </p>
           </div>
         </div>
         <DeleteOutlined
@@ -895,7 +926,7 @@ const Popup = ({
             "
             >
               {/* who posted */}
-              <div className="flex items-center gap-2.5 bg-background fixed">
+              <div className="flex items-center gap-2.5 bg-background ">
                 {post.postedBy?.photo ? (
                   <img
                     src={post.postedBy?.photo.url}
@@ -914,19 +945,16 @@ const Popup = ({
                     className="border"
                   />
                 )}
-                <div className="flex flex-col items-start gap-[2px]">
-                  <Heading
-                    as="h3"
-                    className="!text-primary_text font-serif text-[17px] sm:text-[1.6rem]"
-                  >
+                <div className="flex flex-wrap flex-col items-start gap-[2px]">
+                  <h1 className="!text-primary_text font-serif font-bold text-[20px] sm:text-[1.6rem]">
                     {post.postedBy?.name}
-                  </Heading>
+                  </h1>
                   <p className="!text-secondary_text text-[10px] lg:text-xs xl:text-sm font-semibold">
                     {formattedDate}
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col w-full gap-y-2 mt-[4.5rem] h-[calc(100%-4.5rem)] overflow-y-auto">
+              <div className="flex flex-col w-full gap-y-2 h-[calc(100%-4.5rem)] overflow-y-auto">
                 {/* description */}
                 <div className="flex w-full">
                   <p className="!text-primary_text text-sm">
@@ -1026,18 +1054,16 @@ const PopupStories = ({ onClose, content, StoryLike, StoryUnlike }) => {
                     xl:w-[550px] xl:h-[550px]
                     2xl:w-[650px] 2xl:h-[640px]"
                   >
-                    <div className="flex flex-col items-center justify-between gap-y-1 w-[80px]">
-                      <div className="flex items-center justify-center w-full">
+                    <div className="flex flex-col p-2 items-center justify-center gap-y-3 w-full h-full">
+                      <div className="flex items-center justify-center w-full h-full max-w-[90%] max-h-[90%]">
                         <img
                           src={story.image?.url}
-                          width={65}
-                          height={65}
                           alt="User"
-                          className="w-full h-auto border-2 border-[#00ffff] rounded-full"
+                          className="w-full h-full bg-cover bg-no-repeat bg-center  rounded-xl"
                         />
                       </div>
                       <div className="flex items-center justify-center w-full">
-                        <p className="text-secondary_text text-sm max-w-[80px] overflow-hidden whitespace-nowrap overflow-ellipsis">
+                        <p className="text-secondary_text text-lg font-semibold max-w-full ">
                           {story.postedBy?.name}
                         </p>
                       </div>

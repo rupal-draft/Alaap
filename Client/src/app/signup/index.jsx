@@ -244,7 +244,7 @@ export default function SignupPage() {
                 <input
                   type="text"
                   value={name}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                   id="name"
                   className="w-full text-lg px-4 py-2 border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-highlight text-primary_text"
                   placeholder="Enter your name"

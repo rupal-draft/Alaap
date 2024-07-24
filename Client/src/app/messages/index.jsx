@@ -387,7 +387,7 @@ const MessagesIndexPage = () => {
       <div
         className={` 
       
-          fixed z-50 lg:!sticky top-0 h-full lg:h-screen self-stretch overflow-auto transition-width duration-700 ${
+          fixed lg:z-30 z-40 lg:!sticky top-0 h-full lg:h-screen self-stretch overflow-auto transition-width duration-700 ${
             sidebarOpen ? "w-[220px] lg:w-[300px]" : "w-[0px]"
           }`}
       >
