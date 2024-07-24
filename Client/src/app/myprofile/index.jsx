@@ -74,7 +74,7 @@ export default function MyProfilePage() {
 
       <div
         className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
-          open ? "left-[6rem] px-2 py-1" : "left-0 p-1"
+          open ? "left-[5rem] px-2 py-1" : "left-0 px-2 py-1"
         }`}
       >
         <h1
