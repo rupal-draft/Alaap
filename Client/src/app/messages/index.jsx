@@ -11,7 +11,7 @@ import api from "@/utils/axios";
 import Avatar1 from "@/components/Avatar/Avatar";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { BsEmojiSmile } from "react-icons/bs";
+import { BsEmojiSmileFill, BsFileEarmarkArrowUpFill } from "react-icons/bs";
 import {
   CheckCircleFilled,
   CheckCircleOutlined,
@@ -21,6 +21,7 @@ import {
   SyncOutlined,
 } from "@ant-design/icons";
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
+import { PiChatCircleFill, PiChatCircleSlashFill } from "react-icons/pi";
 
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
@@ -369,7 +370,7 @@ const MessagesIndexPage = () => {
 
       <div
         className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
-          open ? "left-[6rem] px-2 py-1" : "left-0 p-1"
+          open ? "left-[5rem] px-2 py-1" : "left-0 px-2 py-1"
         }`}
       >
         <h1
@@ -383,7 +384,6 @@ const MessagesIndexPage = () => {
       </div>
       {/* Messaging Sidebar */}
 
-      {/* w-[70px] md:w-[220px] lg:w-[300px]  */}
       <div
         className={` 
       
@@ -510,21 +510,21 @@ const MessagesIndexPage = () => {
 
       <div
         className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
-          sidebarOpen ? "right-0 px-2 py-1" : "right-0 p-1"
+          sidebarOpen ? "right-0 px-2 py-1" : "right-0 px-2 py-1"
         }`}
       >
         <h1
-          className="text-base bg-highlight text-shadow px-2 py-1 rounded-lg font-semibold transition-transform duration-700"
+          className="text-[1.7rem] bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
           onClick={() => {
             setSidebarOpen(!sidebarOpen);
           }}
         >
-          {sidebarOpen ? "Close Chat Slider" : "Open Chat Slider"}
+          {sidebarOpen ? <PiChatCircleSlashFill /> : <PiChatCircleFill />}
         </h1>
       </div>
 
       {currentFriend ? (
-        <div className="flex flex-col justify-between min-h-screen  flex-1 gap-3 px-5 lg:px-10">
+        <div className="flex flex-col justify-between min-h-screen flex-1 gap-3 px-2 lg:px-5">
           {/* individual message box header */}
           <Link
             href="/"
@@ -537,7 +537,7 @@ const MessagesIndexPage = () => {
               height={40}
             />
             <div className="flex-1">
-              <h3 className="text-primary_text-A700 font-semibold text-base break-words">
+              <h3 className="text-primary_text font-semibold text-base break-words">
                 {currentFriend?.name}
               </h3>
               <span
@@ -577,7 +577,7 @@ const MessagesIndexPage = () => {
                   <p className="text-lg font-semibold text-primary_text">
                     {currentFriend.name}
                   </p>
-                  <p className="text-sm text-secbg-hover_highlight text-secondary_text">
+                  <p className="text-sm  text-secondary_text">
                     and you are connected
                   </p>
                 </div>
@@ -618,8 +618,8 @@ const MessagesIndexPage = () => {
                       <div
                         className={`p-2 rounded break-words max-w-xs ${
                           message.senderId === user?._id
-                            ? "bg-highlight text-primary_text"
-                            : "bg-hover_highlight text-primary_text"
+                            ? "bg-hover_highlight text-primary_text"
+                            : "bg-secondary_text text-background"
                         }`}
                       >
                         {message.message?.text}
@@ -635,7 +635,7 @@ const MessagesIndexPage = () => {
                   </div>
                   {index === messages.length - 1 &&
                     message.senderId === user?._id && (
-                      <div className="text-xs text-secbg-hover_highlight text-right pr-10">
+                      <div className="text-xs text-secondary_text text-right pr-10">
                         {message.status === "seen" && "Seen"}
                         {message.status === "delivered" && "Delivered"}
                         {message.status === "unseen" && "Sent"}
@@ -661,7 +661,7 @@ const MessagesIndexPage = () => {
           </div>
 
           {/* write message */}
-          <div className="flex items-center gap-2 p-2 w-full border-t relative">
+          <div className="flex items-center gap-2 p-2 w-full mb-12 lg:mb-2 border-t relative">
             <label htmlFor="file-upload" className="cursor-pointer relative">
               {image && (
                 <div className="relative w-20 h-20">
@@ -681,10 +681,7 @@ const MessagesIndexPage = () => {
                 </div>
               )}
               {!image && (
-                <FileImageOutlined
-                  className="text-2xl"
-                  style={{ color: "white" }}
-                />
+                <BsFileEarmarkArrowUpFill className="text-2xl text-hover_highlight hover:text-highlight" />
               )}
             </label>
             <input
@@ -700,10 +697,10 @@ const MessagesIndexPage = () => {
                 value={newMessage}
                 onChange={inputHandle}
                 disabled={messageLoading}
-                className="w-full py-2 pl-10 pr-3 bg-[#cdcdcd] rounded-xl text-gray-700 focus:outline-none focus:bg-primary_text focus:border-secbg-hover_highlight"
+                className="w-full py-2 pl-10 pr-3 bg-[#cdcdcd] rounded-xl text-gray-700 focus:outline-none focus:bg-primary_text focus:border-hover_highlight"
               />
-              <BsEmojiSmile
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secbg-hover_highlight"
+              <BsEmojiSmileFill
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-hover_highlight cursor-pointer"
                 onClick={() => setShowEmoji(!showEmoji)}
               />
               {showEmoji && (
@@ -734,8 +731,8 @@ const MessagesIndexPage = () => {
               }
               className={`py-2 px-4 rounded-xl focus:outline-none ${
                 image || newMessage.trim()
-                  ? "bg-highlight text-primary_text"
-                  : "bg-gray-300 text-secbg-hover_highlight cursor-not-allowed"
+                  ? "bg-hover_highlight text-primary_text hover:bg-highlight"
+                  : "bg-gray-300 text-hover_highlight cursor-not-allowed"
               }`}
             >
               {imageMessageLoading ? (
@@ -745,7 +742,7 @@ const MessagesIndexPage = () => {
                   className={`${
                     image || newMessage.trim()
                       ? "text-primary_text"
-                      : "text-secbg-hover_highlight"
+                      : "text-secondary_text"
                   }`}
                 />
               )}
