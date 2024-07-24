@@ -37,6 +37,7 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
 });
 
+// posts
 const Posts = () => {
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
@@ -486,41 +487,37 @@ const Posts = () => {
         )} */}
 
         {/* Stories Section */}
-        <div className="relative  flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
+        <div className="relative  flex flex-col items-center justify-center w-full p-5 rounded-[12px] bg-shadow ">
           <button
             onClick={scrollLeft}
-            className="absolute top-12 z-10 px-1 left-0 rounded-full text-3xl  text-highlight hover:text-hover_highlight hidden lg:flex"
+            className="absolute  z-10 px-1 left-0 rounded-full text-3xl  text-highlight hover:text-hover_highlight hidden lg:flex"
           >
             <FaChevronCircleLeft />
           </button>
 
           <button
             onClick={scrollRight}
-            className="rounded-full text-3xl font-bold  text-highlight hover:text-hover_highlight hidden absolute top-12 z-10 px-1 right-0 lg:flex"
+            className="rounded-full text-3xl font-bold  text-highlight hover:text-hover_highlight hidden absolute  z-10 px-1 right-0 lg:flex"
           >
             <FaChevronCircleRight />
           </button>
           <div className=" flex flex-col items-center justify-between w-full  bg-shadow ">
             <div
               className="relative flex items-center justify-center gap-x-3 overflow-hidden
-            w-[240px]
-            min-[360px]:w-[300px]
-            sm:w-[570px]
-            md:w-[700px]
-            lg:w-[870px] 
-            xl:w-[520px]
-            2xl:w-[610px] 
-          "
+              w-[240px]
+              min-[360px]:w-[300px]
+              sm:w-[570px]
+              md:w-[700px]
+              lg:w-[870px] 
+              xl:w-[520px]
+              2xl:w-[610px] "
             >
-              <div
-                ref={sliderRef}
-                className="flex overflow-x-auto gap-[2rem] cursor-pointer"
-              >
+              <div ref={sliderRef} className="flex  gap-x-3 ">
                 {showPlusSign && (
-                  <div className="flex-shrink-0 flex items-center justify-center w-[80px] h-[80px] bg-gray-200 border-2 border-gray-300 rounded-full cursor-pointer">
+                  <div className="flex-shrink-0 flex items-center justify-center w-[80px] h-[80px] bg-hover_highlight hover:bg-highlight border-2 border-gray-300 rounded-full cursor-pointer">
                     <label
                       htmlFor="fileInput"
-                      className="flex items-center justify-center w-full h-full"
+                      className="flex items-center cursor-pointer justify-center text-primary_text w-full h-full"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <input
@@ -536,11 +533,11 @@ const Posts = () => {
                     </label>
                   </div>
                 )}
-                <div className="flex-shrink-0 flex gap-x-2">
+                <div className=" flex gap-x-2">
                   {stories.map((story, index) => (
                     <div
                       key={index}
-                      className="flex flex-col items-center justify-between gap-y-1 w-[80px]"
+                      className="flex cursor-pointer flex-col items-center justify-between gap-y-1 w-[80px]"
                       onClick={togglePopup}
                     >
                       <div className="flex items-center justify-center w-full relative">
@@ -549,11 +546,11 @@ const Posts = () => {
                           width={65}
                           height={65}
                           alt="sidebarlogo"
-                          className="w-full h-auto border-2 border-[#00ffff] rounded-full relative"
+                          className="w-auto h-auto border-2 border-[#00ffff] rounded-full relative"
                         />
                         {story.postedBy?._id === user?._id && (
                           <DeleteOutlined
-                            className="absolute top-0 left-0 cursor-pointer text-red-500"
+                            className="absolute bottom-0 left-0 cursor-pointer text-red-500 duration-500   transition-transform hover:scale-125"
                             onClick={() => handleDeleteStory(story._id)}
                           />
                         )}
@@ -1059,18 +1056,16 @@ const PopupStories = ({ onClose, content, StoryLike, StoryUnlike }) => {
                     xl:w-[550px] xl:h-[550px]
                     2xl:w-[650px] 2xl:h-[640px]"
                   >
-                    <div className="flex flex-col items-center justify-between gap-y-1 w-[80px]">
+                    <div className="flex flex-col items-center justify-between gap-y-3 w-full">
                       <div className="flex items-center justify-center w-full">
                         <img
                           src={story.image?.url}
-                          width={65}
-                          height={65}
                           alt="User"
-                          className="w-full h-auto border-2 border-[#00ffff] rounded-full"
+                          className="w-fit h-fit  rounded-xl"
                         />
                       </div>
                       <div className="flex items-center justify-center w-full">
-                        <p className="text-secondary_text text-sm max-w-[80px] overflow-hidden whitespace-nowrap overflow-ellipsis">
+                        <p className="text-secondary_text text-lg font-semibold max-w-full ">
                           {story.postedBy?.name}
                         </p>
                       </div>
