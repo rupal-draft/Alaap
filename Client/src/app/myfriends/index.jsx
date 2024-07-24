@@ -389,7 +389,7 @@ export default function MyFriendsPage() {
           </div>
         </div>
 
-        {/* Whomto follow */}
+        {/* Whom to follow */}
         <div className="flex flex-col w-full items-center md:items-start justify-center gap-5">
           <h1 className="text-primary_text font-montserrat text-3xl font-bold">
             Whom to follow
@@ -400,7 +400,7 @@ export default function MyFriendsPage() {
                 <div
                   key={"myfriends" + index}
                   onClick={() => router.push(`/userprofile/${unfollower._id}`)}
-                  className="flex w-full flex-wrap items-center justify-between rounded-lg bg-shadow p-5  gap-x-2 gap-y-2"
+                  className="flex w-full flex-wrap items-center justify-center rounded-lg bg-shadow p-5  gap-x-2 gap-y-2"
                 >
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
                     {unfollower.photo ? (
@@ -424,7 +424,7 @@ export default function MyFriendsPage() {
                     )}
                   </div>
 
-                  <div className="flex flex-col items-start gap-1">
+                  <div className="flex flex-col items-center justify-center gap-1">
                     <h1 className="text-primary_text font-medium font-lato text-xl break-words text-center">
                       {unfollower && unfollower.name}
                     </h1>
