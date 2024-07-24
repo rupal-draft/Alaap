@@ -37,7 +37,7 @@ const Popup = ({ setIsOpenPopup, position }) => {
   return (
     <div
       onClick={setIsOpenPopup.bind(this, false)}
-      className="fixed inset-0  flex items-start justify-start"
+      className="fixed inset-0 z-50  flex items-start justify-start"
     >
       <div
         onClick={(e) => e.stopPropagation()}

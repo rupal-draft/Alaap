@@ -62,7 +62,7 @@ const Navbar = ({ open, setOpen, socket, myId }) => {
 
   return (
     <div
-      className={`fixed z-40 lg:!sticky top-0 h-full lg:h-screen self-stretch overflow-auto bg-background pt-0 flex flex-col items-center border-r-[2px] border-[#31363F]  transition-width duration-700 ${
+      className={`fixed z-30 lg:z-40 lg:!sticky top-0 h-full lg:h-screen self-stretch overflow-auto bg-background pt-0 flex flex-col items-center border-r-[2px] border-[#31363F]  transition-width duration-700 ${
         open ? "w-[80px]" : "w-[0px]"
       }`}
     >
