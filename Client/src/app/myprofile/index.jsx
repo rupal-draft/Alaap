@@ -94,7 +94,7 @@ export default function MyProfilePage() {
           <div className="flex flex-col items-start justify-center gap-y-5">
             {/* upper part */}
 
-            <div className="flex flex-col items-center gap-y-10 rounded-xl p-[18px] bg-shadow">
+            <div className="flex flex-col items-start justify-center gap-y-10 rounded-xl p-[18px] bg-shadow">
               {/* 0th part */}
               <div className="flex  flex-col items-center justify-center">
                 {isClient && user?.coverphoto?.url ? (
@@ -103,45 +103,45 @@ export default function MyProfilePage() {
                     alt="Cover Photo"
                     className="rounded-xl object-cover
                     
-                   w-[17rem] sm:w-[35rem] md:w-[45rem] lg:w-[50rem] xl:w-[70rem] 2xl:w-[85rem] 
-                  h-[10rem] sm:h-[15rem]  lg:h-[20rem]"
+                    w-[17rem] sm:w-[35rem] md:w-[45rem] lg:w-[50rem] xl:w-[70rem] 2xl:w-[88rem] 
+                    h-[10rem] sm:h-[15rem]  lg:h-[20rem]"
                   />
                 ) : (
                   <div
-                    className=" rounded-xl object-cover bg-gray-300 flex items-center justify-center
+                    className=" relative rounded-xl object-cover bg-gray-300 flex items-center justify-center
                   
                   w-[17rem] sm:w-[35rem] md:w-[45rem] lg:w-[50rem] xl:w-[70rem] 2xl:w-[85rem] 
                   h-[10rem] sm:h-[15rem]  lg:h-[20rem]"
                   >
-                    <span>Cover Photo</span>
+                    <span className=" absolute top-2 left-2 ">Cover Photo</span>
                   </div>
                 )}
 
                 <div
                   className="flex absolute left-0 right-0 flex-col items-center gap-1 
                 
-                top-[8.5rem] sm:top-[12.5rem] md:top-[12.5rem] lg:top-[17.5rem] 
-                sm:mx-[12rem]"
+                  top-[8.5rem] sm:top-[12.5rem] md:top-[12.5rem] lg:top-[17.5rem] 
+                  sm:mx-[12rem]"
                 >
                   {/* profile photo */}
                   <div className="flex flex-col items-center justify-center self-stretch">
                     <div
                       className="rounded-full overflow-hidden border-4 sm:border-8 border-shadow object-cover
-              
-              w-[6rem] sm:w-[8rem] md:w-[12rem] 
-              h-[6rem] sm:h-[8rem] md:h-[12rem] "
+                      flex items-center justify-center
+                      w-[6rem] sm:w-[8rem] md:w-[12rem] 
+                      h-[6rem] sm:h-[8rem] md:h-[12rem] "
                     >
                       {isClient && user.photo?.url ? (
                         <img
                           src={user.photo.url}
-                          alt="Meow"
+                          alt={user.photo.name}
                           className="w-full h-full object-cover"
                         />
                       ) : (
                         <Avatar
                           name={isClient && user?.name ? user.name : "User"}
                           size="192"
-                          round
+                          // round
                           className="cursor-pointer"
                           // className="cursor-pointer rounded-full w-full h-full object-cover border-2 border-shadow"
                           // style={{ border: "0px" }}
@@ -183,8 +183,8 @@ export default function MyProfilePage() {
               {/* 1st part */}
               <div>
                 {/* About me */}
-                <div className="flex flex-col self-stretch gap-y-5 pt-[8rem] sm:pt-[9rem] md:pt-[12rem]">
-                  <h1 className="uppercase text-2xl font-extrabold tracking-[1.00px] text-primary_text">
+                <div className="flex flex-col  items-start self-stretch gap-y-5 pt-[8rem] sm:pt-[9rem] md:pt-[12rem]">
+                  <h1 className="text-primary_text uppercase text-2xl font-extrabold">
                     About Me
                   </h1>
                   <div className="w-full !font-normal text-secondary_text">
