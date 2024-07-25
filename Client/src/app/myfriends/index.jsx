@@ -400,7 +400,7 @@ export default function MyFriendsPage() {
                 <div
                   key={"myfriends" + index}
                   onClick={() => router.push(`/userprofile/${unfollower._id}`)}
-                  className="flex w-full flex-wrap items-center justify-center rounded-lg bg-shadow p-5  gap-x-2 gap-y-2"
+                  className="flex flex-col w-full flex-wrap items-center justify-center rounded-lg bg-shadow p-5  gap-x-2 gap-y-2"
                 >
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
                     {unfollower.photo ? (
