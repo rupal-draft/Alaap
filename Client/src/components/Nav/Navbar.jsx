@@ -10,6 +10,7 @@ import Popup from "./Popup";
 import { FaHome, FaUserFriends } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
 import { BsSendFill, BsArrowLeftShort } from "react-icons/bs";
+import { PiRobotFill } from "react-icons/pi";
 import { IoIosNotifications, IoIosSettings, IoIosLogOut } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { logout } from "@/Context/Slices/authSlice";
@@ -25,6 +26,7 @@ export const navData = [
     icon: <IoIosNotifications />,
   },
   { name: "Messages", path: "/messages", icon: <BsSendFill /> },
+  { name: "AIChat", path: "/aichat", icon: <PiRobotFill /> },
 ];
 export const navData1 = [
   { name: "Settings", path: "/settings", icon: <IoIosSettings /> },
