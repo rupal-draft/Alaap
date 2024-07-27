@@ -2,12 +2,17 @@
 import Navbar from "@/components/Nav/Navbar";
 import React, { useEffect, useState } from "react";
 import { IoSendSharp } from "react-icons/io5";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { FaRegCopy } from "react-icons/fa";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
+import { toast } from "react-toastify";
 
 export default function AIChatPage() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
+  const [fetching, setFetching] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -33,20 +38,46 @@ export default function AIChatPage() {
 
     const userMessage = { sender: "user", text: message };
     setChat([...chat, userMessage]);
-
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_FASTAPI_SERVER_URL}/chat`,
-        { message }
-      );
-      const data = await response.json();
-      const botMessage = { sender: "bot", text: data.response };
-      setChat([...chat, userMessage, botMessage]);
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    const prompt = message;
+    let botMessage;
 
     setMessage("");
+
+    try {
+      setFetching(true);
+      const result = await axios.post(
+        `${process.env.NEXT_PUBLIC_FASTAPI_SERVER_URL}/chat`,
+        { message: prompt }
+      );
+      console.log(result);
+      botMessage = { sender: "bot", text: result.data.response };
+    } catch (error) {
+      console.error("Error:", error);
+      botMessage = {
+        sender: "bot",
+        text: "Oops! Something went wrong while fetching the response. Please try again in a moment. If the problem persists, check your internet connection or contact support for assistance.",
+      };
+    } finally {
+      setFetching(false);
+      setChat([...chat, userMessage, botMessage]);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && message !== "") {
+      handleSendMessage();
+    }
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        toast.success("Copied to clipboard successfully!");
+      },
+      (err) => {
+        toast.error("Failed to copy text!");
+      }
+    );
   };
 
   return (
@@ -58,13 +89,27 @@ export default function AIChatPage() {
           {chat.map((msg, index) => (
             <div
               key={index}
-              className={`p-2 rounded-lg ${
+              className={`p-2 rounded-lg flex ${
                 msg.sender === "user"
                   ? "bg-blue-100 self-end"
                   : "bg-gray-100 self-start"
               }`}
             >
-              {msg.text}
+              <div className="flex-1">
+                {msg.sender === "bot" ? (
+                  <ReactMarkdown>{msg.text}</ReactMarkdown>
+                ) : (
+                  msg.text
+                )}
+              </div>
+              {msg.sender === "bot" && (
+                <button
+                  onClick={() => copyToClipboard(msg.text)}
+                  className="ml-2 text-gray-500 hover:text-gray-700 flex flex-col justify-start items-start"
+                >
+                  <FaRegCopy />
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -73,17 +118,24 @@ export default function AIChatPage() {
         <div className="flex space-x-2">
           <input
             type="text"
-            value={message}
+            value={fetching ? "" : message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
             className="flex-1 p-2 border rounded-lg"
-            placeholder="Start typing..."
+            placeholder={fetching ? "Wait until I can fetch my response for you :)" : "Start typing..."}
           />
-          <button
-            onClick={handleSendMessage}
-            className="p-2 bg-highlight hover:bg-hover_highlight text-white-A700 rounded-full"
-          >
-            <IoSendSharp />
-          </button>
+          {fetching ? (
+            <button className="p-2 bg-hover_highlight text-white-A700 rounded-full">
+              <AiOutlineLoading3Quarters className="animate-spin" />
+            </button>
+          ) : (
+            <button
+              onClick={handleSendMessage}
+              className="p-2 bg-highlight hover:bg-hover_highlight text-white-A700 rounded-full"
+            >
+              <IoSendSharp />
+            </button>
+          )}
         </div>
       </div>
     </div>

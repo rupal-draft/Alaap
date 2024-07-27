@@ -13,6 +13,7 @@ import {
 import { useMutation, useQuery } from "@apollo/client";
 import { toast } from "react-toastify";
 import { GET_POST_COMMENTS_QUERY } from "@/graphql/query";
+import axios from "axios";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
@@ -40,18 +41,18 @@ const CommentBody = ({ postID, loadPosts, user }) => {
   const [addComment] = useMutation(ADD_COMMENT_MUTATION);
   const [removeComment] = useMutation(REMOVE_COMMENT_MUTATION);
 
-/*   const checkCommentToxicity = async (comment) => {
+  const checkCommentToxicity = async (comment) => {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_MLMODEL_URL}/predict?comment=${comment}`
+      `${process.env.NEXT_PUBLIC_FASTAPI_SERVER_URL}/predict?comment=${comment}`
     );
     return response.data.toxic === true;
-  }; */
+  };
 
   const handleAddComment = async (e) => {
     e.preventDefault();
     try {
-//      const isToxic = await checkCommentToxicity(comment);
-//      if (!isToxic) {
+      const isToxic = await checkCommentToxicity(comment);
+      if (!isToxic) {
         const { data } = await addComment({
           variables: { postId: postID, comment },
         });
@@ -59,11 +60,10 @@ const CommentBody = ({ postID, loadPosts, user }) => {
         loadComments();
         setComment("");
         loadPosts();
-//      }
-//      else {
-//        toast.warning("Your comment is identified to be vulgar !!");
-//        setComment("");
-//      }
+      } else {
+        toast.warning("Your comment is identified to be vulgar !!");
+        setComment("");
+      }
     } catch (err) {
       console.log(err);
       toast.error("Error adding comment");

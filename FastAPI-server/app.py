@@ -10,7 +10,7 @@ nltk.download('stopwords')
 nltk.download('wordnet')
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from openai import OpenAI
+import google.generativeai as genai
 import os
 
 load_dotenv()
@@ -32,12 +32,8 @@ app.add_middleware(
 model = joblib.load('toxic_comment_model.pkl')
 vectorizer = joblib.load('vectorizer.pkl')
 
-#openai.api_key = os.getenv('OPENAI_API_KEY')
-
-client = OpenAI(
-    # This is the default and can be omitted
-    api_key=os.getenv("OPENAI_API_KEY", ""),
-)
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+genai_model = genai.GenerativeModel('gemini-1.5-flash')
 
 class Comment(BaseModel):
     text: str
@@ -72,13 +68,8 @@ async def predict(comment: str = Query(..., title="Comment Text")):
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",  # Adjust the model name if needed
-            messages=[{"role": "user", "content": request.message}],
-            max_tokens=150
-        )
-        answer = response.choices[0].message['content'].strip()
-        return ChatResponse(response=answer)
+        response = genai_model.generate_content(request.message)
+        return ChatResponse(response=response.text)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
