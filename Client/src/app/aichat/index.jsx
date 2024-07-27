@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "@/components/Nav/Navbar";
 import React, { useEffect, useState } from "react";
-import { IoSendSharp } from "react-icons/io5";
+import { IoSendSharp, IoMic, IoMicOff } from "react-icons/io5";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaRegCopy } from "react-icons/fa";
 import axios from "axios";
@@ -13,6 +13,8 @@ export default function AIChatPage() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [fetching, setFetching] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [recognition, setRecognition] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -49,7 +51,6 @@ export default function AIChatPage() {
         `${process.env.NEXT_PUBLIC_FASTAPI_SERVER_URL}/chat`,
         { message: prompt }
       );
-      console.log(result);
       botMessage = { sender: "bot", text: result.data.response };
     } catch (error) {
       console.error("Error:", error);
@@ -78,6 +79,41 @@ export default function AIChatPage() {
         toast.error("Failed to copy text!");
       }
     );
+  };
+
+  const startListening = () => {
+    if (!("webkitSpeechRecognition" in window)) {
+      alert("Your browser does not support speech recognition.");
+      return;
+    }
+
+    const recognition = new webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => setIsListening(true);
+    recognition.onend = () => setIsListening(false);
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setMessage(transcript);
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error:", event.error);
+      setIsListening(false);
+    };
+
+    recognition.start();
+    setRecognition(recognition);
+  };
+
+  const stopListening = () => {
+    if (recognition) {
+      recognition.stop();
+      setRecognition(null);
+    }
   };
 
   return (
@@ -122,19 +158,35 @@ export default function AIChatPage() {
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             className="flex-1 p-2 border rounded-lg"
-            placeholder={fetching ? "Wait until I can fetch my response for you :)" : "Start typing..."}
+            placeholder={
+              isListening
+                ? "Listening..."
+                : fetching
+                ? "Wait until I can fetch my response for you :)"
+                : "Start typing..."
+            }
           />
           {fetching ? (
             <button className="p-2 bg-hover_highlight text-white-A700 rounded-full">
               <AiOutlineLoading3Quarters className="animate-spin" />
             </button>
           ) : (
-            <button
-              onClick={handleSendMessage}
-              className="p-2 bg-highlight hover:bg-hover_highlight text-white-A700 rounded-full"
-            >
-              <IoSendSharp />
-            </button>
+            <>
+              <button
+                onClick={isListening ? stopListening : startListening}
+                className={`p-2 ${
+                  isListening ? "bg-red-500" : "bg-green-500"
+                } text-white-A700 rounded-full`}
+              >
+                {isListening ? <IoMicOff /> : <IoMic />}
+              </button>
+              <button
+                onClick={handleSendMessage}
+                className="p-2 bg-highlight hover:bg-hover_highlight text-white-A700 rounded-full"
+              >
+                <IoSendSharp />
+              </button>
+            </>
           )}
         </div>
       </div>
