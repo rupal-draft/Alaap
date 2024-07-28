@@ -183,12 +183,9 @@ export default function SettingsPage() {
       </div>
 
       <div className="flex flex-col w-[70%] px-auto mx-auto items-center justify-center gap-5 py-4 ">
-        <Heading
-          as="h1"
-          className=" text-primary_text !font-bold text-[1.5rem] sm:text-3xl "
-        >
+        <h1 className=" text-primary_text !font-bold text-[1.5rem] sm:text-3xl ">
           My Profile Information
-        </Heading>
+        </h1>
 
         <form
           className="flex flex-col items-center gap-y-5 sm:gap-y-10 rounded-xl p-[18px] bg-shadow "
@@ -198,10 +195,10 @@ export default function SettingsPage() {
           <div className="relative flex flex-col items-start gap-4">
             {/* upload cover photo */}
             <div
-              className="rounded-lg overflow-hidden
-            
-            w-[17rem] sm:w-[35rem] md:w-[45rem] lg:w-[50rem] xl:w-[70rem] 2xl:w-[85rem] 
-            h-[10rem] sm:h-[15rem]  lg:h-[20rem] "
+              className="rounded-xl object-cover
+                    
+                    w-[17rem] sm:w-[35rem] md:w-[45rem] lg:w-[50rem] xl:w-[70rem] 2xl:w-[88rem] 
+                    h-[10rem] sm:h-[15rem]  lg:h-[20rem]"
             >
               {isClient && coverphoto?.url ? (
                 <img
@@ -222,8 +219,13 @@ export default function SettingsPage() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-                  <span>Cover Photo</span>
+                <div
+                  className=" relative rounded-xl object-cover bg-gray-300 flex items-center justify-center
+                  
+                  w-[17rem] sm:w-[35rem] md:w-[45rem] lg:w-[50rem] xl:w-[70rem] 2xl:w-[85rem] 
+                  h-[10rem] sm:h-[15rem]  lg:h-[20rem]"
+                >
+                  <span className=" absolute top-2 left-2 ">Cover Photo</span>
                 </div>
               )}
             </div>
@@ -264,9 +266,9 @@ export default function SettingsPage() {
             >
               <div
                 className="rounded-full overflow-hidden border-4 sm:border-8 border-shadow object-cover
-              
-              w-[6rem] sm:w-[8rem] md:w-[12rem] 
-              h-[6rem] sm:h-[8rem] md:h-[12rem] "
+                      flex items-center justify-center
+                      w-[6rem] sm:w-[8rem] md:w-[12rem] 
+                      h-[6rem] sm:h-[8rem] md:h-[12rem] "
               >
                 {isClient && photo?.url ? (
                   <img
@@ -289,7 +291,7 @@ export default function SettingsPage() {
                 ) : (
                   <Avatar
                     name={final?.user?.name || user?.name || "User"}
-                    size="100"
+                    size="192"
                     round
                     className="cursor-pointer"
                   />

@@ -42,6 +42,7 @@ const postTypeDefs = gql`
     ServerSideEncryption: String
     Location: String
     Key: String
+    key: String
     Bucket: String
   }
 
@@ -55,6 +56,7 @@ const postTypeDefs = gql`
     ServerSideEncryption: String
     Location: String
     Key: String
+    key: String
     Bucket: String
   }
 `;

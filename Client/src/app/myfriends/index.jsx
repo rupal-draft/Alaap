@@ -166,7 +166,7 @@ export default function MyFriendsPage() {
       </div>
 
       {/* <div className="flex justify-between gap-5"> */}
-      <div className="flex flex-col  w-full items-center md:items-start justify-center p-5 pt-10 gap-5">
+      <div className="flex flex-col  w-full items-center md:items-start  p-5 pt-7 lg:pt-10 gap-5">
         {/* search button + search results */}
         <div className="flex flex-col w-full items-center md:items-start justify-center gap-5">
           <form
@@ -205,7 +205,7 @@ export default function MyFriendsPage() {
                 <h1 className="text-primary_text font-montserrat text-3xl font-bold">
                   Search Result
                 </h1>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 text-primary_text">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 text-primary_text">
                   {result.map((search, index) => (
                     <div
                       key={"myfriends" + index}
@@ -218,8 +218,9 @@ export default function MyFriendsPage() {
                           alt="user"
                           className="cursor-pointer rounded-xl object-cover
                     
-                    w-[260px] md:w-[200px] lg:w-[250px] 
-                    h-[260px] md:h-[200px] lg:h-[250px]"
+                    
+                    w-[260px] md:w-[200px] lg:w-[250px] min-[1440px]:w-[290px] 2xl:w-[150px] 
+                    h-[260px] md:h-[200px] lg:h-[250px] min-[1440px]:h-[290px] 2xl:h-[150px]"
                         />
                       ) : (
                         <Avatar
@@ -227,8 +228,9 @@ export default function MyFriendsPage() {
                           size="280"
                           className="cursor-pointer rounded-xl object-cover 
                     
-                    w-full max-w-[240px] md:max-w-[180px] lg:max-w-[230px] 2xl:max-w-[240px]
-                    h-full max-h-[240px] sm:max-h-[260px] md:max-h-[200px] lg:max-h-[250px] "
+                    w-full max-w-[240px] md:max-w-[180px] lg:max-w-[230px] 2xl:max-w-[150px]
+                    
+                    h-full max-h-[240px] sm:max-h-[260px] md:max-h-[200px] lg:max-h-[250px] 2xl:max-h-[150px] "
                         />
                       )}
 
@@ -270,8 +272,8 @@ export default function MyFriendsPage() {
           <h1 className="text-primary_text font-montserrat text-3xl font-bold">
             My Followers
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 text-primary_text">
-            {follower &&
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 text-primary_text">
+            {follower && follower.length > 0 ? (
               follower.map((follow, index) => (
                 <div
                   key={"myfriends" + index}
@@ -284,8 +286,8 @@ export default function MyFriendsPage() {
                       alt="user"
                       className="cursor-pointer rounded-xl object-cover
                     
-                    w-[260px] md:w-[200px] lg:w-[250px] 
-                    h-[260px] md:h-[200px] lg:h-[250px]"
+                      w-[260px] md:w-[200px] lg:w-[250px] min-[1440px]:w-[290px] 2xl:w-[150px] 
+                      h-[260px] md:h-[200px] lg:h-[250px] min-[1440px]:h-[290px] 2xl:h-[150px]"
                     />
                   ) : (
                     <Avatar
@@ -293,16 +295,16 @@ export default function MyFriendsPage() {
                       size="280"
                       className="cursor-pointer rounded-xl object-cover 
                     
-                    w-full max-w-[240px] md:max-w-[180px] lg:max-w-[230px] 2xl:max-w-[240px]
-                    h-full max-h-[240px] sm:max-h-[260px] md:max-h-[200px] lg:max-h-[250px] "
+                    w-full max-w-[240px] md:max-w-[180px] lg:max-w-[230px] 2xl:max-w-[150px]
+                    
+                    h-full max-h-[240px] sm:max-h-[260px] md:max-h-[200px] lg:max-h-[250px] 2xl:max-h-[150px] "
                     />
                   )}
 
                   <h1 className="text-primary_text font-medium font-lato text-xl break-words text-center">
                     {follow && follow.name}
                   </h1>
-                  <Button
-                    size="xl"
+                  <button
                     leftIcon={
                       <Img
                         src="img_checkmark_white_a700.svg"
@@ -321,9 +323,14 @@ export default function MyFriendsPage() {
                     {user.following.includes(follow._id)
                       ? "Following"
                       : "Follow Back!!"}
-                  </Button>
+                  </button>
                 </div>
-              ))}
+              ))
+            ) : (
+              <p className=" text-secondary_text">
+                You have no followers right now.
+              </p>
+            )}
           </div>
         </div>
 
@@ -333,59 +340,64 @@ export default function MyFriendsPage() {
           <h1 className="text-primary_text font-montserrat text-3xl font-bold">
             My Followings
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 text-primary_text">
-            {following.map((fan, index) => (
-              <div
-                key={"myfriends" + index}
-                onClick={() => router.push(`/userprofile/${fan._id}`)}
-                className="flex flex-col items-center justify-center rounded-lg bg-shadow p-5 sm:p-5 gap-y-2"
-              >
-                {fan.photo ? (
-                  <img
-                    src={fan.photo.url}
-                    alt="user"
-                    className="cursor-pointer rounded-xl object-cover
-                    
-                    w-[260px] md:w-[200px] lg:w-[250px] 
-                    h-[260px] md:h-[200px] lg:h-[250px]"
-                  />
-                ) : (
-                  <Avatar
-                    name={fan.name}
-                    size="280"
-                    className="cursor-pointer rounded-xl object-cover 
-                    
-                    w-full max-w-[240px] md:max-w-[180px] lg:max-w-[230px] 2xl:max-w-[240px]
-                    h-full max-h-[240px] sm:max-h-[260px] md:max-h-[200px] lg:max-h-[250px] "
-                  />
-                )}
-
-                {fan && fan.name && (
-                  <h1 className="text-primary_text font-medium font-lato text-xl break-words text-center">
-                    {fan.name}
-                  </h1>
-                )}
-                <Button
-                  size="xl"
-                  leftIcon={
-                    <Img
-                      src="img_checkmark_white_a700.svg"
-                      width={14}
-                      height={14}
-                      alt="checkmark"
-                      className="h-[14px] w-[14px]"
-                    />
-                  }
-                  className="flex-grow flex items-center justify-center cursor-pointer bg-highlight hover:bg-hover_highlight duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-[10px] md:text-lg"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleUnfollow(fan);
-                  }}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 text-primary_text">
+            {following.length > 0 ? (
+              following.map((fan, index) => (
+                <div
+                  key={"myfriends" + index}
+                  onClick={() => router.push(`/userprofile/${fan._id}`)}
+                  className="flex flex-col items-center justify-center rounded-lg bg-shadow p-5 sm:p-5 gap-y-2"
                 >
-                  Unfollow
-                </Button>
-              </div>
-            ))}
+                  {fan.photo ? (
+                    <img
+                      src={fan.photo.url}
+                      alt="user"
+                      className="cursor-pointer rounded-xl object-cover
+                    
+                    w-[260px] md:w-[200px] lg:w-[250px] min-[1440px]:w-[290px] 2xl:w-[150px] 
+                    h-[260px] md:h-[200px] lg:h-[250px] min-[1440px]:h-[290px] 2xl:h-[150px]"
+                    />
+                  ) : (
+                    <Avatar
+                      name={fan.name}
+                      size="280"
+                      className="cursor-pointer rounded-xl object-cover 
+                    
+                    w-full max-w-[240px] md:max-w-[180px] lg:max-w-[230px] 2xl:max-w-[150px]
+                    
+                    h-full max-h-[240px] sm:max-h-[260px] md:max-h-[200px] lg:max-h-[250px] 2xl:max-h-[150px] "
+                    />
+                  )}
+
+                  {fan && fan.name && (
+                    <h1 className="text-primary_text font-medium font-lato text-xl break-words text-center">
+                      {fan.name}
+                    </h1>
+                  )}
+
+                  <button
+                    leftIcon={
+                      <Img
+                        src="img_checkmark_white_a700.svg"
+                        width={14}
+                        height={14}
+                        alt="checkmark"
+                        className="h-[14px] w-[14px]"
+                      />
+                    }
+                    className="flex-grow flex items-center justify-center cursor-pointer bg-highlight hover:bg-hover_highlight duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-[10px] md:text-lg"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleUnfollow(fan);
+                    }}
+                  >
+                    Unfollow
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p className=" text-secondary_text">You didn't follow anyone.</p>
+            )}
           </div>
         </div>
 
@@ -394,8 +406,8 @@ export default function MyFriendsPage() {
           <h1 className="text-primary_text font-montserrat text-3xl font-bold">
             Whom to follow
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 text-primary_text">
-            {unfollowing &&
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 text-primary_text">
+            {unfollowing && unfollowing.length > 0 ? (
               unfollowing.map((unfollower, index) => (
                 <div
                   key={"myfriends" + index}
@@ -447,7 +459,12 @@ export default function MyFriendsPage() {
                     </Button>
                   </Tooltip>
                 </div>
-              ))}
+              ))
+            ) : (
+              <p className=" text-secondary_text ">
+                You have no followers right now.
+              </p>
+            )}
           </div>
         </div>
       </div>

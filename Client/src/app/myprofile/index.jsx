@@ -183,24 +183,31 @@ export default function MyProfilePage() {
               {/* 1st part */}
               <div>
                 {/* About me */}
-                <div className="flex flex-col  items-start self-stretch gap-y-5 pt-[8rem] sm:pt-[9rem] md:pt-[12rem]">
+                <div className="flex flex-col items-start self-stretch gap-y-5 pt-[8rem] sm:pt-[9rem] md:pt-[12rem]">
                   <h1 className="text-primary_text uppercase text-2xl font-extrabold">
                     About Me
                   </h1>
                   <div className="w-full !font-normal text-secondary_text">
-                    {isClient && user?.about && (
-                      <p className="leading-normal">{user.about}</p>
-                    )}
+                    {isClient ? (
+                      user?.about ? (
+                        <p className="leading-normal">{user.about}</p>
+                      ) : (
+                        <p className="leading-normal">
+                          You haven't edited your profile.
+                        </p>
+                      )
+                    ) : null}
                   </div>
                 </div>
               </div>
+
               {/* 2nd part */}
               <div className="flex flex-col items-start self-stretch gap-y-5">
                 <h1 className="text-primary_text uppercase text-2xl font-extrabold">
                   Followers
                 </h1>
-                <div className="flex gap-[15px] items-start self-stretch">
-                  {followers &&
+                <div className="flex gap-[15px] items-start self-stretch text-secondary_text ">
+                  {followers && followers.length > 0 ? (
                     followers
                       .slice(0, maxDisplayedFollowers)
                       .map((follower, index) => (
@@ -228,7 +235,10 @@ export default function MyProfilePage() {
                             />
                           )}
                         </div>
-                      ))}
+                      ))
+                  ) : (
+                    <p>You have no followers right now.</p>
+                  )}
                 </div>
                 {followers.length > maxDisplayedFollowers && (
                   <Link
@@ -247,7 +257,7 @@ export default function MyProfilePage() {
                 </h1>{" "}
                 <div className="flex flex-col items-start justify-center gap-[30px] rounded-xl">
                   <div className="flex flex-col items-start gap-[15px] self-stretch">
-                    <div className="flex flex-wrap gap-[15px] self-stretch grid-cols-3 sm:grid-cols-1 text-primary_text">
+                    <div className="flex flex-wrap gap-[15px] self-stretch grid-cols-3 sm:grid-cols-1 text-secondary_text ">
                       {posts && posts.length > 0 ? (
                         posts
                           .slice(0, maxDisplayedPhotos)
@@ -265,7 +275,7 @@ export default function MyProfilePage() {
                             />
                           ))
                       ) : (
-                        <p>No posts available.</p>
+                        <p>Your Gallery is empty.</p>
                       )}
                     </div>
                     {posts.length > maxDisplayedPhotos && (
