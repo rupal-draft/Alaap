@@ -667,24 +667,26 @@ export const Post = ({
     <div className="flex w-full flex-col gap-[15px] rounded-[12px] bg-shadow p-5 ">
       <div className="flex items-center justify-between gap-5 ">
         <div className="flex w-[100%] items-center gap-2.5">
-          {post?.postedBy?.photo ? (
-            <img
-              src={post.postedBy?.photo?.url}
-              width={50}
-              height={50}
-              alt="avatar"
-              className="rounded-full object-cover"
-            />
-          ) : (
-            <Avatar
-              name={post?.postedBy?.name}
-              size="50"
-              round="100px"
-              textSizeRatio={2}
-              color="#222831"
-              className="border"
-            />
-          )}
+          <Link href={`/userprofile/${post.postedBy?._id}`}>
+            {post?.postedBy?.photo ? (
+              <img
+                src={post.postedBy?.photo?.url}
+                width={50}
+                height={50}
+                alt="avatar"
+                className="rounded-full object-cover"
+              />
+            ) : (
+              <Avatar
+                name={post?.postedBy?.name}
+                size="50"
+                round="100px"
+                textSizeRatio={2}
+                color="#222831"
+                className="border"
+              />
+            )}
+          </Link>
           <div className="flex flex-col items-start gap-[2px]">
             <h1 className="!text-primary_text font-serif font-bold text-[17px] sm:text-[1.6rem]">
               {post.postedBy?.name}
