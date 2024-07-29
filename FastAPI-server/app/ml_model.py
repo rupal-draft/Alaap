@@ -1,4 +1,3 @@
-# ml_model.py
 import pandas as pd
 import re
 import string
@@ -21,7 +20,7 @@ def preprocess_text(text):
     return ' '.join(words)
 
 # Load data
-data = pd.read_csv('./train.csv')
+data = pd.read_csv('data/train.csv')
 data['cleaned_comment'] = data['comment_text'].apply(preprocess_text)
 
 # Feature Extraction
@@ -41,5 +40,5 @@ f1 = f1_score(y_test, y_pred)
 print(f'Accuracy: {accuracy}, F1 Score: {f1}')
 
 # Save the Model
-joblib.dump(model, 'toxic_comment_model.pkl')
-joblib.dump(vectorizer, 'vectorizer.pkl')
+joblib.dump(model, 'data/toxic_comment_model.pkl')
+joblib.dump(vectorizer, 'data/vectorizer.pkl')

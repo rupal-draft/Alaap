@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Query, HTTPException
-from pydantic import BaseModel
+from app.models.pydantic_models import Comment, ChatRequest, ChatResponse
 import joblib
 import re
 import string
@@ -21,7 +21,7 @@ cors_origins = os.getenv('SITE_URL', '*')
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[cors_origins],
     expose_headers=["*"],
     allow_credentials=True,
     allow_methods=["*"],
@@ -29,20 +29,12 @@ app.add_middleware(
 )
 
 # Load the model and vectorizer
-model = joblib.load('toxic_comment_model.pkl')
-vectorizer = joblib.load('vectorizer.pkl')
+model = joblib.load('data/toxic_comment_model.pkl')
+vectorizer = joblib.load('data/vectorizer.pkl')
 
+# Configure the gemini api
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 genai_model = genai.GenerativeModel('gemini-1.5-flash')
-
-class Comment(BaseModel):
-    text: str
-    
-class ChatRequest(BaseModel):
-    message: str
-
-class ChatResponse(BaseModel):
-    response: str
 
 def preprocess_text(text):
     text = text.lower()
@@ -72,7 +64,6 @@ async def chat(request: ChatRequest):
         return ChatResponse(response=response.text)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
 
 if __name__ == "__main__":
     import uvicorn
