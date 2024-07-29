@@ -117,18 +117,23 @@ export default function AIChatPage() {
   };
 
   return (
-    <div className="flex w-full h-full min-h-screen bg-background">
-      <Navbar open={open} setOpen={setOpen} />
-      <div className="w-full p-14 bg-white rounded-lg justify-between shadow-md">
+    <div className="flex flex-col w-full h-full min-h-screen bg-background">
+      <div className="flex flex-col w-full items-center py-2 justify-center gap-5">
+        <h1 className="text-primary_text font-logo_text text-3xl font-medium">
+          Ask your doubt!
+        </h1>
+      </div>
+
+      <div className="flex-1 w-full px-4 lg:px-14 py-2 overflow-hidden">
         {/** The message section */}
-        <div className="flex flex-col space-y-4 h-[80vh] overflow-y-scroll mb-4">
+        <div className="flex flex-col bg-shadow space-y-4 overflow-y-auto rounded-lg shadow-md h-full p-4">
           {chat.map((msg, index) => (
             <div
               key={index}
               className={`p-2 rounded-lg flex ${
                 msg.sender === "user"
-                  ? "bg-blue-100 self-end"
-                  : "bg-gray-100 self-start"
+                  ? "bg-hover_highlight text-primary_text self-end"
+                  : "bg-secondary_text  self-start"
               }`}
             >
               <div className="flex-1">
@@ -149,15 +154,17 @@ export default function AIChatPage() {
             </div>
           ))}
         </div>
+      </div>
 
-        {/** The input section */}
-        <div className="flex space-x-2">
+      {/** The input section */}
+      <div className="w-full pl-14 pr-4 lg:px-14 py-2 bg-background">
+        <div className="flex items-center gap-x-2">
           <input
             type="text"
             value={fetching ? "" : message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="flex-1 p-2 border rounded-lg"
+            className="flex-1 p-2 border rounded-lg text-black"
             placeholder={
               isListening
                 ? "Listening..."

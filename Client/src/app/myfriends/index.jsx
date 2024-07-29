@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button, Img, Text, h1, Input } from "../../components";
-import { MenuItem, Menu, Sidebar, sidebarClasses } from "react-pro-sidebar";
+import Image from "next/image";
 import Navbar from "@/components/Nav/Navbar";
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +9,7 @@ import api from "@/utils/axios";
 import Avatar from "react-avatar";
 import { UserAddOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
-import { setCredentials } from "@/Context/Slices/authSlice";
+import { setCredentials } from "@/context/slices/authSlice";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
@@ -20,8 +19,6 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
 });
 
 export default function MyFriendsPage() {
-  const [collapsed, setCollapsed] = React.useState(false);
-  const [open, setOpen] = useState(false);
   const router = useRouter();
   const [following, setFollowing] = useState([]);
   const [follower, setFollower] = useState([]);
@@ -30,25 +27,6 @@ export default function MyFriendsPage() {
   const [result, setResult] = useState([]);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.matchMedia("(min-width: 768px)").matches) {
-        setOpen(true);
-      } else {
-        setOpen(false);
-      }
-    };
-
-    // Set initial state based on screen size
-    handleResize();
-
-    // Update state on resize
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup event listener on component unmount
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   useEffect(() => {
     if (user) {
@@ -146,27 +124,13 @@ export default function MyFriendsPage() {
   };
 
   return (
-    <div className="flex w-full h-full min-h-screen bg-background">
-      {/* Nav bar */}
-      <Navbar open={open} setOpen={setOpen} />
-
-      <div
-        className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
-          open ? "left-[5rem] px-2 py-1" : "left-0 px-2 py-1"
-        }`}
-      >
-        <h1
-          className="text-2xl bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
-          onClick={() => {
-            setOpen(!open);
-          }}
-        >
-          {open ? <RiMenuUnfold2Line /> : <RiMenuFold2Line />}
-        </h1>
-      </div>
-
-      {/* <div className="flex justify-between gap-5"> */}
-      <div className="flex flex-col  w-full items-center md:items-start  p-5 pt-7 lg:pt-10 gap-5">
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex flex-col  w-[95%] items-center md:items-start  p-5 gap-5">
+        <div className="flex flex-col w-full items-center md:items-start justify-center gap-5">
+          <h1 className="text-primary_text font-montserrat text-4xl font-bold">
+            My Friends
+          </h1>
+        </div>
         {/* search button + search results */}
         <div className="flex flex-col w-full items-center md:items-start justify-center gap-5">
           <form
@@ -205,7 +169,7 @@ export default function MyFriendsPage() {
                 <h1 className="text-primary_text font-montserrat text-3xl font-bold">
                   Search Result
                 </h1>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 text-primary_text">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7 gap-5 text-primary_text">
                   {result.map((search, index) => (
                     <div
                       key={"myfriends" + index}
@@ -237,11 +201,11 @@ export default function MyFriendsPage() {
                       <h1 className="text-primary_text font-medium font-lato text-xl break-words text-center">
                         {search && search.name}
                       </h1>
-                      <Button
+                      <button
                         size="xl"
                         leftIcon={
-                          <Img
-                            src="img_checkmark_white_a700.svg"
+                          <Image
+                            src="/img_checkmark_white_a700.svg"
                             width={14}
                             height={14}
                             alt="checkmark"
@@ -257,7 +221,7 @@ export default function MyFriendsPage() {
                         {user.following.includes(search._id)
                           ? "Following"
                           : "Follow Back!!"}
-                      </Button>
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -269,10 +233,10 @@ export default function MyFriendsPage() {
         {/* My followers */}
 
         <div className="flex flex-col w-full items-center md:items-start justify-center gap-5">
-          <h1 className="text-primary_text font-montserrat text-3xl font-bold">
+          <h1 className="text-primary_text font-lato text-3xl font-medium">
             My Followers
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 text-primary_text">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-7 text-primary_text">
             {follower && follower.length > 0 ? (
               follower.map((follow, index) => (
                 <div
@@ -286,8 +250,8 @@ export default function MyFriendsPage() {
                       alt="user"
                       className="cursor-pointer rounded-xl object-cover
                     
-                      w-[260px] md:w-[200px] lg:w-[250px] min-[1440px]:w-[290px] 2xl:w-[150px] 
-                      h-[260px] md:h-[200px] lg:h-[250px] min-[1440px]:h-[290px] 2xl:h-[150px]"
+                      w-[260px] md:w-[200px] lg:w-[250px] min-[1440px]:w-[290px] 2xl:w-[180px] 
+                      h-[260px] md:h-[200px] lg:h-[250px] min-[1440px]:h-[290px] 2xl:h-[180px]"
                     />
                   ) : (
                     <Avatar
@@ -295,9 +259,9 @@ export default function MyFriendsPage() {
                       size="280"
                       className="cursor-pointer rounded-xl object-cover 
                     
-                    w-full max-w-[240px] md:max-w-[180px] lg:max-w-[230px] 2xl:max-w-[150px]
+                    w-full max-w-[240px] md:max-w-[180px] lg:max-w-[230px] 2xl:max-w-[180px]
                     
-                    h-full max-h-[240px] sm:max-h-[260px] md:max-h-[200px] lg:max-h-[250px] 2xl:max-h-[150px] "
+                    h-full max-h-[240px] sm:max-h-[260px] md:max-h-[200px] lg:max-h-[250px] 2xl:max-h-[180px] "
                     />
                   )}
 
@@ -306,8 +270,8 @@ export default function MyFriendsPage() {
                   </h1>
                   <button
                     leftIcon={
-                      <Img
-                        src="img_checkmark_white_a700.svg"
+                      <Image
+                        src="/img_checkmark_white_a700.svg"
                         width={14}
                         height={14}
                         alt="checkmark"
@@ -327,9 +291,7 @@ export default function MyFriendsPage() {
                 </div>
               ))
             ) : (
-              <p className=" text-secondary_text">
-                You have no followers right now.
-              </p>
+              <p className=" text-secondary_text">You have no followers.</p>
             )}
           </div>
         </div>
@@ -337,10 +299,10 @@ export default function MyFriendsPage() {
         {/* My followings */}
 
         <div className="flex flex-col w-full items-center md:items-start justify-center gap-5">
-          <h1 className="text-primary_text font-montserrat text-3xl font-bold">
+          <h1 className="text-primary_text font-lato text-3xl font-medium">
             My Followings
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 text-primary_text">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-7 text-primary_text">
             {following.length > 0 ? (
               following.map((fan, index) => (
                 <div
@@ -354,8 +316,8 @@ export default function MyFriendsPage() {
                       alt="user"
                       className="cursor-pointer rounded-xl object-cover
                     
-                    w-[260px] md:w-[200px] lg:w-[250px] min-[1440px]:w-[290px] 2xl:w-[150px] 
-                    h-[260px] md:h-[200px] lg:h-[250px] min-[1440px]:h-[290px] 2xl:h-[150px]"
+                    w-[260px] md:w-[200px] lg:w-[250px] min-[1440px]:w-[290px] 2xl:w-[180px] 
+                    h-[260px] md:h-[200px] lg:h-[250px] min-[1440px]:h-[290px] 2xl:h-[180px]"
                     />
                   ) : (
                     <Avatar
@@ -363,9 +325,9 @@ export default function MyFriendsPage() {
                       size="280"
                       className="cursor-pointer rounded-xl object-cover 
                     
-                    w-full max-w-[240px] md:max-w-[180px] lg:max-w-[230px] 2xl:max-w-[150px]
+                    w-full max-w-[240px] md:max-w-[180px] lg:max-w-[230px] 2xl:max-w-[180px]
                     
-                    h-full max-h-[240px] sm:max-h-[260px] md:max-h-[200px] lg:max-h-[250px] 2xl:max-h-[150px] "
+                    h-full max-h-[240px] sm:max-h-[260px] md:max-h-[200px] lg:max-h-[250px] 2xl:max-h-[180px] "
                     />
                   )}
 
@@ -377,8 +339,8 @@ export default function MyFriendsPage() {
 
                   <button
                     leftIcon={
-                      <Img
-                        src="img_checkmark_white_a700.svg"
+                      <Image
+                        src="/img_checkmark_white_a700.svg"
                         width={14}
                         height={14}
                         alt="checkmark"
@@ -403,10 +365,10 @@ export default function MyFriendsPage() {
 
         {/* Whom to follow */}
         <div className="flex flex-col w-full items-center md:items-start justify-center gap-5">
-          <h1 className="text-primary_text font-montserrat text-3xl font-bold">
+          <h1 className="text-primary_text font-lato text-3xl font-medium">
             Whom to follow
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 text-primary_text">
+          <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-7 gap-5 text-primary_text">
             {unfollowing && unfollowing.length > 0 ? (
               unfollowing.map((unfollower, index) => (
                 <div
@@ -419,7 +381,10 @@ export default function MyFriendsPage() {
                       <img
                         src={unfollower.photo.url}
                         alt="avatar"
-                        className="h-[45px] w-[45px] rounded-xl object-cover"
+                        className="rounded-xl object-cover
+                       lg:h-[80px]   sm:h-[50px] h-[75px]
+                       lg:w-[80px] sm:w-[50px] w-[75px]
+                        "
                       />
                     ) : (
                       <Avatar
@@ -437,18 +402,18 @@ export default function MyFriendsPage() {
                   </div>
 
                   <div className="flex flex-col items-center justify-center gap-1">
-                    <h1 className="text-primary_text font-medium font-lato text-xl break-words text-center">
+                    <h1 className="text-primary_text font-medium font-lato text-xl md:text-[1rem]  break-words text-center">
                       {unfollower && unfollower.name}
                     </h1>
-                    {unfollower.about && (
+                    {/* {unfollower.about && (
                       <p className="text-secondary_text font-normal font-roboto text-base break-words text-center">
                         {unfollower.about}
                       </p>
-                    )}
+                    )} */}
                   </div>
 
                   <Tooltip title="Follow">
-                    <Button
+                    <button
                       className="w-[28px]  rounded-lg bg-indigo-400"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -456,14 +421,12 @@ export default function MyFriendsPage() {
                       }}
                     >
                       <UserAddOutlined />
-                    </Button>
+                    </button>
                   </Tooltip>
                 </div>
               ))
             ) : (
-              <p className=" text-secondary_text ">
-                You have no followers right now.
-              </p>
+              <p className=" text-secondary_text ">You have no followers.</p>
             )}
           </div>
         </div>

@@ -1,31 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Img, Button, Text, Heading } from "../../components";
+
 import api from "@/utils/axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import Avatar from "react-avatar";
 import ReactPlayer from "react-player";
 import { io } from "socket.io-client";
-import { CloseCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import { AiOutlineClose } from "react-icons/ai";
 
-import { IoIosShareAlt } from "react-icons/io";
-import {
-  FaRegCommentAlt,
-  FaRegHeart,
-  FaHeart,
-  FaChevronCircleLeft,
-  FaChevronCircleRight,
-  FaSave,
-} from "react-icons/fa";
+import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 
-import CommentBody from "../commentBody";
 import { useMutation, useQuery } from "@apollo/client";
 import {
   CREATE_POST_MUTATION,
   CREATE_STORY_MUTATION,
-  DELETE_POST_MUTATION,
   DELETE_STORY_MUTATION,
   LIKE_POST_MUTATION,
   LIKE_STORY_MUTATION,
@@ -33,6 +23,8 @@ import {
   UNLIKE_STORY_MUTATION,
 } from "@/graphql/mutation";
 import { GET_POSTS_QUERY, GET_STORY_FEED_QUERY } from "@/graphql/query";
+import { Post } from "./Post";
+import { PopupStories } from "./PopupStories";
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
 });
@@ -332,12 +324,15 @@ const Posts = () => {
   // console.log(stories);
 
   return (
-    <div className="grid gap-[30px] w-full">
-      <div className="flex flex-col xl:flex-row flex-grow flex-shrink gap-[30px]">
+    <div className="grid gap-[30px] w-full h-full min-h-screen">
+      <div className="flex flex-col xl:flex-row flex-grow flex-shrink gap-[30px] px-5">
         {/* Create Post Section */}
         <div className=" flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
-          <form className="flex gap-2.5 w-full" onSubmit={handleSubmit}>
-            <div className="flex items-start">
+          <form
+            className="flex items-start justify-between gap-2.5 w-full"
+            onSubmit={handleSubmit}
+          >
+            <div className="flex items-center justify-center ">
               {isClient && user?.photo?.url ? (
                 <Link href="/myprofile">
                   <img
@@ -345,7 +340,7 @@ const Posts = () => {
                     width={80}
                     height={80}
                     alt="avatar"
-                    className="cursor-pointer rounded-full object-cover"
+                    className="rounded-full cursor-pointer w-12 h-12 object-center sm:w-20 sm:h-20"
                   />
                 </Link>
               ) : (
@@ -354,12 +349,12 @@ const Posts = () => {
                     name={user?.name || "User"}
                     size="80"
                     round
-                    className="cursor-pointer"
+                    className="rounded-full cursor-pointer w-12 h-12 object-center sm:w-20 sm:h-20"
                   />
                 </Link>
               )}
             </div>
-            <div className="flex flex-col w-full gap-y-2">
+            <div className="flex flex-col w-[90%] gap-y-2">
               <textarea
                 placeholder="What are you thinking…"
                 value={content}
@@ -383,7 +378,7 @@ const Posts = () => {
                   ref={videoInputRef}
                   className="hidden"
                 />
-                <Button
+                <button
                   type="button"
                   onClick={() => imageInputRef.current.click()}
                   className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] ${
@@ -392,8 +387,8 @@ const Posts = () => {
                   disabled={isVideoSelected}
                 >
                   Upload Image
-                </Button>
-                <Button
+                </button>
+                <button
                   type="button"
                   onClick={() => videoInputRef.current.click()}
                   className={`flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] ${
@@ -402,13 +397,7 @@ const Posts = () => {
                   disabled={isImageSelected}
                 >
                   Upload Video
-                </Button>
-                {/* <button
-                  type="submit"
-                  className="mt-2 flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-xl px-5"
-                >
-                  Post
-                </button> */}
+                </button>
 
                 {/* Preview Section */}
 
@@ -469,22 +458,6 @@ const Posts = () => {
             </div>
           </form>
         </div>
-
-        {/* {isVideoSelected && video && (
-          <div className="relative mt-3">
-            <ReactPlayer
-              url={video}
-              width="100%"
-              height="100%"
-              className="rounded-lg"
-              controls
-            />
-            <CloseCircleOutlined
-              className="absolute top-2 right-2 text-xl text-red50 cursor-pointer"
-              onClick={clearVideo}
-            />
-          </div>
-        )} */}
 
         {/* Stories Section */}
         <div className="relative  flex flex-col items-center justify-center w-full p-5 rounded-[12px] bg-shadow ">
@@ -568,7 +541,7 @@ const Posts = () => {
       </div>
 
       {/* Posts */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-[30px] w-full">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-[30px] px-5 w-full h-full min-h-screen bg-background">
         {posts &&
           posts.map((post, index) => (
             <Post
@@ -597,530 +570,529 @@ const Posts = () => {
 
 // Post
 
-export const Post = ({
-  post,
-  loadPosts,
-  handleLike,
-  handleUnlike,
-  user,
-  isClient,
-}) => {
-  function formatDateTime(timestamp) {
-    if (!timestamp) {
-      return "Invalid Date";
-    }
-    const date = new Date(parseInt(timestamp, 10));
+// export const Post = ({
+//   post,
+//   loadPosts,
+//   handleLike,
+//   handleUnlike,
+//   user,
+//   isClient,
+// }) => {
+//   function formatDateTime(timestamp) {
+//     if (!timestamp) {
+//       return "Invalid Date";
+//     }
+//     const date = new Date(parseInt(timestamp, 10));
 
-    if (isNaN(date.getTime())) {
-      return "Invalid Date";
-    }
+//     if (isNaN(date.getTime())) {
+//       return "Invalid Date";
+//     }
 
-    return new Intl.DateTimeFormat("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-    }).format(date);
-  }
-  const formattedDate = formatDateTime(post.createdAt);
+//     return new Intl.DateTimeFormat("en-US", {
+//       weekday: "long",
+//       year: "numeric",
+//       month: "long",
+//       day: "numeric",
+//       hour: "2-digit",
+//       minute: "2-digit",
+//       second: "2-digit",
+//       hour12: true,
+//     }).format(date);
+//   }
+//   const formattedDate = formatDateTime(post.createdAt);
 
-  const [deletePost] = useMutation(DELETE_POST_MUTATION);
+//   const [deletePost] = useMutation(DELETE_POST_MUTATION);
 
-  const handleDelete = async () => {
-    try {
-      const answer = window.confirm("Are you sure?");
-      if (!answer) return;
+//   const handleDelete = async () => {
+//     try {
+//       const answer = window.confirm("Are you sure?");
+//       if (!answer) return;
 
-      const { data } = await deletePost({
-        variables: { id: post._id },
-      });
+//       const { data } = await deletePost({
+//         variables: { id: post._id },
+//       });
 
-      if (data.deletePost.ok) {
-        toast.error("Post deleted");
-        loadPosts();
-      } else {
-        toast.error("Error deleting post");
-      }
-    } catch (err) {
-      console.log(err);
-      toast.error("Error deleting post");
-    }
-  };
+//       if (data.deletePost.ok) {
+//         toast.error("Post deleted");
+//         loadPosts();
+//       } else {
+//         toast.error("Error deleting post");
+//       }
+//     } catch (err) {
+//       console.log(err);
+//       toast.error("Error deleting post");
+//     }
+//   };
 
-  const truncateText = (text, wordLimit) => {
-    const words = text.split(" ");
-    if (words.length <= wordLimit) return text;
-    return words.slice(0, wordLimit).join(" ") + " ";
-  };
+//   const truncateText = (text, wordLimit) => {
+//     const words = text.split(" ");
+//     if (words.length <= wordLimit) return text;
+//     return words.slice(0, wordLimit).join(" ") + " ";
+//   };
 
-  const truncatedContent = truncateText(post.content, 20);
+//   const truncatedContent = truncateText(post.content, 20);
 
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const togglePopup = () => {
-    setIsPopupOpen(!isPopupOpen);
-  };
-  return (
-    <div className="flex w-full flex-col gap-[15px] rounded-[12px] bg-shadow p-5 ">
-      <div className="flex items-center justify-between gap-5 ">
-        <div className="flex w-[100%] items-center gap-2.5">
-          <Link href={`/userprofile/${post.postedBy?._id}`}>
-            {post?.postedBy?.photo ? (
-              <img
-                src={post.postedBy?.photo?.url}
-                width={50}
-                height={50}
-                alt="avatar"
-                className="rounded-full object-cover"
-              />
-            ) : (
-              <Avatar
-                name={post?.postedBy?.name}
-                size="50"
-                round="100px"
-                textSizeRatio={2}
-                color="#222831"
-                className="border"
-              />
-            )}
-          </Link>
-          <div className="flex flex-col items-start gap-[2px]">
-            <h1 className="!text-primary_text font-serif font-bold text-[17px] sm:text-[1.6rem]">
-              {post.postedBy?.name}
-            </h1>
-            <p
-              size="s"
-              as="p"
-              className="!text-secondary_text text-[10px] md:text-sm font-semibold"
-            >
-              {formattedDate}
-            </p>
-          </div>
-        </div>
-        <DeleteOutlined
-          className="text-red-500 cursor-pointer text-xl sm:text-2xl duration-500
-          transition-transform hover:scale-125"
-          onClick={handleDelete}
-        />
-      </div>
-      <div
-        className="flex flex-col items-center justify-center gap-y-5
-       max-w-full"
-      >
-        <div
-          className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
-          w-[240px] h-[240px]
-          min-[360px]:w-[300px] min-[360px]:h-[300px]
-          sm:w-[570px] sm:h-[500px]
-          md:w-[700px] 
-          lg:w-[870px] lg:h-[550px]
-          xl:w-[530px] xl:h-[500px]
-          2xl:w-[655px] 2xl:h-[655px] "
-        >
-          {post && post.image && post.image.url && (
-            <div className="flex items-center justify-center w-full h-full">
-              <img
-                src={post.image.url}
-                alt="post image"
-                className="block max-w-full max-h-full m-auto object-contain"
-              />
-            </div>
-          )}
+//   const [isPopupOpen, setIsPopupOpen] = useState(false);
+//   const togglePopup = () => {
+//     setIsPopupOpen(!isPopupOpen);
+//   };
+//   return (
+//     <div className="flex w-full flex-col gap-[15px] rounded-[12px] bg-shadow p-5 ">
+//       <div className="flex items-center justify-between gap-5 ">
+//         <div className="flex w-[100%] items-center gap-2.5">
+//           <Link href={`/userprofile/${post.postedBy?._id}`}>
+//             {post?.postedBy?.photo ? (
+//               <img
+//                 src={post.postedBy?.photo?.url}
+//                 width={50}
+//                 height={50}
+//                 alt="avatar"
+//                 className="rounded-full object-cover"
+//               />
+//             ) : (
+//               <Avatar
+//                 name={post?.postedBy?.name}
+//                 size="50"
+//                 round="100px"
+//                 textSizeRatio={2}
+//                 color="#222831"
+//                 className="border"
+//               />
+//             )}
+//           </Link>
+//           <div className="flex flex-col items-start gap-[2px]">
+//             <h1 className="!text-primary_text font-serif font-bold text-[17px] sm:text-[1.6rem]">
+//               {post.postedBy?.name}
+//             </h1>
+//             <p
+//               size="s"
+//               as="p"
+//               className="!text-secondary_text text-[10px] md:text-sm font-semibold"
+//             >
+//               {formattedDate}
+//             </p>
+//           </div>
+//         </div>
+//         <DeleteOutlined
+//           className="text-red-500 cursor-pointer text-xl sm:text-2xl duration-500
+//           transition-transform hover:scale-125"
+//           onClick={handleDelete}
+//         />
+//       </div>
+//       <div
+//         className="flex flex-col items-center justify-center gap-y-5
+//        max-w-full"
+//       >
+//         <div
+//           className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
+//           w-[240px] h-[240px]
+//           min-[360px]:w-[300px] min-[360px]:h-[300px]
+//           sm:w-[570px] sm:h-[500px]
+//           md:w-[700px]
+//           lg:w-[870px] lg:h-[550px]
+//           xl:w-[530px] xl:h-[500px]
+//           2xl:w-[655px] 2xl:h-[655px] "
+//         >
+//           {post && post.image && post.image.url && (
+//             <div className="flex items-center justify-center w-full h-full">
+//               <img
+//                 src={post.image.url}
+//                 alt="post image"
+//                 className="block max-w-full max-h-full m-auto object-contain"
+//               />
+//             </div>
+//           )}
 
-          {post && post.video_link && post.video_link.Location && (
-            <div className="flex items-center justify-center w-full h-full">
-              <ReactPlayer
-                url={post.video_link.Location}
-                width="100%"
-                height="100%"
-                className="max-w-full max-h-full m-auto"
-                controls
-              />
-            </div>
-          )}
-        </div>
+//           {post && post.video_link && post.video_link.Location && (
+//             <div className="flex items-center justify-center w-full h-full">
+//               <ReactPlayer
+//                 url={post.video_link.Location}
+//                 width="100%"
+//                 height="100%"
+//                 className="max-w-full max-h-full m-auto"
+//                 controls
+//               />
+//             </div>
+//           )}
+//         </div>
 
-        <div className="flex flex-col self-stretch">
-          <Text
-            as="p"
-            className="leading-5 !text-primary_text text-xs sm:text-base"
-          >
-            {truncatedContent}
+//         <div className="flex flex-col self-stretch">
+//           <h1
+//             as="p"
+//             className="leading-5 !text-primary_text text-xs sm:text-base"
+//           >
+//             {truncatedContent}
 
-            <div
-              onClick={togglePopup}
-              className="inline-block text-highlight cursor-pointer"
-            >
-              ... Read More
-            </div>
-          </Text>
-        </div>
+//             <div
+//               onClick={togglePopup}
+//               className="inline-block text-highlight cursor-pointer"
+//             >
+//               ... Read More
+//             </div>
+//           </h1>
+//         </div>
 
-        <div className="flex self-stretch justify-between gap-y-5 ">
-          <div className="flex items-center justify-between gap-[15px]">
-            <div className="flex items-center cursor-pointer">
-              {isClient && post.likes?.includes(user?._id) ? (
-                <FaHeart
-                  className="text-red-500"
-                  onClick={() => {
-                    handleUnlike(post._id);
-                  }}
-                />
-              ) : (
-                <FaRegHeart
-                  className="text-primary_text"
-                  onClick={() => {
-                    handleLike(post._id);
-                  }}
-                />
-              )}
-              <Text as="p" className="ml-[5px] text-primary_text text-[1rem]">
-                {post.likes.length}
-              </Text>
-            </div>
-            <div className="flex items-center justify-center gap-x-2 cursor-pointer ">
-              <FaRegCommentAlt className="text-primary_text " />
-              <Text as="p" className="text-primary_text text-[1rem]">
-                {post.comments.length}
-              </Text>
-            </div>
-          </div>
-          <div className="flex items-center text-primary_text cursor-pointer relative">
-            <FaSave className="text-lg" />
-          </div>
-        </div>
-      </div>
-      {isPopupOpen && (
-        <Popup
-          onClose={togglePopup}
-          post={post}
-          user={user}
-          handleLike={handleLike}
-          handleUnlike={handleUnlike}
-          isClient={isClient}
-          loadPosts={loadPosts}
-        />
-      )}
-    </div>
-  );
-};
+//         <div className="flex self-stretch justify-between gap-y-5 ">
+//           <div className="flex items-center justify-between gap-[15px]">
+//             <div className="flex items-center cursor-pointer">
+//               {isClient && post.likes?.includes(user?._id) ? (
+//                 <FaHeart
+//                   className="text-red-500"
+//                   onClick={() => {
+//                     handleUnlike(post._id);
+//                   }}
+//                 />
+//               ) : (
+//                 <FaRegHeart
+//                   className="text-primary_text"
+//                   onClick={() => {
+//                     handleLike(post._id);
+//                   }}
+//                 />
+//               )}
+//               <h1 as="p" className="ml-[5px] text-primary_text text-[1rem]">
+//                 {post.likes.length}
+//               </h1>
+//             </div>
+//             <div className="flex items-center justify-center gap-x-2 cursor-pointer ">
+//               <FaRegCommentAlt className="text-primary_text " />
+//               <h1 as="p" className="text-primary_text text-[1rem]">
+//                 {post.comments.length}
+//               </h1>
+//             </div>
+//           </div>
+//           <div className="flex items-center text-primary_text cursor-pointer relative">
+//             <FaSave className="text-lg" />
+//           </div>
+//         </div>
+//       </div>
+//       {isPopupOpen && (
+//         <Popup
+//           onClose={togglePopup}
+//           post={post}
+//           user={user}
+//           handleLike={handleLike}
+//           handleUnlike={handleUnlike}
+//           isClient={isClient}
+//           loadPosts={loadPosts}
+//         />
+//       )}
+//     </div>
+//   );
+// };
 
 // Popup for posts
 
-const Popup = ({
-  onClose,
-  post,
-  user,
-  isClient,
-  handleLike,
-  handleUnlike,
-  loadPosts,
-}) => {
-  const [showFullContent, setShowFullContent] = useState(false);
+// const Popup = ({
+//   onClose,
+//   post,
+//   user,
+//   isClient,
+//   handleLike,
+//   handleUnlike,
+//   loadPosts,
+// }) => {
+//   const [showFullContent, setShowFullContent] = useState(false);
 
-  function formatDateTime(timestamp) {
-    if (!timestamp) {
-      return "Invalid Date";
-    }
-    const date = new Date(parseInt(timestamp, 10));
+//   function formatDateTime(timestamp) {
+//     if (!timestamp) {
+//       return "Invalid Date";
+//     }
+//     const date = new Date(parseInt(timestamp, 10));
 
-    if (isNaN(date.getTime())) {
-      return "Invalid Date";
-    }
+//     if (isNaN(date.getTime())) {
+//       return "Invalid Date";
+//     }
 
-    return new Intl.DateTimeFormat("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-    }).format(date);
-  }
+//     return new Intl.DateTimeFormat("en-US", {
+//       weekday: "long",
+//       year: "numeric",
+//       month: "long",
+//       day: "numeric",
+//       hour: "2-digit",
+//       minute: "2-digit",
+//       second: "2-digit",
+//       hour12: true,
+//     }).format(date);
+//   }
 
-  const formattedDate = formatDateTime(post.createdAt);
+//   const formattedDate = formatDateTime(post.createdAt);
 
-  const truncateText = (text, wordLimit) => {
-    if (showFullContent) return text;
-    const words = text.split(" ");
-    if (words.length <= wordLimit) return text;
-    return words.slice(0, wordLimit).join(" ") + " ";
-  };
+//   const truncateText = (text, wordLimit) => {
+//     if (showFullContent) return text;
+//     const words = text.split(" ");
+//     if (words.length <= wordLimit) return text;
+//     return words.slice(0, wordLimit).join(" ") + " ";
+//   };
 
-  const truncatedContent = truncateText(post.content, 20);
+//   const truncatedContent = truncateText(post.content, 20);
 
-  const handleReadMoreOrLess = () => {
-    setShowFullContent(!showFullContent);
-  };
+//   const handleReadMoreOrLess = () => {
+//     setShowFullContent(!showFullContent);
+//   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-filter backdrop-blur-lg">
-      <div>
-        <div className="flex justify-end text-3xl">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-primary_text"
-          >
-            <AiOutlineClose />
-          </button>
-        </div>
+//   return (
+//     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-filter backdrop-blur-lg">
+//       <div>
+//         <div className="flex justify-end text-3xl">
+//           <button
+//             onClick={onClose}
+//             className="absolute top-4 right-4 text-primary_text"
+//           >
+//             <AiOutlineClose />
+//           </button>
+//         </div>
 
-        <div className="flex items-center bg-shadow rounded-lg max-w-[20rem] md:max-w-full">
-          <div className="flex flex-col md:flex-row w-full items-start justify-between gap-x-5 p-5">
-            <div className="flex w-full flex-col">
-              <div className="flex flex-col items-center">
-                <div
-                  className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
-                  w-[270px] h-[240px]
-                  min-[360px]:w-[280px] min-[360px]:h-[250px]
-                  sm:w-[280px] sm:h-[250px]
-                  md:w-[350px] md:h-[420px]
-                  lg:w-[450px] lg:h-[420px]
-                  xl:w-[550px] xl:h-[550px]
-                  2xl:w-[650px] 2xl:h-[640px]"
-                >
-                  {post && post.image && post.image.url && (
-                    <div className="">
-                      <img
-                        src={post.image.url}
-                        width={290}
-                        height={150}
-                        alt="post image"
-                        className="w-full rounded-lg object-cover md:h-auto"
-                      />
-                    </div>
-                  )}
+//         <div className="flex items-center bg-shadow rounded-lg max-w-[20rem] md:max-w-full">
+//           <div className="flex flex-col md:flex-row w-full items-start justify-between gap-x-5 p-5">
+//             <div className="flex w-full flex-col">
+//               <div className="flex flex-col items-center">
+//                 <div
+//                   className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
+//                   w-[270px] h-[240px]
+//                   min-[360px]:w-[280px] min-[360px]:h-[250px]
+//                   sm:w-[280px] sm:h-[250px]
+//                   md:w-[350px] md:h-[420px]
+//                   lg:w-[450px] lg:h-[420px]
+//                   xl:w-[550px] xl:h-[550px]
+//                   2xl:w-[650px] 2xl:h-[640px]"
+//                 >
+//                   {post && post.image && post.image.url && (
+//                     <div className="">
+//                       <img
+//                         src={post.image.url}
+//                         width={290}
+//                         height={150}
+//                         alt="post image"
+//                         className="w-full rounded-lg object-cover md:h-auto"
+//                       />
+//                     </div>
+//                   )}
 
-                  {post && post.video_link && post.video_link.Location && (
-                    <div className="">
-                      <ReactPlayer
-                        url={post.video_link.Location}
-                        width="100%"
-                        height="100%"
-                        className="rounded-lg"
-                        controls
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+//                   {post && post.video_link && post.video_link.Location && (
+//                     <div className="">
+//                       <ReactPlayer
+//                         url={post.video_link.Location}
+//                         width="100%"
+//                         height="100%"
+//                         className="rounded-lg"
+//                         controls
+//                       />
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
 
-            {/* comments */}
-            <div
-              className="flex w-full shadow-inner flex-col gap-y-3 rounded-lg my-3 bg-background p-5 
-            
-            
-            max-w-[400px]  
-            h-[300px]
-            min-[360px]:h-[300px]
-            sm:h-[300px]
-            md:h-[420px]   
-            lg:h-[450px]
-            xl:h-[550px]
-            2xl:h-[640px]
-            
-            "
-            >
-              {/* who posted */}
-              <div className="flex items-center gap-2.5 bg-background ">
-                {post.postedBy?.photo ? (
-                  <img
-                    src={post.postedBy?.photo.url}
-                    width={50}
-                    height={50}
-                    alt="avatar"
-                    className="rounded-full object-cover"
-                  />
-                ) : (
-                  <Avatar
-                    name={post.postedBy?.name}
-                    size="50"
-                    round="100px"
-                    textSizeRatio={2}
-                    color="#222831"
-                    className="border"
-                  />
-                )}
-                <div className="flex flex-wrap flex-col items-start gap-[2px]">
-                  <h1 className="!text-primary_text font-serif font-bold text-[20px] sm:text-[1.6rem]">
-                    {post.postedBy?.name}
-                  </h1>
-                  <p className="!text-secondary_text text-[10px] lg:text-xs xl:text-sm font-semibold">
-                    {formattedDate}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col w-full gap-y-2 h-[calc(100%-4.5rem)] overflow-y-auto">
-                {/* description */}
-                <div className="flex w-full">
-                  <p className="!text-primary_text text-sm">
-                    {truncatedContent}
-                    <span
-                      onClick={handleReadMoreOrLess}
-                      className="inline-block text-highlight cursor-pointer "
-                    >
-                      {showFullContent ? "... Read Less" : "... Read More"}
-                    </span>
-                  </p>
-                </div>
+//             {/* comments */}
+//             <div
+//               className="flex w-full shadow-inner flex-col gap-y-3 rounded-lg my-3 bg-background p-5
 
-                {/* like counts */}
-                <div className="flex self-stretch justify-between gap-y-5 ">
-                  <div className="flex items-center justify-between gap-[15px]">
-                    <div
-                      className="flex items-center cursor-pointer"
-                      // onClick={() => toggleLike(post._id)}
-                    >
-                      {isClient && post.likes?.includes(user?._id) ? (
-                        <FaHeart
-                          className="text-red-500"
-                          onClick={() => {
-                            handleUnlike(post._id);
-                          }}
-                        />
-                      ) : (
-                        <FaRegHeart
-                          className="text-primary_text"
-                          onClick={() => {
-                            handleLike(post._id);
-                          }}
-                        />
-                      )}
-                      <Text
-                        as="p"
-                        className="ml-[5px] text-primary_text text-[1rem]"
-                      >
-                        {post.likes.length}
-                      </Text>
-                    </div>
-                    <div className="flex items-center justify-center gap-x-2 cursor-pointer ">
-                      <FaRegCommentAlt className="text-primary_text " />
-                      <Text as="p" className="text-primary_text text-[1rem]">
-                        {post.comments.length}
-                      </Text>
-                    </div>
-                  </div>
-                  <div className="flex items-center text-primary_text cursor-pointer">
-                    <FaSave className="text-lg" />
-                  </div>
-                </div>
+//             max-w-[400px]
+//             h-[300px]
+//             min-[360px]:h-[300px]
+//             sm:h-[300px]
+//             md:h-[420px]
+//             lg:h-[450px]
+//             xl:h-[550px]
+//             2xl:h-[640px]
 
-                {/* comments */}
-                <CommentBody
-                  postID={post._id}
-                  loadPosts={loadPosts}
-                  user={user}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+//             "
+//             >
+//               {/* who posted */}
+//               <div className="flex items-center gap-2.5 bg-background ">
+//                 {post.postedBy?.photo ? (
+//                   <img
+//                     src={post.postedBy?.photo.url}
+//                     width={50}
+//                     height={50}
+//                     alt="avatar"
+//                     className="rounded-full object-cover"
+//                   />
+//                 ) : (
+//                   <Avatar
+//                     name={post.postedBy?.name}
+//                     size="50"
+//                     round="100px"
+//                     textSizeRatio={2}
+//                     color="#222831"
+//                     className="border"
+//                   />
+//                 )}
+//                 <div className="flex flex-wrap flex-col items-start gap-[2px]">
+//                   <h1 className="!text-primary_text font-serif font-bold text-[20px] sm:text-[1.6rem]">
+//                     {post.postedBy?.name}
+//                   </h1>
+//                   <p className="!text-secondary_text text-[10px] lg:text-xs xl:text-sm font-semibold">
+//                     {formattedDate}
+//                   </p>
+//                 </div>
+//               </div>
+//               <div className="flex flex-col w-full gap-y-2 h-[calc(100%-4.5rem)] overflow-y-auto">
+//                 {/* description */}
+//                 <div className="flex w-full">
+//                   <p className="!text-primary_text text-sm">
+//                     {truncatedContent}
+//                     <span
+//                       onClick={handleReadMoreOrLess}
+//                       className="inline-block text-highlight cursor-pointer "
+//                     >
+//                       {showFullContent ? "... Read Less" : "... Read More"}
+//                     </span>
+//                   </p>
+//                 </div>
+
+//                 {/* like counts */}
+//                 <div className="flex self-stretch justify-between gap-y-5 ">
+//                   <div className="flex items-center justify-between gap-[15px]">
+//                     <div
+//                       className="flex items-center cursor-pointer"
+//                       // onClick={() => toggleLike(post._id)}
+//                     >
+//                       {isClient && post.likes?.includes(user?._id) ? (
+//                         <FaHeart
+//                           className="text-red-500"
+//                           onClick={() => {
+//                             handleUnlike(post._id);
+//                           }}
+//                         />
+//                       ) : (
+//                         <FaRegHeart
+//                           className="text-primary_text"
+//                           onClick={() => {
+//                             handleLike(post._id);
+//                           }}
+//                         />
+//                       )}
+//                       <h1
+//                         as="p"
+//                         className="ml-[5px] text-primary_text text-[1rem]"
+//                       >
+//                         {post.likes.length}
+//                       </h1>
+//                     </div>
+//                     <div className="flex items-center justify-center gap-x-2 cursor-pointer ">
+//                       <FaRegCommentAlt className="text-primary_text " />
+//                       <h1 as="p" className="text-primary_text text-[1rem]">
+//                         {post.comments.length}
+//                       </h1>
+//                     </div>
+//                   </div>
+//                   <div className="flex items-center text-primary_text cursor-pointer">
+//                     <FaSave className="text-lg" />
+//                   </div>
+//                 </div>
+
+//                 {/* comments */}
+//                 <CommentBody
+//                   postID={post._id}
+//                   loadPosts={loadPosts}
+//                   user={user}
+//                 />
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
 // Popup for stories
 
-const PopupStories = ({ onClose, content, StoryLike, StoryUnlike }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+// const PopupStories = ({ onClose, content, StoryLike, StoryUnlike }) => {
+//   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const scrollLeft = () => {
-    setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : 0));
-  };
+//   const scrollLeft = () => {
+//     setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : 0));
+//   };
 
-  const scrollRight = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex < content.length - 1 ? prevIndex + 1 : prevIndex
-    );
-  };
+//   const scrollRight = () => {
+//     setCurrentIndex((prevIndex) =>
+//       prevIndex < content.length - 1 ? prevIndex + 1 : prevIndex
+//     );
+//   };
 
-  const visibleStories = (index) => {
-    if (window.innerWidth >= 768) {
-      return content.slice(index, index + 1); // Show 2 stories for md and larger screens
-    } else {
-      return content.slice(index, index + 1); // Show 1 story for mobile screens
-    }
-  };
+//   const visibleStories = (index) => {
+//     if (window.innerWidth >= 768) {
+//       return content.slice(index, index + 1); // Show 2 stories for md and larger screens
+//     } else {
+//       return content.slice(index, index + 1); // Show 1 story for mobile screens
+//     }
+//   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-filter backdrop-blur-lg">
-      <div>
-        <div className="flex justify-end text-3xl">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-primary_text"
-          >
-            <AiOutlineClose />
-          </button>
-        </div>
+//   return (
+//     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-filter backdrop-blur-lg">
+//       <div>
+//         <div className="flex justify-end text-3xl">
+//           <button
+//             onClick={onClose}
+//             className="absolute top-4 right-4 text-primary_text"
+//           >
+//             <AiOutlineClose />
+//           </button>
+//         </div>
 
-        <div className="flex items-center bg-shadow rounded-lg max-w-[20rem] md:max-w-full relative">
-          <button
-            onClick={scrollLeft}
-            className="absolute z-10 px-1 left-0 rounded-full text-3xl text-highlight hover:text-hover_highlight "
-          >
-            <FaChevronCircleLeft />
-          </button>
-          <button
-            onClick={scrollRight}
-            className="absolute z-10 px-1 right-0 rounded-full text-3xl text-highlight hover:text-hover_highlight "
-          >
-            <FaChevronCircleRight />
-          </button>
+//         <div className="flex items-center bg-shadow rounded-lg max-w-[20rem] md:max-w-full relative">
+//           <button
+//             onClick={scrollLeft}
+//             className="absolute z-10 px-1 left-0 rounded-full text-3xl text-highlight hover:text-hover_highlight "
+//           >
+//             <FaChevronCircleLeft />
+//           </button>
+//           <button
+//             onClick={scrollRight}
+//             className="absolute z-10 px-1 right-0 rounded-full text-3xl text-highlight hover:text-hover_highlight "
+//           >
+//             <FaChevronCircleRight />
+//           </button>
 
-          <div className="flex flex-col md:flex-row w-full items-start justify-between gap-x-5 p-5">
-            {visibleStories(currentIndex).map((story, index) => (
-              <div key={index} className="flex w-full flex-col">
-                <div className="flex flex-col items-center">
-                  {/* <div
-                    className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
-                    w-[270px] h-[240px]
-                    min-[360px]:w-[280px] min-[360px]:h-[250px]
-                    sm:w-[280px] sm:h-[250px]
-                    md:w-[350px] md:h-[420px]
-                    lg:w-[450px] lg:h-[420px]
-                    xl:w-[550px] xl:h-[550px]
-                    2xl:w-[650px] 2xl:h-[640px]"
-                  > */}
-                  <div
-                    className="flex flex-col p-2 items-center justify-center gap-y-3 
-                    w-[270px] h-[270px]
-                    min-[360px]:w-[280px] min-[360px]:h-[280px]
-                   
-                    md:w-[350px] md:h-[350px]
-                    lg:w-[450px] lg:h-[450px]
-                    xl:w-[550px] xl:h-[550px]
-                    2xl:w-[650px] 2xl:h-[650px]"
-                  >
-                    <div className="flex items-center justify-center w-[90%] h-[90%]">
-                      <img
-                        src={story.image?.url}
-                        alt="User"
-                        className="w-full h-full bg-contain bg-no-repeat bg-center rounded-xl"
-                      />
-                    </div>
-                    <div className="flex items-center justify-center w-full">
-                      <p className="text-secondary_text text-lg font-semibold max-w-full">
-                        {story.postedBy?.name}
-                      </p>
-                    </div>
-                  </div>
-                  {/* </div> */}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+//           <div className="flex flex-col md:flex-row w-full items-start justify-between gap-x-5 p-5">
+//             {visibleStories(currentIndex).map((story, index) => (
+//               <div key={index} className="flex w-full flex-col">
+//                 <div className="flex flex-col items-center">
+//                   {/* <div
+//                     className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
+//                     w-[270px] h-[240px]
+//                     min-[360px]:w-[280px] min-[360px]:h-[250px]
+//                     sm:w-[280px] sm:h-[250px]
+//                     md:w-[350px] md:h-[420px]
+//                     lg:w-[450px] lg:h-[420px]
+//                     xl:w-[550px] xl:h-[550px]
+//                     2xl:w-[650px] 2xl:h-[640px]"
+//                   > */}
+//                   <div
+//                     className="flex flex-col p-2 items-center justify-center gap-y-3
+//                     w-[270px] h-[270px]
+//                     min-[360px]:w-[280px] min-[360px]:h-[280px]
+
+//                     md:w-[350px] md:h-[350px]
+//                     lg:w-[450px] lg:h-[450px]
+//                     xl:w-[550px] xl:h-[550px]
+//                     2xl:w-[650px] 2xl:h-[650px]"
+//                   >
+//                     <div className="flex items-center justify-center w-[90%] h-[90%]">
+//                       <img
+//                         src={story.image?.url}
+//                         alt="User"
+//                         className="w-full h-full bg-contain bg-no-repeat bg-center rounded-xl"
+//                       />
+//                     </div>
+//                     <div className="flex items-center justify-center w-full">
+//                       <p className="text-secondary_text text-lg font-semibold max-w-full">
+//                         {story.postedBy?.name}
+//                       </p>
+//                     </div>
+//                   </div>
+//                   {/* </div> */}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
 export default Posts;

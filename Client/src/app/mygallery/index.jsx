@@ -1,56 +1,33 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import { Button } from "../../components";
-import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
-import Navbar from "@/components/Nav/Navbar";
-import { Post } from "@/components/Postcard/Posts";
-import { useSelector } from "react-redux";
-import api from "@/utils/axios";
-import Avatar from "react-avatar";
-import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
-export default function MyProfilePage() {
-  const [open, setOpen] = useState(false);
-  const { user } = useSelector((state) => state.user);
+import { Post } from "@/components/Postcard/Post";
+import { POSTS_BY_USER_QUERY } from "@/graphql/query";
+import { useQuery } from "@apollo/client";
+
+export default function MyGallery() {
+  const [posts, setPosts] = useState([]);
+  const { data } = useQuery(POSTS_BY_USER_QUERY);
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.matchMedia("(min-width: 768px)").matches) {
-        setOpen(true);
-      } else {
-        setOpen(false);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    if (data) {
+      setPosts(data.postsByUser);
+    }
+  }, [data]);
 
   return (
-    <div className="flex items-start justify-center gap-5 bg-background">
-      {/* Nav bar */}
-      <Navbar open={open} setOpen={setOpen} />
-      <div
-        className={`md:hidden fixed z-50 bottom-0 transition-all duration-700 ${
-          open ? "left-[4.5rem] px-2 py-1" : "left-0 p-1"
-        }`}
-      >
-        <h1
-          className="text-2xl bg-gray-50 p-2 rounded-xl font-semibold transition-transform duration-700"
-          onClick={() => {
-            setOpen(!open);
-          }}
-        >
-          {open ? <RiMenuUnfold2Line /> : <RiMenuFold2Line />}
-        </h1>
-      </div>
+    <div className="flex  min-h-screen items-start justify-center gap-5 bg-background">
+      <div className="flex flex-col w-[92%] mx-auto items-center justify-center gap-5 py-4">
+        <div className="flex flex-col items-start justify-center gap-y-5">
+          <div className="flex flex-col w-full items-center py-2 justify-center gap-5">
+            <h1 className="text-primary_text font-logo_text text-3xl font-medium">
+              Yay! Here is your Gallery
+            </h1>
+          </div>
 
-      <div className="flex items-center justify-center gap-5 md:w-full flex-col md:py-2 mr-5">
-        <div className="mt-6 flex flex-col gap-10">
-          {/* rest contents */}
-
-          <div className="flex flex-col items-start justify-center gap-y-5">
-            Hi
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-[30px] w-full">
+            {posts &&
+              posts.map((post, index) => <Post post={post} key={index} />)}
           </div>
         </div>
       </div>

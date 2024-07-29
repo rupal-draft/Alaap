@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import api from "@/utils/axios";
-import { formatDistanceToNow } from "date-fns";
+// import { formatDistanceToNow } from "date-fns";
 import Avatar from "react-avatar";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
@@ -82,8 +82,6 @@ const Popup = ({ setIsOpenPopup, position }) => {
                     ) : (
                       <Avatar
                         name={notification.user?.name}
-                        // size="70"
-                        // round={true}
                         className="rounded-full w-12 h-12 sm:w-20 sm:h-20"
                       />
                     )}

@@ -1,23 +1,23 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import Logo from "../../../public/images/sociofyLogoTemp.png";
-import { Img, Button, Text, Heading, Input } from "../../components";
+import Logo from "../../../public/sociofyLogoTemp.png";
 import Link from "next/link";
-import { Sidebar, sidebarClasses } from "react-pro-sidebar";
 import Popup from "./Popup";
 
 import { FaHome, FaUserFriends } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
-import { BsSendFill, BsArrowLeftShort } from "react-icons/bs";
+import { BsSendFill } from "react-icons/bs";
 import { PiRobotFill } from "react-icons/pi";
 import { IoIosNotifications, IoIosSettings, IoIosLogOut } from "react-icons/io";
+import { MdOutlineSaveAlt } from "react-icons/md";
+
 import { useDispatch } from "react-redux";
-import { logout } from "@/Context/Slices/authSlice";
+import { logout } from "@/context/slices/authSlice";
 import { resetClient } from "@/utils/graphql";
 
 export const navData = [
-  { name: "Home", path: "/home1", icon: <FaHome /> },
+  { name: "Home", path: "/home", icon: <FaHome /> },
   { name: "Profile", path: "/myprofile", icon: <FaCircleUser /> },
   { name: "Friends", path: "/myfriends", icon: <FaUserFriends /> },
   {
@@ -27,6 +27,7 @@ export const navData = [
   },
   { name: "Messages", path: "/messages", icon: <BsSendFill /> },
   { name: "AIChat", path: "/aichat", icon: <PiRobotFill /> },
+  { name: "Saved", path: "/savedposts", icon: <MdOutlineSaveAlt /> },
 ];
 export const navData1 = [
   { name: "Settings", path: "/settings", icon: <IoIosSettings /> },
@@ -42,7 +43,6 @@ const Navbar = ({ open, setOpen, socket, myId }) => {
     });
     if (socket && myId) socket.current.emit("logout", myId);
   };
-  const [collapsed, setCollapsed] = React.useState(false);
   const dispatch = useDispatch();
 
   const [isOpenPopup, setIsOpenPopup] = useState(false);
@@ -64,7 +64,7 @@ const Navbar = ({ open, setOpen, socket, myId }) => {
 
   return (
     <div
-      className={`fixed z-30 lg:z-40 lg:!sticky top-0 h-full lg:h-screen self-stretch overflow-auto bg-background pt-0 flex flex-col items-center border-r-[2px] border-[#31363F]  transition-width duration-700 ${
+      className={`fixed z-40  top-0 h-full lg:h-screen self-stretch overflow-auto bg-background pt-0 flex flex-col items-center border-r-[2px] border-[#31363F]  transition-width duration-700 ${
         open ? "w-[80px]" : "w-[0px]"
       }`}
     >

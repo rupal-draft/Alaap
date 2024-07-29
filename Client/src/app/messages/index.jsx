@@ -1,9 +1,8 @@
 "use client";
-import Logo from "../../../public/images/sociofyLogoTemp.png";
-import MessageImg from "../../../public/images/sociofyMessage1.png";
+import Logo from "../../../public/sociofyLogoTemp.png";
+import MessageImg from "../../../public/sociofyMessage1.png";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import Navbar from "@/components/Nav/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { FaSearch } from "react-icons/fa";
@@ -20,7 +19,7 @@ import {
   SendOutlined,
   SyncOutlined,
 } from "@ant-design/icons";
-import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
+
 import { PiChatCircleFill, PiChatCircleSlashFill } from "react-icons/pi";
 
 import { io } from "socket.io-client";
@@ -35,7 +34,7 @@ import {
   messageSend,
   seenMessage,
   updateMessage,
-} from "@/Context/Messanger/messangerAction";
+} from "@/context/messanger/messangerAction";
 import Avatar from "react-avatar";
 
 const MessagesIndexPage = () => {
@@ -366,22 +365,6 @@ const MessagesIndexPage = () => {
 
   return (
     <div className="flex h-screen max-h-screen">
-      <Navbar open={open} setOpen={setOpen} socket={socket} myId={user?._id} />
-
-      <div
-        className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
-          open ? "left-[5rem] px-2 py-1" : "left-0 px-2 py-1"
-        }`}
-      >
-        <h1
-          className="text-2xl bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
-          onClick={() => {
-            setOpen(!open);
-          }}
-        >
-          {open ? <RiMenuUnfold2Line /> : <RiMenuFold2Line />}
-        </h1>
-      </div>
       {/* Messaging Sidebar */}
 
       <div
@@ -406,7 +389,7 @@ const MessagesIndexPage = () => {
                 placeholder="Search in social…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full text-primary_text bg-shadow rounded-lg focus:outline-none focus:border focus:border-highlight 
+                className="w-full text-primary_text bg-shadow border rounded-lg focus:outline-none focus:border focus:border-highlight 
                     text-base sm:text-base 
                     pl-10 sm:pl-10  
                     py-1 sm:py-2
@@ -514,7 +497,7 @@ const MessagesIndexPage = () => {
         }`}
       >
         <h1
-          className="text-[1.7rem] bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
+          className="text-[1.6rem] bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
           onClick={() => {
             setSidebarOpen(!sidebarOpen);
           }}
@@ -524,7 +507,7 @@ const MessagesIndexPage = () => {
       </div>
 
       {currentFriend ? (
-        <div className="flex flex-col justify-between min-h-screen flex-1 gap-3 px-2 lg:px-5">
+        <div className="flex bg-background flex-col justify-between min-h-screen flex-1 gap-3 px-2 lg:px-5">
           {/* individual message box header */}
           <Link
             href="/"
@@ -750,7 +733,7 @@ const MessagesIndexPage = () => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center  flex-1 gap-3 px-10">
+        <div className="flex flex-col items-center justify-center  bg-background flex-1 gap-3 px-10">
           <div className="w-[60px] lg:w-[70px]">
             <Image src={Logo} alt="sociofy" className="rounded-full" />
           </div>

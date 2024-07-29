@@ -7,6 +7,6 @@ export const metadata = {
   //ogTitle:'...'
 };
 
-export default function MyGallery() {
+export default function MySavedPosts() {
   return <Page />;
 }

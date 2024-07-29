@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Img } from "../../components";
 import Link from "next/link";
 import { IoSend } from "react-icons/io5";
 import { formatDistanceToNow } from "date-fns";
