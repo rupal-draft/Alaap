@@ -26,7 +26,7 @@ export const navData = [
     icon: <IoIosNotifications />,
   },
   { name: "Messages", path: "/messages", icon: <BsSendFill /> },
-  { name: "AIChat", path: "/aichat", icon: <PiRobotFill /> },
+  { name: "Sociofy-AI", path: "/sociofy-ai", icon: <PiRobotFill /> },
   { name: "Saved", path: "/savedposts", icon: <MdOutlineSaveAlt /> },
 ];
 export const navData1 = [

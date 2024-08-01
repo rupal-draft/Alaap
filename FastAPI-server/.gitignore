@@ -1,2 +1,12 @@
-.vercel
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+venv.bak/
+.idea/
+.vscode/
 .env
