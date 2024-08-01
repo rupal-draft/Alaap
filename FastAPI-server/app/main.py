@@ -1,70 +1,27 @@
-from fastapi import FastAPI, Query, HTTPException
-from app.models.pydantic_models import Comment, ChatRequest, ChatResponse
-import joblib
-import re
-import string
-from nltk.corpus import stopwords
-from nltk.stem.wordnet import WordNetLemmatizer
-import nltk
-nltk.download('stopwords')
-nltk.download('wordnet')
+import uvicorn
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-import google.generativeai as genai
-import os
-
-load_dotenv()
+from app.api import router as api_router
 
 app = FastAPI()
 
-cors_origins = os.getenv('SITE_URL', '*')
+origins = [
+    "http://localhost:3000",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[cors_origins],
-    expose_headers=["*"],
+    allow_origins=origins,  
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"], 
 )
 
-# Load the model and vectorizer
-model = joblib.load('data/toxic_comment_model.pkl')
-vectorizer = joblib.load('data/vectorizer.pkl')
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the FastAPI application!"}
 
-# Configure the gemini api
-genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-genai_model = genai.GenerativeModel('gemini-1.5-flash')
-
-def preprocess_text(text):
-    text = text.lower()
-    text = re.sub(f'[{string.punctuation}]', '', text)
-    words = text.split()
-    stop_words = set(stopwords.words('english'))
-    words = [word for word in words if word not in stop_words]
-    lemmatizer = WordNetLemmatizer()
-    words = [lemmatizer.lemmatize(word) for word in words]
-    return ' '.join(words)
-
-@app.get('/')
-async def root():
-    return {"message": "Welcome to the FastAPI server!"}
-
-@app.get('/predict')
-async def predict(comment: str = Query(..., title="Comment Text")):
-    processed_text = preprocess_text(comment)
-    features = vectorizer.transform([processed_text])
-    prediction = model.predict(features)
-    return {'toxic': bool(prediction[0])}
-
-@app.post("/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
-    try:
-        response = genai_model.generate_content(request.message)
-        return ChatResponse(response=response.text)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+app.include_router(api_router, prefix="/api")
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
