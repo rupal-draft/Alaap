@@ -1,17 +1,23 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Button } from "../../components";
 import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
 import Navbar from "@/components/Nav/Navbar";
-import { Post } from "@/components/Postcard/Posts";
-import { useSelector } from "react-redux";
 import api from "@/utils/axios";
-import Avatar from "react-avatar";
-import Link from "next/link";
 
-export default function MyProfilePage() {
+export default function Gallery({ params }) {
   const [open, setOpen] = useState(true);
-  const { user } = useSelector((state) => state.user);
+  const { id } = params;
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    loadImages(id);
+  }, [id]);
+  const loadImages = async (id) => {
+    const { data } = await api.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/user-images/${id}`
+    );
+    setImages(data);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,7 +31,7 @@ export default function MyProfilePage() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
+  console.log(images);
   return (
     <div className="flex items-start justify-center gap-5 bg-background">
       {/* Nav bar */}

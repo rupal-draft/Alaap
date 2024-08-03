@@ -1,4 +1,5 @@
 import User from "./../Model/user.js";
+import Post from "./../Model/post.js";
 import { comparePassword, hashPassword } from "./../Helpers/auth.js";
 import cloudinary from "cloudinary";
 
@@ -250,5 +251,23 @@ export const getUserNotifications = async (req, res) => {
     res
       .status(500)
       .json({ error: "Server error while fetching notifications" });
+  }
+};
+
+export const getUserImages = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const posts = await Post.find({
+      postedBy: id,
+      "image.url": { $exists: true, $ne: null },
+    })
+      .select("image")
+      .exec();
+    const images = posts.map((post) => post.image);
+
+    res.json(images);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 };
