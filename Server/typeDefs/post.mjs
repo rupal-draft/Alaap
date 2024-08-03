@@ -3,6 +3,7 @@ import { gql } from "apollo-server-express";
 const postTypeDefs = gql`
   type Query {
     postsByUser: [Post!]!
+    getSavedPosts: [Post]
     userPosts(id: ID!): [Post!]!
     newsFeed: [Post!]!
     getPosts: [Post]
@@ -16,6 +17,8 @@ const postTypeDefs = gql`
     unlikePost(postId: ID!): AuthResponse!
     addComment(postId: ID!, comment: String!): Notification!
     removeComment(postId: ID!, commentId: ID!): AuthResponse!
+    savePost(postId: ID!): User!
+    unsavePost(postId: ID!): User!
   }
 
   type Post {

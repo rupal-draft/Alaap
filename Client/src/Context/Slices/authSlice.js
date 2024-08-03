@@ -24,6 +24,21 @@ const authSlice = createSlice({
         window.localStorage.setItem("user", JSON.stringify(user));
       }
     },
+    setSaved: (state, action) => {
+      const saved = action.payload.saved
+        ? action.payload.saved
+        : action.payload;
+      if (state.user) {
+        state.user.saved = saved;
+
+        if (typeof window !== "undefined") {
+          const userString = window.localStorage.getItem("user");
+          const user = userString ? JSON.parse(userString) : {};
+          user.saved = saved;
+          window.localStorage.setItem("user", JSON.stringify(user));
+        }
+      }
+    },
     logout: (state) => {
       state.user = null;
       if (typeof window !== "undefined") {
@@ -34,6 +49,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, logout, setSaved } = authSlice.actions;
 
 export default authSlice.reducer;

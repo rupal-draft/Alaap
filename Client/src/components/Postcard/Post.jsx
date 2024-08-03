@@ -3,8 +3,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import Avatar from "react-avatar";
 import ReactPlayer from "react-player";
-import { DeleteOutlined } from "@ant-design/icons";
-import { MdOutlineSaveAlt } from "react-icons/md";
+import { DeleteOutlined, SaveFilled, SaveOutlined } from "@ant-design/icons";
 
 import { FaRegCommentAlt, FaRegHeart, FaHeart } from "react-icons/fa";
 
@@ -18,6 +17,8 @@ export const Post = ({
   loadPosts,
   handleLike,
   handleUnlike,
+  handleSave,
+  handleUnSave,
   user,
   isClient,
 }) => {
@@ -206,7 +207,20 @@ export const Post = ({
             </div>
           </div>
           <div className="flex items-center text-primary_text cursor-pointer relative">
-            <MdOutlineSaveAlt className="text-lg" />
+            {isClient &&
+            user.saved?.some((savedPost) => savedPost._id === post._id) ? (
+              <SaveFilled
+                onClick={() => {
+                  handleUnSave(post._id);
+                }}
+              />
+            ) : (
+              <SaveOutlined
+                onClick={() => {
+                  handleSave(post._id);
+                }}
+              />
+            )}{" "}
           </div>
         </div>
       </div>

@@ -17,7 +17,18 @@ const postResolvers = {
         throw new Error("Error fetching posts");
       }
     },
-
+    getSavedPosts: async (_, __, { req, userId }) => {
+      try {
+        const user = await User.findById(userId);
+        return await Post.find({ _id: user.saved })
+          .populate("postedBy", "_id name photo")
+          .populate("comments.postedBy", "_id name photo")
+          .sort({ createdAt: -1 });
+      } catch (err) {
+        console.error(err);
+        throw new Error("Error fetching Saved Posts");
+      }
+    },
     postsByUser: async (_, __, { req, userId }) => {
       try {
         return await Post.find({ postedBy: userId })
@@ -247,6 +258,30 @@ const postResolvers = {
       } catch (err) {
         console.log(err);
         throw new Error("Error removing comment");
+      }
+    },
+    savePost: async (_, { postId }, { req, userId }) => {
+      try {
+        return await User.findByIdAndUpdate(
+          userId,
+          { $addToSet: { saved: postId } },
+          { new: true }
+        );
+      } catch (err) {
+        console.log(err);
+        throw new Error("Error saving posts");
+      }
+    },
+    unsavePost: async (_, { postId }, { req, userId }) => {
+      try {
+        return await User.findByIdAndUpdate(
+          userId,
+          { $pull: { saved: postId } },
+          { new: true }
+        );
+      } catch (err) {
+        console.log(err);
+        throw new Error("Error removing save");
       }
     },
   },

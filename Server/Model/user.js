@@ -50,6 +50,7 @@ const userSchema = new Schema(
     },
     following: [{ type: Schema.ObjectId, ref: "User" }],
     followers: [{ type: Schema.ObjectId, ref: "User" }],
+    saved: [{ type: Schema.ObjectId, red: "Post" }],
     notifications: [notificationSchema],
   },
   { timestamps: true }

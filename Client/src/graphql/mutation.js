@@ -33,6 +33,9 @@ export const LOGIN_MUTATION = gql`
         followers {
           _id
         }
+        saved {
+          _id
+        }
       }
     }
   }
@@ -207,6 +210,26 @@ export const UNLIKE_STORY_MUTATION = gql`
   mutation UnlikeStory($id: ID!) {
     unlikeStory(id: $id) {
       ok
+    }
+  }
+`;
+
+export const SAVE_POST_MUTATION = gql`
+  mutation SavePost($postId: ID!) {
+    savePost(postId: $postId) {
+      saved {
+        _id
+      }
+    }
+  }
+`;
+
+export const UNSAVE_POST_MUTATION = gql`
+  mutation UnsavePost($postId: ID!) {
+    unsavePost(postId: $postId) {
+      saved {
+        _id
+      }
     }
   }
 `;
