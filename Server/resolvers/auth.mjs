@@ -2,7 +2,7 @@ import { comparePassword, hashPassword } from "../Helpers/auth.js";
 import User from "../Model/user.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const register = async (_, { name, email, password }) => {
   if (!name) {
