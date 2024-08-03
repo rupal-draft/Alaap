@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "@/context/slices/authSlice";
 import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "@/graphql/mutation";
 import { resetClient } from "@/utils/graphql";
@@ -14,6 +13,7 @@ import { resetClient } from "@/utils/graphql";
 import landingBgImg from "../../../public/landingbg.jpg";
 import HeaderFooter from "@/components/HeaderFooter";
 import { SyncOutlined } from "@ant-design/icons";
+import { setCredentials } from "@/Context/Slices/authSlice";
 
 export default function LoginPage() {
   const router = useRouter();

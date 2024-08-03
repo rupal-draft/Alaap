@@ -1,5 +1,4 @@
 // src/utils/axios.js
-import { logout } from "@/context/slices/authSlice";
 
 import axios from "axios";
 

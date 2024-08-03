@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import api from "@/utils/axios";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Avatar from "react-avatar";
 import ReactPlayer from "react-player";
 import { io } from "socket.io-client";
@@ -19,12 +19,16 @@ import {
   DELETE_STORY_MUTATION,
   LIKE_POST_MUTATION,
   LIKE_STORY_MUTATION,
+  SAVE_POST_MUTATION,
   UNLIKE_POST_MUTATION,
   UNLIKE_STORY_MUTATION,
+  UNSAVE_POST_MUTATION,
 } from "@/graphql/mutation";
 import { GET_POSTS_QUERY, GET_STORY_FEED_QUERY } from "@/graphql/query";
 import { Post } from "./Post";
 import { PopupStories } from "./PopupStories";
+import { setSaved } from "@/Context/Slices/authSlice";
+// import { setSaved } from "@/Context/Slices/authSlice";
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
 });
@@ -43,7 +47,7 @@ const Posts = () => {
   const videoInputRef = useRef(null);
   const { user } = useSelector((state) => state.user);
   const [isClient, setIsClient] = useState(false);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -259,7 +263,12 @@ const Posts = () => {
   const [unlikePost] = useMutation(UNLIKE_POST_MUTATION, {
     refetchQueries: [{ query: GET_POSTS_QUERY }],
   });
-
+  const [savePost] = useMutation(SAVE_POST_MUTATION, {
+    refetchQueries: [{ query: GET_POSTS_QUERY }],
+  });
+  const [unsavePost] = useMutation(UNSAVE_POST_MUTATION, {
+    refetchQueries: [{ query: GET_POSTS_QUERY }],
+  });
   const handleLike = async (_id) => {
     try {
       const { data } = await likePost({ variables: { postId: _id } });
@@ -269,13 +278,30 @@ const Posts = () => {
       toast.error("Error liking post");
     }
   };
-
   const handleUnlike = async (_id) => {
     try {
       await unlikePost({ variables: { postId: _id } });
     } catch (err) {
       console.log(err);
       toast.error("Error unliking post");
+    }
+  };
+  const handleSave = async (_id) => {
+    try {
+      const { data } = await savePost({ variables: { postId: _id } });
+      dispatch(setSaved(data.savePost));
+    } catch (err) {
+      console.error(err);
+      toast.error("Error saving post");
+    }
+  };
+  const handleUnSave = async (_id) => {
+    try {
+      const { data } = await unsavePost({ variables: { postId: _id } });
+      dispatch(setSaved(data.unsavePost));
+    } catch (err) {
+      console.error(err);
+      toast.error("Error saving post");
     }
   };
   const [likeStory] = useMutation(LIKE_STORY_MUTATION);
@@ -295,7 +321,7 @@ const Posts = () => {
 
   const handleUnlikeStory = async (_id) => {
     try {
-      const { data } = await unlikeStory({
+      await unlikeStory({
         variables: { id: _id },
       });
       loadPosts();
@@ -550,6 +576,8 @@ const Posts = () => {
               loadPosts={loadPosts}
               handleLike={handleLike}
               handleUnlike={handleUnlike}
+              handleSave={handleSave}
+              handleUnSave={handleUnSave}
               user={user}
               isClient={isClient}
             />

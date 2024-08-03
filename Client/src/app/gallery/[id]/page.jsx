@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import api from "@/utils/axios";
+import Image from "next/image";
 
 export default function Gallery({ params }) {
   const [open, setOpen] = useState(true);
@@ -29,7 +30,6 @@ export default function Gallery({ params }) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  console.log(images);
   return (
     <div className="flex  min-h-screen items-start justify-center gap-5 bg-background">
       <div className="flex flex-col w-[92%] mx-auto items-center justify-center gap-5 py-4">
@@ -40,7 +40,18 @@ export default function Gallery({ params }) {
             </h1>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-[30px] w-full"></div>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-[30px] w-full">
+            {images &&
+              images.map((image, index) => (
+                <Image
+                  key={index}
+                  src={image.url}
+                  alt={`Image ${index}`}
+                  width={100}
+                  height={100}
+                />
+              ))}
+          </div>
         </div>
       </div>
     </div>

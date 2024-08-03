@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import api from "@/utils/axios";
 import Avatar from "react-avatar";
-import { POSTS_BY_USER_QUERY } from "@/graphql/query";
+import { POSTS_BY_USER_QUERY, SAVED_POSTS_QUERY } from "@/graphql/query";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,27 +15,46 @@ export default function MyProfilePage() {
   const maxDisplayedFollowers = 10;
   const router = useRouter();
   const [posts, setPosts] = useState([]);
+  const [savedPosts, setSavedPosts] = useState([]);
   const [followers, setFollower] = useState([]);
   const { user } = useSelector((state) => state.user);
   const [isClient, setIsClient] = useState(false);
+  const [activeTab, setActiveTab] = useState("myPosts");
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   const { data, loading, error, refetch } = useQuery(POSTS_BY_USER_QUERY);
+  const {
+    data: saved,
+    loading: savedLoading,
+    error: savedError,
+    refetch: savedRefetch,
+  } = useQuery(SAVED_POSTS_QUERY);
 
   useEffect(() => {
     if (user) {
       refetch();
+      savedRefetch();
     }
-  }, [user, refetch]);
+  }, [user, refetch, savedRefetch]);
 
   useEffect(() => {
     if (data) {
       setPosts(data.postsByUser);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (saved) {
+      setSavedPosts(saved.getSavedPosts);
+    }
+  }, [saved]);
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
 
   useEffect(() => {
     if (user) {
@@ -207,9 +226,9 @@ export default function MyProfilePage() {
                       <p>Your Gallery is empty.</p>
                     )}
                   </div>
-                  {posts.length > maxDisplayedPhotos && (
+                  {isClient && posts.length > maxDisplayedPhotos && (
                     <Link
-                      href="/mygallery" // Adjust 'to' prop based on your routing setup
+                      href={`/gallery/${user?._id}`}
                       className="font-semibold text-secondary_text hover:text-primary_text"
                     >
                       See more...
@@ -219,10 +238,30 @@ export default function MyProfilePage() {
               </div>
             </div>
           </div>
-
+          <div className="flex justify-between mb-4">
+            <div
+              className={`cursor-pointer p-2 text-center ${
+                activeTab === "myPosts" ? "bg-white" : "bg-light-gray"
+              }`}
+              onClick={() => handleTabClick("myPosts")}
+            >
+              My Posts
+            </div>
+            <div
+              className={`cursor-pointer p-2 text-center ${
+                activeTab === "savedPosts" ? "bg-white" : "bg-light-gray"
+              }`}
+              onClick={() => handleTabClick("savedPosts")}
+            >
+              Saved Posts
+            </div>
+          </div>
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-[30px] w-full">
-            {posts &&
-              posts.map((post, index) => <Post post={post} key={index} />)}
+            {activeTab === "myPosts"
+              ? posts.map((post, index) => <Post post={post} key={index} />)
+              : savedPosts.map((post, index) => (
+                  <Post post={post} key={index} />
+                ))}
           </div>
         </div>
       </div>

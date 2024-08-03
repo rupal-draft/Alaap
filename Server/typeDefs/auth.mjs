@@ -22,6 +22,7 @@ const authTypeDefs = gql`
     following: [User]
     followers: [User]
     notifications: [Notification]
+    saved: [Post]
   }
 
   type Photo {

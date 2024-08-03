@@ -143,3 +143,31 @@ export const USER_POSTS_QUERY = gql`
     }
   }
 `;
+
+export const SAVED_POSTS_QUERY = gql`
+  query getSavedPosts {
+    getSavedPosts {
+      _id
+      content
+      postedBy {
+        _id
+        name
+        photo {
+          url
+        }
+      }
+      image {
+        url
+      }
+      video_link {
+        Location
+      }
+      likes
+      comments {
+        _id
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

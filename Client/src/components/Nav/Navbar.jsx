@@ -11,10 +11,9 @@ import { BsSendFill } from "react-icons/bs";
 import { PiRobotFill } from "react-icons/pi";
 import { IoIosNotifications, IoIosSettings, IoIosLogOut } from "react-icons/io";
 import { MdOutlineSaveAlt } from "react-icons/md";
-
 import { useDispatch } from "react-redux";
-import { logout } from "@/context/slices/authSlice";
 import { resetClient } from "@/utils/graphql";
+import { logout } from "@/Context/Slices/authSlice";
 
 export const navData = [
   { name: "Home", path: "/home", icon: <FaHome /> },
@@ -37,6 +36,7 @@ export const navData1 = [
 const Navbar = ({ open, setOpen, socket, myId }) => {
   const handleLogout = () => {
     resetClient();
+    window.location.href = "/login";
     dispatch(logout());
     dispatch({
       type: "LOGOUT_SUCCESS",
