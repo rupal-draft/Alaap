@@ -100,7 +100,11 @@ const MessagesIndexPage = () => {
     }
   }, [search]);
 
-  const displayUsers = search ? searchUser : friend;
+  // const displayUsers = search ? searchUser : friend;
+
+  const filteredFriends = friend.filter((bondhu) =>
+    bondhu?.fndInfo?.name?.toLowerCase().includes(search.toLowerCase())
+  );
 
   useEffect(() => {
     socket.current = io(process.env.NEXT_PUBLIC_SOCKET_URL);
@@ -327,24 +331,6 @@ const MessagesIndexPage = () => {
     }
   }, [socketMessage]);
 
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.matchMedia("(min-width: 768px)").matches) {
-        setOpen(true);
-      } else {
-        setOpen(false);
-      }
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -390,10 +376,10 @@ const MessagesIndexPage = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full text-primary_text bg-shadow border rounded-lg focus:outline-none focus:border focus:border-highlight 
-                    text-base sm:text-base 
-                    pl-10 sm:pl-10  
-                    py-1 sm:py-2
-                    sm:px-4"
+                text-base sm:text-base 
+                pl-10 sm:pl-10  
+                py-1 sm:py-2
+                sm:px-4"
               />
               <FaSearch className="absolute left-3 text-primary_text w-4 h-4" />
             </div>
@@ -406,10 +392,9 @@ const MessagesIndexPage = () => {
               </div>
             )}
 
-            {displayUsers && displayUsers.length > 0 ? (
-              displayUsers.map((friend) => {
-                const isFriend = !search;
-                const userInfo = isFriend ? friend.fndInfo : user;
+            {filteredFriends && filteredFriends.length > 0 ? (
+              filteredFriends.map((friend) => {
+                const userInfo = friend.fndInfo;
 
                 return (
                   <div
