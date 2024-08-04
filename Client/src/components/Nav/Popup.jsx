@@ -3,9 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import api from "@/utils/axios";
-// import { formatDistanceToNow } from "date-fns";
 import Avatar from "react-avatar";
-
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
 });
@@ -70,7 +68,7 @@ const Popup = ({ setIsOpenPopup, position }) => {
               return (
                 <div
                   key={index}
-                  className="flex text-secondary_text hover:text-primary_text hover:bg-accent  items-center gap-x-2 p-2"
+                  className="flex text-secondary_text hover:text-primary_text hover:bg-hover_accent  items-center gap-x-2 p-3"
                 >
                   <div className="flex items-center justify-center ">
                     {imageUrl ? (
@@ -81,8 +79,10 @@ const Popup = ({ setIsOpenPopup, position }) => {
                       />
                     ) : (
                       <Avatar
+                        size="75"
+                        round
                         name={notification.user?.name}
-                        className="rounded-full w-12 h-12 sm:w-20 sm:h-20"
+                        className="rounded-full w-8 h-8 sm:w-8 sm:h-8"
                       />
                     )}
                   </div>
