@@ -238,18 +238,22 @@ export default function MyProfilePage() {
               </div>
             </div>
           </div>
-          <div className="flex justify-between mb-4">
+          <div className="flex justify-between gap-3">
             <div
-              className={`cursor-pointer p-2 text-center ${
-                activeTab === "myPosts" ? "bg-white" : "bg-light-gray"
+              className={`flex-grow flex items-center justify-center cursor-pointer border  duration-500 rounded-lg  text-primary_text  text-base px-4   ${
+                activeTab === "myPosts"
+                  ? "bg-highlight hover:bg-hover_highlight border-shadow"
+                  : "border-primary_text hover:bg-highlight"
               }`}
               onClick={() => handleTabClick("myPosts")}
             >
               My Posts
             </div>
             <div
-              className={`cursor-pointer p-2 text-center ${
-                activeTab === "savedPosts" ? "bg-white" : "bg-light-gray"
+              className={`lex-grow flex items-center justify-center cursor-pointer border  duration-500 rounded-lg  text-primary_text  text-base px-4  ${
+                activeTab === "savedPosts"
+                  ? "bg-highlight hover:bg-hover_highlight border-shadow"
+                  : "border-primary_text hover:bg-highlight"
               }`}
               onClick={() => handleTabClick("savedPosts")}
             >
