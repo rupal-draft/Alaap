@@ -10,7 +10,6 @@ import { FaCircleUser } from "react-icons/fa6";
 import { BsSendFill } from "react-icons/bs";
 import { PiRobotFill } from "react-icons/pi";
 import { IoIosNotifications, IoIosSettings, IoIosLogOut } from "react-icons/io";
-import { MdOutlineSaveAlt } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { resetClient } from "@/utils/graphql";
 import { logout } from "@/context/slices/authSlice.js";
@@ -26,7 +25,6 @@ export const navData = [
   },
   { name: "Messages", path: "/messages", icon: <BsSendFill /> },
   { name: "Sociofy-AI", path: "/sociofy-ai", icon: <PiRobotFill /> },
-  { name: "Saved", path: "/savedposts", icon: <MdOutlineSaveAlt /> },
 ];
 export const navData1 = [
   { name: "Settings", path: "/settings", icon: <IoIosSettings /> },

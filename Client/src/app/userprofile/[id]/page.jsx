@@ -5,11 +5,9 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 import Avatar from "react-avatar";
-import Navbar from "@/components/Nav/Navbar";
-import { Post } from "@/components/Postcard/Posts";
+import { Post } from "@/components/Postcard/Post";
 import api from "@/utils/axios";
 import { USER_POSTS_QUERY } from "@/graphql/query";
-import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
 import Link from "next/link";
 
 export default function UserProfilePage({ params }) {

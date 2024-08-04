@@ -19,7 +19,7 @@ export const PopupStories = ({ onClose, content, StoryLike, StoryUnlike }) => {
 
   const visibleStories = (index) => {
     if (window.innerWidth >= 768) {
-      return content.slice(index, index + 1); // Show 2 stories for md and larger screens
+      return content.slice(index, index + 1); // Show 1 stories for md and larger screens
     } else {
       return content.slice(index, index + 1); // Show 1 story for mobile screens
     }
