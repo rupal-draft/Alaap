@@ -389,7 +389,7 @@ const MessagesIndexPage = () => {
                 placeholder="Search in social…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full text-primary_text bg-shadow border rounded-lg focus:outline-none focus:border focus:border-highlight 
+                className="w-full text-primary_text bg-shadow border rounded-lg focus:outline-none focus:border focus:border-hover_accent 
                     text-base sm:text-base 
                     pl-10 sm:pl-10  
                     py-1 sm:py-2
@@ -415,7 +415,7 @@ const MessagesIndexPage = () => {
                   <div
                     onClick={() => setCurrentFriend(userInfo)}
                     key={userInfo._id}
-                    className="flex items-center justify-start gap-2 py-3 px-2 border border-transparent hover:border-primary rounded hover:bg-hover_highlight cursor-pointer relative"
+                    className="flex items-center justify-start gap-2 py-3 px-2 border border-transparent hover:border-primary rounded hover:bg-accent cursor-pointer relative"
                   >
                     <div className="relative">
                       <Avatar1
@@ -497,7 +497,7 @@ const MessagesIndexPage = () => {
         }`}
       >
         <h1
-          className="text-[1.6rem] bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
+          className="text-[1.6rem] bg-hover_accent text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
           onClick={() => {
             setSidebarOpen(!sidebarOpen);
           }}
@@ -601,7 +601,7 @@ const MessagesIndexPage = () => {
                       <div
                         className={`p-2 rounded break-words max-w-xs ${
                           message.senderId === user?._id
-                            ? "bg-hover_highlight text-primary_text"
+                            ? "bg-accent text-primary_text"
                             : "bg-secondary_text text-background"
                         }`}
                       >
@@ -635,7 +635,7 @@ const MessagesIndexPage = () => {
                     alt="avatar"
                     className="w-8 h-8 rounded-full mr-2"
                   />
-                  <div className="p-2 rounded break-words max-w-xs bg-hover_highlight text-primary_text">
+                  <div className="p-2 rounded break-words max-w-xs bg-accent text-primary_text">
                     Typing...
                   </div>
                 </div>
@@ -664,7 +664,7 @@ const MessagesIndexPage = () => {
                 </div>
               )}
               {!image && (
-                <BsFileEarmarkArrowUpFill className="text-2xl text-hover_highlight hover:text-highlight" />
+                <BsFileEarmarkArrowUpFill className="text-2xl text-accent hover:text-hover_accent" />
               )}
             </label>
             <input
@@ -680,10 +680,10 @@ const MessagesIndexPage = () => {
                 value={newMessage}
                 onChange={inputHandle}
                 disabled={messageLoading}
-                className="w-full py-2 pl-10 pr-3 bg-[#cdcdcd] rounded-xl text-gray-700 focus:outline-none focus:bg-primary_text focus:border-hover_highlight"
+                className="w-full py-2 pl-10 pr-3 bg-[#cdcdcd] rounded-xl text-gray-700 focus:outline-none focus:bg-primary_text focus:border-accent"
               />
               <BsEmojiSmileFill
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-hover_highlight cursor-pointer"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-accent cursor-pointer"
                 onClick={() => setShowEmoji(!showEmoji)}
               />
               {showEmoji && (
@@ -714,8 +714,8 @@ const MessagesIndexPage = () => {
               }
               className={`py-2 px-4 rounded-xl focus:outline-none ${
                 image || newMessage.trim()
-                  ? "bg-hover_highlight text-primary_text hover:bg-highlight"
-                  : "bg-gray-300 text-hover_highlight cursor-not-allowed"
+                  ? "bg-accent text-primary_text hover:bg-hover_accent"
+                  : "bg-gray-300 text-accent cursor-not-allowed"
               }`}
             >
               {imageMessageLoading ? (

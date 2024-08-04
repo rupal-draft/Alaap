@@ -131,7 +131,7 @@ export default function MyProfilePage() {
 
               <Link
                 href="/settings"
-                className="flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] px-5 py-2 font-semibold"
+                className="flex-grow flex items-center justify-center cursor-pointer border bg-hover_accent hover:bg-accent duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] px-5 py-2 font-semibold"
               >
                 Edit Profile
               </Link>
@@ -242,8 +242,8 @@ export default function MyProfilePage() {
             <div
               className={`flex-grow flex items-center justify-center cursor-pointer border  duration-500 rounded-lg  text-primary_text  text-base px-4   ${
                 activeTab === "myPosts"
-                  ? "bg-highlight hover:bg-hover_highlight border-shadow"
-                  : "border-primary_text hover:bg-highlight"
+                  ? "bg-hover_accent hover:bg-accent border-shadow"
+                  : "border-primary_text hover:bg-hover_accent"
               }`}
               onClick={() => handleTabClick("myPosts")}
             >
@@ -252,8 +252,8 @@ export default function MyProfilePage() {
             <div
               className={`lex-grow flex items-center justify-center cursor-pointer border  duration-500 rounded-lg  text-primary_text  text-base px-4  ${
                 activeTab === "savedPosts"
-                  ? "bg-highlight hover:bg-hover_highlight border-shadow"
-                  : "border-primary_text hover:bg-highlight"
+                  ? "bg-hover_accent hover:bg-accent border-shadow"
+                  : "border-primary_text hover:bg-hover_accent"
               }`}
               onClick={() => handleTabClick("savedPosts")}
             >

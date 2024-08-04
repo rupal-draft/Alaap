@@ -3,7 +3,8 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import Avatar from "react-avatar";
 import ReactPlayer from "react-player";
-import { DeleteOutlined, SaveFilled, SaveOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
+import { BsSave, BsSaveFill } from "react-icons/bs";
 
 import { FaRegCommentAlt, FaRegHeart, FaHeart } from "react-icons/fa";
 
@@ -81,9 +82,9 @@ export const Post = ({
     setIsPopupOpen(!isPopupOpen);
   };
   return (
-    <div className="flex w-full  flex-col gap-[15px] rounded-[12px] bg-shadow p-5 ">
+    <div className="flex w-full  flex-col gap-[15px] rounded-xl bg-shadow p-5 ">
       <div className="flex items-center justify-between gap-5 ">
-        <div className="flex w-[100%] items-center gap-2.5">
+        <div className="flex w-full items-center gap-2.5">
           <Link
             href={`/userprofile/${post.postedBy?._id}`}
             className="flex items-center justify-center "
@@ -106,7 +107,7 @@ export const Post = ({
             )}
           </Link>
           <div className="flex flex-col items-start gap-[2px]">
-            <h1 className="!text-primary_text font-serif font-bold text-[17px] sm:text-[1.6rem]">
+            <h1 className="!text-primary_text font-serif font-bold text-[17px] sm:text-[1.6rem] leading-7">
               {post.postedBy?.name}
             </h1>
             <p
@@ -129,7 +130,7 @@ export const Post = ({
        max-w-full"
       >
         <div
-          className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
+          className="mt-3 flex items-center justify-center bg-background rounded-lg overflow-hidden
           w-[240px] h-[240px]
           min-[360px]:w-[300px] min-[360px]:h-[300px]
           sm:w-[570px] sm:h-[500px]
@@ -170,7 +171,7 @@ export const Post = ({
 
             <div
               onClick={togglePopup}
-              className="inline-block text-highlight cursor-pointer"
+              className="inline-block text-secondary_text hover:text-accent cursor-pointer"
             >
               ... Read More
             </div>
@@ -200,7 +201,10 @@ export const Post = ({
               </h1>
             </div>
             <div className="flex items-center justify-center gap-x-2 cursor-pointer ">
-              <FaRegCommentAlt className="text-primary_text " />
+              <FaRegCommentAlt
+                onClick={togglePopup}
+                className="text-primary_text "
+              />
               <h1 as="p" className="text-primary_text text-[1rem]">
                 {post.comments.length}
               </h1>
@@ -209,13 +213,13 @@ export const Post = ({
           <div className="flex items-center text-primary_text cursor-pointer relative">
             {isClient &&
             user.saved?.some((savedPost) => savedPost._id === post._id) ? (
-              <SaveFilled
+              <BsSaveFill
                 onClick={() => {
                   handleUnSave(post._id);
                 }}
               />
             ) : (
-              <SaveOutlined
+              <BsSave
                 onClick={() => {
                   handleSave(post._id);
                 }}
@@ -231,6 +235,8 @@ export const Post = ({
           user={user}
           handleLike={handleLike}
           handleUnlike={handleUnlike}
+          handleSave={handleSave}
+          handleUnSave={handleUnSave}
           isClient={isClient}
           loadPosts={loadPosts}
         />

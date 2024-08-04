@@ -81,7 +81,7 @@ const Navbar = ({ open, setOpen, socket, myId }) => {
               className="flex flex-col items-center justify-center relative group w-full"
               ref={link.name === "Notifications" ? notificationRef : null}
             >
-              <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg text-2xl text-primary_text hover:text-highlight">
+              <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg text-2xl text-primary_text hover:text-hover_accent">
                 {link.icon}
               </div>
             </Link>
@@ -100,7 +100,7 @@ const Navbar = ({ open, setOpen, socket, myId }) => {
               className="flex flex-col items-center justify-center relative group w-full"
               onClick={link.action === "logout" ? handleLogout : undefined}
             >
-              <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg text-2xl text-primary_text hover:text-highlight">
+              <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg text-2xl text-primary_text hover:text-hover_accent">
                 {link.icon}
               </div>
             </div>

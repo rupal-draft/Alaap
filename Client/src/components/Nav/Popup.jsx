@@ -48,7 +48,7 @@ const Popup = ({ setIsOpenPopup, position }) => {
           left: `${position.left}px`,
         }}
       >
-        <div className="fixed bg-background2 text-primary_text w-[250px] sm:w-[400px] text-lg font-semibold font-ubuntu text-center rounded-tr-lg  border-b-hover_highlight border-b-[1px]  p-3 self-stretch justify-between items-center flex">
+        <div className="fixed bg-background2 text-primary_text w-[250px] sm:w-[400px] text-lg font-semibold font-ubuntu text-center rounded-tr-lg  border-b-accent border-b-[1px]  p-3 self-stretch justify-between items-center flex">
           <h1 className="">Notifications</h1>
           <div
             onClick={setIsOpenPopup.bind(this, false)}
@@ -70,7 +70,7 @@ const Popup = ({ setIsOpenPopup, position }) => {
               return (
                 <div
                   key={index}
-                  className="flex text-secondary_text hover:text-primary_text hover:bg-hover_highlight  items-center gap-x-2 p-2"
+                  className="flex text-secondary_text hover:text-primary_text hover:bg-accent  items-center gap-x-2 p-2"
                 >
                   <div className="flex items-center justify-center ">
                     {imageUrl ? (

@@ -8,13 +8,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "#222831",
-        background2: "#2a3545",
-        shadow: "#31363F",
-        highlight: "#76ABAE",
-        hover_highlight: "#537e80",
-        primary_text: "#EEEEEE",
-        secondary_text: "#b3b3b3",
+        // background: "#222831",
+        // background2: "#2a3545",
+        // shadow: "#31363F",
+        // hover_accent: "#76ABAE",
+        // accent: "#537e80",
+        // primary_text: "#EEEEEE",
+        // secondary_text: "#b3b3b3",
+
+        background: "#101214",
+        background2: "#161A1D",
+        shadow: "#1D2125",
+        hover_accent: "#454F59",
+        accent: "#738496",
+        primary_text: "#DEE4EA",
+        secondary_text: "#B6C2CF",
       },
       fontFamily: {
         open_sans: ["Open Sans", "sans-serif"], // normal text

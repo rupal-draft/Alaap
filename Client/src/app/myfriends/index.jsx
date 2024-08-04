@@ -142,7 +142,7 @@ export default function MyFriendsPage() {
               shape="square"
               name="search"
               placeholder={`Search in social…`}
-              className="w-full text-primary_text bg-shadow rounded-lg focus:outline-none focus:border focus:border-highlight 
+              className="w-full text-primary_text bg-shadow rounded-lg focus:outline-none focus:border focus:border-hover_accent 
             
                    text-base sm:text-base 
                    pl-10 sm:pl-10  
@@ -156,7 +156,7 @@ export default function MyFriendsPage() {
             <FaSearch className="absolute left-3 text-primary_text w-4 h-4" />
 
             <button
-              className=" flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow px-4 py-1 font-ubuntu font-medium text-primary_text text-base md:text-lg"
+              className=" flex-grow flex items-center justify-center cursor-pointer border bg-hover_accent hover:bg-accent duration-500 rounded-lg border-shadow px-4 py-1 font-ubuntu font-medium text-primary_text text-base md:text-lg"
               type="submit"
             >
               Search
@@ -212,7 +212,7 @@ export default function MyFriendsPage() {
                             className="h-[14px] w-[14px]"
                           />
                         }
-                        className="flex-grow flex items-center justify-center cursor-pointer bg-highlight hover:bg-hover_highlight duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-[10px] md:text-lg"
+                        className="flex-grow flex items-center justify-center cursor-pointer bg-hover_accent hover:bg-accent duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-[10px] md:text-lg"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleFollow(search);
@@ -278,7 +278,7 @@ export default function MyFriendsPage() {
                         className="h-[14px] w-[14px]"
                       />
                     }
-                    className="flex-grow flex items-center justify-center cursor-pointer bg-highlight hover:bg-hover_highlight duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-[10px] md:text-lg"
+                    className="flex-grow flex items-center justify-center cursor-pointer bg-hover_accent hover:bg-accent duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-[10px] md:text-lg"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleFollow(follow);
@@ -347,7 +347,7 @@ export default function MyFriendsPage() {
                         className="h-[14px] w-[14px]"
                       />
                     }
-                    className="flex-grow flex items-center justify-center cursor-pointer bg-highlight hover:bg-hover_highlight duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-[10px] md:text-lg"
+                    className="flex-grow flex items-center justify-center cursor-pointer bg-hover_accent hover:bg-accent duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-[10px] md:text-lg"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleUnfollow(fan);
