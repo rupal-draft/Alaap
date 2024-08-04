@@ -65,7 +65,7 @@ export const Post = ({
       }
     } catch (err) {
       console.log(err);
-      toast.error("Error deleting post");
+      toast.error("You can't delete other's post");
     }
   };
 
