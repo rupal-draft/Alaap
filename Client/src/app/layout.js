@@ -13,18 +13,18 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.matchMedia("(min-width: 768px)").matches) {
-        setOpen(true);
-      } else {
-        setOpen(false);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (window.matchMedia("(min-width: 768px)").matches) {
+  //       setOpen(true);
+  //     } else {
+  //       setOpen(false);
+  //     }
+  //   };
+  //   handleResize();
+  //   window.addEventListener("resize", handleResize);
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []);
 
   const noNavbarRoutes = ["/", "/login", "/signup", "/forgot-password"];
   const shouldRenderNavbar =
@@ -32,7 +32,6 @@ export default function RootLayout({ children }) {
     !pathname.startsWith("/reset-password/");
 
   useEffect(() => {
-    // Set the title of the page
     document.title = "Sociofy";
   }, [pathname]);
 
@@ -51,7 +50,7 @@ export default function RootLayout({ children }) {
                 }`}
               >
                 <h1
-                  className="text-2xl bg-hover_accent text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
+                  className="text-2xl bg-hover_accent hover:bg-background2 text-primary_text p-2 rounded-lg font-semibold transition-transform duration-700"
                   onClick={() => {
                     setOpen(!open);
                   }}
