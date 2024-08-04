@@ -9,7 +9,7 @@ import api from "@/utils/axios";
 import Avatar from "react-avatar";
 import { UserAddOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
-import { setCredentials } from "@/Context/Slices/authSlice";
+import { setCredentials } from "@/context/slices/authSlice.js";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { FaSearch } from "react-icons/fa";

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import api from "@/utils/axios";
-import { setCredentials } from "@/Context/Slices/authSlice";
+import { setCredentials } from "@/context/slices/authSlice.js";
 
 export default function SettingsPage() {
   const [photo, setPhoto] = useState({});

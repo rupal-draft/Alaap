@@ -13,8 +13,7 @@ import { resetClient } from "@/utils/graphql";
 import landingBgImg from "../../../public/landingbg.jpg";
 import HeaderFooter from "@/components/HeaderFooter";
 import { SyncOutlined } from "@ant-design/icons";
-import { setCredentials } from "@/Context/Slices/authSlice";
-
+import { setCredentials } from "@/context/slices/authSlice.js";
 export default function LoginPage() {
   const router = useRouter();
   const dispatch = useDispatch();

@@ -40,18 +40,35 @@ export default function Gallery({ params }) {
             </h1>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-[30px] w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 w-full">
             {images &&
               images.map((image, index) => (
                 <Image
                   key={index}
                   src={image.url}
                   alt={`Image ${index}`}
-                  width={100}
-                  height={100}
+                  width={400}
+                  height={400}
+                  className=" h-full lg:h-[450px] w-full  lg:w-[450px] rounded-lg"
                 />
               ))}
           </div>
+
+          {/* <div className="grid grid-cols-1 xl:grid-cols-3 gap-2 w-full">
+            {images &&
+              images.map((image, index) => (
+                <div key={index} className="relative w-full h-full">
+                  <Image
+                    src={image.url}
+                    alt={`Image ${index}`}
+                    layout="responsive" // Use responsive layout
+                    width={image.width || 500} 
+                    height={image.height || 500} 
+                    className="object-cover w-full h-full rounded-lg" // Tailwind classes
+                  />
+                </div>
+              ))}
+          </div> */}
         </div>
       </div>
     </div>

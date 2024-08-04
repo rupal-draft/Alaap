@@ -13,7 +13,7 @@ import { IoIosNotifications, IoIosSettings, IoIosLogOut } from "react-icons/io";
 import { MdOutlineSaveAlt } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { resetClient } from "@/utils/graphql";
-import { logout } from "@/Context/Slices/authSlice";
+import { logout } from "@/context/slices/authSlice.js";
 
 export const navData = [
   { name: "Home", path: "/home", icon: <FaHome /> },

@@ -27,8 +27,7 @@ import {
 import { GET_POSTS_QUERY, GET_STORY_FEED_QUERY } from "@/graphql/query";
 import { Post } from "./Post";
 import { PopupStories } from "./PopupStories";
-import { setSaved } from "@/Context/Slices/authSlice";
-// import { setSaved } from "@/Context/Slices/authSlice";
+import { setSaved } from "@/context/slices/authSlice.js";
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   reconnection: true,
 });
