@@ -51,7 +51,7 @@ export default function RootLayout({ children }) {
                 }`}
               >
                 <h1
-                  className="text-2xl bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
+                  className="text-2xl bg-hover_accent text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
                   onClick={() => {
                     setOpen(!open);
                   }}

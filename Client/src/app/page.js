@@ -53,7 +53,7 @@ export default function Home() {
             <div>
               <Link
                 href="/login"
-                className="md:px-7 px-5 font-semibold py-1 tracking-widest rounded-lg bg-highlight hover:bg-hover_highlight focus:outline-none font-ubuntu w-full text-xl  focus:ring-highlight"
+                className="md:px-7 px-5 font-semibold py-1 tracking-widest rounded-lg bg-hover_accent hover:bg-accent focus:outline-none font-ubuntu w-full text-xl  focus:ring-hover_accent"
               >
                 Login
               </Link>{" "}
@@ -61,7 +61,7 @@ export default function Home() {
             <div>
               <Link
                 href="/signup"
-                className="md:px-7 px-5 font-semibold py-1 tracking-widest rounded-lg bg-highlight hover:bg-hover_highlight focus:outline-none font-ubuntu w-full text-xl  focus:ring-highlight"
+                className="md:px-7 px-5 font-semibold py-1 tracking-widest rounded-lg bg-hover_accent hover:bg-accent focus:outline-none font-ubuntu w-full text-xl  focus:ring-hover_accent"
               >
                 Signup
               </Link>

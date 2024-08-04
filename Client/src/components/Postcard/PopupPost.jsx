@@ -7,7 +7,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FaRegCommentAlt, FaRegHeart, FaHeart, FaSave } from "react-icons/fa";
 
 import CommentBody from "../commentBody";
-import { MdOutlineSaveAlt } from "react-icons/md";
+import { BsSave, BsSaveFill } from "react-icons/bs";
 
 export const PopupPost = ({
   onClose,
@@ -16,6 +16,8 @@ export const PopupPost = ({
   isClient,
   handleLike,
   handleUnlike,
+  handleSave,
+  handleUnSave,
   loadPosts,
 }) => {
   const [showFullContent, setShowFullContent] = useState(false);
@@ -74,7 +76,7 @@ export const PopupPost = ({
             <div className="flex w-full flex-col">
               <div className="flex flex-col items-center">
                 <div
-                  className="mt-3 flex items-center justify-center bg-black rounded-lg overflow-hidden
+                  className="mt-3 flex items-center justify-center bg-background rounded-lg overflow-hidden
                   w-[270px] h-[240px]
                   min-[360px]:w-[280px] min-[360px]:h-[250px]
                   sm:w-[280px] sm:h-[250px]
@@ -127,7 +129,7 @@ export const PopupPost = ({
             "
             >
               {/* who posted */}
-              <div className="flex items-center gap-2.5 bg-background ">
+              <div className="flex items-start gap-2.5 bg-background ">
                 {post.postedBy?.photo?.url ? (
                   <img
                     src={post.postedBy?.photo.url}
@@ -145,7 +147,7 @@ export const PopupPost = ({
                   />
                 )}
                 <div className="flex flex-wrap flex-col items-start gap-[2px]">
-                  <h1 className="!text-primary_text font-serif font-bold text-[20px] sm:text-[1.6rem]">
+                  <h1 className="!text-primary_text font-serif font-bold text-[20px] sm:text-[1.6rem] leading-7">
                     {post.postedBy?.name}
                   </h1>
                   <p className="!text-secondary_text text-[10px] lg:text-xs xl:text-sm font-semibold">
@@ -160,7 +162,7 @@ export const PopupPost = ({
                     {truncatedContent}
                     <span
                       onClick={handleReadMoreOrLess}
-                      className="inline-block text-highlight cursor-pointer "
+                      className="inline-block text-secondary_text hover:text-accent cursor-pointer "
                     >
                       {showFullContent ? "... Read Less" : "... Read More"}
                     </span>
@@ -203,8 +205,23 @@ export const PopupPost = ({
                       </h1>
                     </div>
                   </div>
-                  <div className="flex items-center text-primary_text cursor-pointer">
-                    <MdOutlineSaveAlt className="text-lg" />
+                  <div className="flex items-center text-primary_text cursor-pointer relative">
+                    {isClient &&
+                    user.saved?.some(
+                      (savedPost) => savedPost._id === post._id
+                    ) ? (
+                      <BsSaveFill
+                        onClick={() => {
+                          handleUnSave(post._id);
+                        }}
+                      />
+                    ) : (
+                      <BsSave
+                        onClick={() => {
+                          handleSave(post._id);
+                        }}
+                      />
+                    )}{" "}
                   </div>
                 </div>
 

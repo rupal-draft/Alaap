@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import api from "@/utils/axios";
-import { setCredentials } from "@/Context/Slices/authSlice";
+import { setCredentials } from "@/context/slices/authSlice.js";
 
 export default function SettingsPage() {
   const [photo, setPhoto] = useState({});
@@ -193,7 +193,7 @@ export default function SettingsPage() {
             <div className="mt-0 flex flex-col items-start space-x-2">
               <label
                 htmlFor="coverImage"
-                className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-2 sm:px-4 rounded-lg text-[10px] sm:text-base text-center w-1/2 sm:w-full"
+                className="cursor-pointer bg-hover_accent hover:bg-accent text-primary_text font-bold py-2 px-2 sm:px-4 rounded-lg text-[10px] sm:text-base text-center w-1/2 sm:w-full"
               >
                 Upload cover photo
               </label>
@@ -260,7 +260,7 @@ export default function SettingsPage() {
               <div className="mt-0 flex items-center justify-center  space-x-2">
                 <label
                   htmlFor="profileImage"
-                  className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-2 md:px-4 rounded-lg text-[10px] sm:text-base text-center w-full"
+                  className="cursor-pointer bg-hover_accent hover:bg-accent text-primary_text font-bold py-2 px-2 md:px-4 rounded-lg text-[10px] sm:text-base text-center w-full"
                 >
                   Upload profile photo
                 </label>
@@ -296,7 +296,7 @@ export default function SettingsPage() {
                   type="text"
                   name="fullName"
                   placeholder={user.name}
-                  className="flex-grow bg-shadow h-10 pl-2 !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none  transition-all resize-none"
+                  className="flex-grow bg-shadow h-10 pl-2 !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-hover_accent focus:outline-none focus:ring-1 focus:ring-hover_accent outline-none  transition-all resize-none"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -310,7 +310,7 @@ export default function SettingsPage() {
                   type="email"
                   name="email"
                   placeholder={user.email}
-                  className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none h-10 pl-2 transition-all resize-none"
+                  className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-hover_accent focus:outline-none focus:ring-1 focus:ring-hover_accent outline-none h-10 pl-2 transition-all resize-none"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -323,7 +323,7 @@ export default function SettingsPage() {
                 type="password"
                 name="oldpassword"
                 placeholder="***********"
-                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none h-10 pl-2 transition-all resize-none"
+                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-hover_accent focus:outline-none focus:ring-1 focus:ring-hover_accent outline-none h-10 pl-2 transition-all resize-none"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
               />
@@ -335,7 +335,7 @@ export default function SettingsPage() {
                 type="password"
                 name="newpassword"
                 placeholder="***********"
-                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none h-10 pl-2 transition-all resize-none"
+                className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-hover_accent focus:outline-none focus:ring-1 focus:ring-hover_accent outline-none h-10 pl-2 transition-all resize-none"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -348,7 +348,7 @@ export default function SettingsPage() {
                   type="text"
                   name="about"
                   placeholder={user.about}
-                  className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-highlight focus:outline-none focus:ring-1 focus:ring-highlight outline-none pl-2 transition-all resize-none h-[100px]"
+                  className="flex-grow bg-shadow !text-primary_text w-full text-[13px] sm:text-[1rem] border rounded-lg border-hover_accent focus:outline-none focus:ring-1 focus:ring-hover_accent outline-none pl-2 transition-all resize-none h-[100px]"
                   value={about}
                   onChange={(e) => setAbout(e.target.value)}
                 />
@@ -359,7 +359,7 @@ export default function SettingsPage() {
           {/* update button */}
           <button
             type="submit"
-            className="cursor-pointer bg-highlight hover:bg-hover_highlight text-primary_text font-bold py-2 px-4 rounded-lg text-[13px] sm:text-base"
+            className="cursor-pointer bg-hover_accent hover:bg-accent text-primary_text font-bold py-2 px-4 rounded-lg text-[13px] sm:text-base"
             disabled={loading}
           >
             {loading ? (

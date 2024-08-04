@@ -131,7 +131,7 @@ export default function MyProfilePage() {
 
               <Link
                 href="/settings"
-                className="flex-grow flex items-center justify-center cursor-pointer border bg-highlight hover:bg-hover_highlight duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] px-5 py-2 font-semibold"
+                className="flex-grow flex items-center justify-center cursor-pointer border bg-hover_accent hover:bg-accent duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] px-5 py-2 font-semibold"
               >
                 Edit Profile
               </Link>
@@ -207,25 +207,26 @@ export default function MyProfilePage() {
               </h1>{" "}
               <div className="flex flex-col items-start justify-center gap-[30px] rounded-xl">
                 <div className="flex flex-col items-start gap-[15px] self-stretch">
-                  <div className="flex flex-wrap gap-[15px] self-stretch grid-cols-3 sm:grid-cols-1 text-secondary_text ">
+                  <div className="flex flex-wrap gap-[15px] self-stretch grid-cols-3 sm:grid-cols-1 text-secondary_text">
                     {posts && posts.length > 0 ? (
-                      posts.slice(0, maxDisplayedPhotos).map((post, index) => (
-                        <img
-                          key={index}
-                          src={post.image?.url}
-                          width={130}
-                          height={130}
-                          alt="image"
-                          className=" rounded-xl object-cover
-                              
-                              w-[240px] h-[240px]   min-[360px]:w-[360px] min-[360px]:h-[360px]   sm:w-[240px] sm:h-[240px]   md:w-[210px] md:h-[210px]   lg:w-[210px] lg:h-[210px] xl:w-[272px] xl:h-[272px] min-[1440px]:w-[310px]  min-[1440px]:h-[310px] 2xl:w-[330px] 2xl:h-[330px]
-                              "
-                        />
-                      ))
+                      posts
+                        .filter((post) => post?.image?.url) // Filter out posts without images
+                        .slice(0, maxDisplayedPhotos)
+                        .map((post, index) => (
+                          <img
+                            key={index}
+                            src={post.image.url}
+                            width={130}
+                            height={130}
+                            alt={`Image ${index}`}
+                            className="rounded-xl object-cover w-[240px] h-[240px] min-[360px]:w-[360px] min-[360px]:h-[360px] sm:w-[240px] sm:h-[240px] md:w-[210px] md:h-[210px] lg:w-[210px] lg:h-[210px] xl:w-[272px] xl:h-[272px] min-[1440px]:w-[310px] min-[1440px]:h-[310px] 2xl:w-[330px] 2xl:h-[330px]"
+                          />
+                        ))
                     ) : (
                       <p>Your Gallery is empty.</p>
                     )}
                   </div>
+
                   {isClient && posts.length > maxDisplayedPhotos && (
                     <Link
                       href={`/gallery/${user?._id}`}
@@ -238,18 +239,22 @@ export default function MyProfilePage() {
               </div>
             </div>
           </div>
-          <div className="flex justify-between mb-4">
+          <div className="flex justify-between gap-3">
             <div
-              className={`cursor-pointer p-2 text-center ${
-                activeTab === "myPosts" ? "bg-white" : "bg-light-gray"
+              className={`flex-grow flex items-center justify-center cursor-pointer border  duration-500 rounded-lg  text-primary_text  text-base px-4   ${
+                activeTab === "myPosts"
+                  ? "bg-hover_accent hover:bg-accent border-shadow"
+                  : "border-primary_text hover:bg-hover_accent"
               }`}
               onClick={() => handleTabClick("myPosts")}
             >
               My Posts
             </div>
             <div
-              className={`cursor-pointer p-2 text-center ${
-                activeTab === "savedPosts" ? "bg-white" : "bg-light-gray"
+              className={`lex-grow flex items-center justify-center cursor-pointer border  duration-500 rounded-lg  text-primary_text  text-base px-4  ${
+                activeTab === "savedPosts"
+                  ? "bg-hover_accent hover:bg-accent border-shadow"
+                  : "border-primary_text hover:bg-hover_accent"
               }`}
               onClick={() => handleTabClick("savedPosts")}
             >

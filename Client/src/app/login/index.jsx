@@ -13,8 +13,7 @@ import { resetClient } from "@/utils/graphql";
 import landingBgImg from "../../../public/landingbg.jpg";
 import HeaderFooter from "@/components/HeaderFooter";
 import { SyncOutlined } from "@ant-design/icons";
-import { setCredentials } from "@/Context/Slices/authSlice";
-
+import { setCredentials } from "@/context/slices/authSlice.js";
 export default function LoginPage() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -84,7 +83,7 @@ export default function LoginPage() {
         </Link>
 
         <div className="relative  p-1 px-5 rounded-lg shadow-lg w-full max-w-xs md:max-w-xl">
-          <div className="absolute inset-0 backdrop-blur-xl   shadow-lg shadow-highlight rounded-lg"></div>
+          <div className="absolute inset-0 backdrop-blur-xl   shadow-lg shadow-hover_accent rounded-lg"></div>
           <div className="relative">
             <h2 className=" text-primary_text text-center font-semibold text-4xl font-lato my-2">
               Log In
@@ -102,7 +101,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   id="email"
-                  className="w-full text-lg px-4 py-2 border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-highlight text-primary_text"
+                  className="w-full text-lg px-4 py-2 border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-hover_accent text-primary_text"
                   placeholder="Enter a registered email address"
                 />
               </div>
@@ -118,7 +117,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   id="password"
-                  className="w-full text-lg px-4 py-2 border rounded-lg text-primary_text focus:outline-none focus:ring-2 bg-background focus:ring-highlight"
+                  className="w-full text-lg px-4 py-2 border rounded-lg text-primary_text focus:outline-none focus:ring-2 bg-background focus:ring-hover_accent"
                   placeholder="Enter password"
                 />
               </div>
@@ -133,7 +132,7 @@ export default function LoginPage() {
               <div className="flex flex-col items-center text-center gap-y-4">
                 <button
                   type="submit"
-                  className="px-4 text-white py-2 rounded-lg bg-highlight hover:bg-hover_highlight focus:outline-none font-ubuntu  focus:ring-highlight"
+                  className="px-4 text-white py-2 rounded-lg bg-hover_accent hover:bg-accent focus:outline-none font-ubuntu  focus:ring-hover_accent"
                   onClick={() => router.push("/login")}
                 >
                   {loading ? <SyncOutlined spin className="py-1" /> : "Login"}

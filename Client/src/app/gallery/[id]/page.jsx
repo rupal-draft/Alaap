@@ -2,9 +2,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import api from "@/utils/axios";
 import Image from "next/image";
+import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
 
 export default function Gallery({ params }) {
-  const [open, setOpen] = useState(true);
   const { id } = params;
   const [images, setImages] = useState([]);
 
@@ -18,18 +18,26 @@ export default function Gallery({ params }) {
     setImages(data);
   };
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.matchMedia("(min-width: 768px)").matches) {
-        setOpen(true);
-      } else {
-        setOpen(false);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = (index) => {
+    setSelectedImage(index);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const prevImage = () => {
+    setSelectedImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const nextImage = () => {
+    setSelectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
   return (
     <div className="flex  min-h-screen items-start justify-center gap-5 bg-background">
       <div className="flex flex-col w-[92%] mx-auto items-center justify-center gap-5 py-4">
@@ -40,17 +48,51 @@ export default function Gallery({ params }) {
             </h1>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-[30px] w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 w-full">
             {images &&
               images.map((image, index) => (
                 <Image
                   key={index}
                   src={image.url}
                   alt={`Image ${index}`}
-                  width={100}
-                  height={100}
+                  width={400}
+                  height={400}
+                  className="cursor-pointer h-full lg:h-[450px] w-full lg:w-[450px] rounded-lg"
+                  onClick={() => openModal(index)}
                 />
               ))}
+
+            {isModalOpen && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50">
+                <div className="relative w-full h-full flex items-center justify-center">
+                  <Image
+                    src={images[selectedImage].url}
+                    alt={`Image ${selectedImage}`}
+                    layout="fill"
+                    objectFit="contain"
+                    className="z-10 "
+                  />
+                  <button
+                    className="absolute top-4 z-20 right-4 text-primary_text cursor-pointer text-2xl"
+                    onClick={closeModal}
+                  >
+                    <FaTimes />
+                  </button>
+                  <button
+                    className="absolute left-4 z-20 text-primary_text cursor-pointer text-2xl"
+                    onClick={prevImage}
+                  >
+                    <FaArrowLeft />
+                  </button>
+                  <button
+                    className="absolute right-4 z-20 text-primary_text cursor-pointer text-2xl"
+                    onClick={nextImage}
+                  >
+                    <FaArrowRight />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

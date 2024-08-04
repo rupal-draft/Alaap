@@ -29,21 +29,21 @@ const HeaderFooter = () => {
         <div className="flex flex-col  items-center justify-center">
           <div className="flex items-center justify-center gap-x-1 font-medium  text-xs md:text-base  font-lato">
             <Link
-              className="text-highlight hover:text-highlight_hover"
+              className="text-hover_accent hover:text-hover_accent_hover"
               href="/privacy"
             >
               Privacy
             </Link>
             <p>|</p>
             <Link
-              className="text-highlight hover:text-highlight_hover"
+              className="text-hover_accent hover:text-hover_accent_hover"
               href="/disclaimer"
             >
               Disclaimer
             </Link>
             <p>|</p>
             <Link
-              className="text-highlight hover:text-highlight_hover"
+              className="text-hover_accent hover:text-hover_accent_hover"
               href="/sitemap"
             >
               Sitemap

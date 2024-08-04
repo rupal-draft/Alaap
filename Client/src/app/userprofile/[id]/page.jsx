@@ -5,11 +5,9 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 import Avatar from "react-avatar";
-import Navbar from "@/components/Nav/Navbar";
-import { Post } from "@/components/Postcard/Posts";
+import { Post } from "@/components/Postcard/Post";
 import api from "@/utils/axios";
 import { USER_POSTS_QUERY } from "@/graphql/query";
-import { RiMenuFold2Line, RiMenuUnfold2Line } from "react-icons/ri";
 import Link from "next/link";
 
 export default function UserProfilePage({ params }) {
@@ -187,25 +185,26 @@ export default function UserProfilePage({ params }) {
               </h1>{" "}
               <div className="flex flex-col items-start justify-center gap-[30px] rounded-xl">
                 <div className="flex flex-col items-start gap-[15px] self-stretch">
-                  <div className="flex flex-wrap gap-[15px] self-stretch grid-cols-3 sm:grid-cols-1 text-secondary_text ">
+                  <div className="flex flex-wrap gap-[15px] self-stretch grid-cols-3 sm:grid-cols-1 text-secondary_text">
                     {posts && posts.length > 0 ? (
-                      posts.slice(0, maxDisplayedPhotos).map((post, index) => (
-                        <img
-                          key={index}
-                          src={post.image?.url}
-                          width={130}
-                          height={130}
-                          alt="Post Image"
-                          className=" rounded-xl object-cover
-                              
-                              w-[240px] h-[240px]   min-[360px]:w-[360px] min-[360px]:h-[360px]   sm:w-[240px] sm:h-[240px]   md:w-[210px] md:h-[210px]   lg:w-[210px] lg:h-[210px] xl:w-[272px] xl:h-[272px] min-[1440px]:w-[310px]  min-[1440px]:h-[310px] 2xl:w-[330px] 2xl:h-[330px]
-                              "
-                        />
-                      ))
+                      posts
+                        .filter((post) => post?.image?.url) // Filter out posts without images
+                        .slice(0, maxDisplayedPhotos)
+                        .map((post, index) => (
+                          <img
+                            key={index}
+                            src={post.image.url}
+                            width={130}
+                            height={130}
+                            alt={`Image ${index}`}
+                            className="rounded-xl object-cover w-[240px] h-[240px] min-[360px]:w-[360px] min-[360px]:h-[360px] sm:w-[240px] sm:h-[240px] md:w-[210px] md:h-[210px] lg:w-[210px] lg:h-[210px] xl:w-[272px] xl:h-[272px] min-[1440px]:w-[310px] min-[1440px]:h-[310px] 2xl:w-[330px] 2xl:h-[330px]"
+                          />
+                        ))
                     ) : (
                       <p>Your Gallery is empty.</p>
                     )}
                   </div>
+
                   {posts.length > maxDisplayedPhotos && (
                     <Link
                       href="/mygallery"
