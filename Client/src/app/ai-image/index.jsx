@@ -58,9 +58,9 @@ const AIImagePage = () => {
       <img
         src="https://images.tech.co/wp-content/uploads/2024/02/20074049/AdobeStock_583862221-1.jpeg"
         alt="AI image"
-        className=" h-[30%] w-[30%] mb-4 rounded-lg"
+        className=" h-full sm:h-[60%] lg:h-[30%] w-full sm:w-[60%] lg:w-[30%] mb-4 rounded-lg"
       />
-      <h1 className="text-4xl font-bold mb-8 text-primary_text">
+      <h1 className="text-4xl font-bold text-center mb-8 text-primary_text">
         AI Image Generation
       </h1>
       <form
