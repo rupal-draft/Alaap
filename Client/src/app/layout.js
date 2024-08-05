@@ -50,7 +50,7 @@ export default function RootLayout({ children }) {
                 }`}
               >
                 <h1
-                  className="text-2xl bg-hover_accent hover:bg-background2 text-primary_text p-2 rounded-lg font-semibold transition-transform duration-700"
+                  className="text-2xl bg-hover_accent hover:bg-background2 text-primary_text p-2 flex-grow flex items-center justify-center cursor-pointer  duration-500 rounded-lg "
                   onClick={() => {
                     setOpen(!open);
                   }}
