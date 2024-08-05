@@ -190,7 +190,7 @@ export default function SettingsPage() {
               )}
             </div>
 
-            <div className="mt-0 flex flex-col items-start space-x-2">
+            <div className="mt-0 flex flex-col gap-1 sm:flex-row items-start sm:items-center">
               <label
                 htmlFor="coverImage"
                 className="cursor-pointer bg-hover_accent hover:bg-accent text-primary_text font-bold py-2 px-2 sm:px-4 rounded-lg text-[10px] sm:text-base text-center w-1/2 sm:w-full"
@@ -207,8 +207,8 @@ export default function SettingsPage() {
                 className="hidden"
               />
               {coverphoto && coverphoto.url && (
-                <div className="flex items-center space-x-2">
-                  <span className="mr-2">{coverphoto.name}</span>
+                <div className="flex items-center ">
+                  <span className="">{coverphoto.name}</span>
                   <DeleteOutlined
                     onClick={handleCoverRemove}
                     className="cursor-pointer text-red-500 hover:text-red-600"
@@ -222,7 +222,7 @@ export default function SettingsPage() {
               className="flex absolute left-0 right-0 flex-col items-center gap-1
             
               top-[6.5rem] sm:top-[10.5rem] md:top-[8.5rem] lg:top-[13.5rem] 
-              mx-16 sm:mx-[12rem]  "
+              mx-16 sm:mx-[13rem]  "
             >
               <div
                 className="rounded-full overflow-hidden border-4 sm:border-8 border-shadow object-cover
@@ -257,7 +257,7 @@ export default function SettingsPage() {
                   />
                 )}
               </div>
-              <div className="mt-0 flex items-center justify-center  space-x-2">
+              <div className="mt-0 flex  items-center justify-center  gap-1">
                 <label
                   htmlFor="profileImage"
                   className="cursor-pointer bg-hover_accent hover:bg-accent text-primary_text font-bold py-2 px-2 md:px-4 rounded-lg text-[10px] sm:text-base text-center w-full"
@@ -274,8 +274,8 @@ export default function SettingsPage() {
                   className="hidden"
                 />
                 {photo && photo.url && (
-                  <div className="flex items-center space-x-2">
-                    <span className="mr-2">{photo.name}</span>
+                  <div className="flex items-center">
+                    <span className="">{photo.name}</span>
                     <DeleteOutlined
                       onClick={handlePhotoRemove}
                       className="cursor-pointer text-red-500 hover:text-red-600"
