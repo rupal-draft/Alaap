@@ -78,9 +78,9 @@ const AIImagePage = () => {
           type="text"
           value={numImages}
           onChange={(e) => setNumImages(e.target.value)}
-          placeholder="Enter the number of images to generate (1-3)"
+          placeholder="Enter the number of images to generate (1-2)"
           min="1"
-          max="3"
+          max="2"
           className="w-full text-lg px-4 py-2 border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-hover_accent text-primary_text"
         />
         <button
