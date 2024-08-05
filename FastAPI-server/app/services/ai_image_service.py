@@ -8,8 +8,8 @@ def handle_image_gen(prompt: str, num_images: int):
     try:
         image_urls = []
         input = {
-            "width": 768,
-            "height": 768,
+            "width": "100%",
+            "height": "100%",
             "prompt": prompt,
             "refine": "expert_ensemble_refiner",
             "apply_watermark": False,

@@ -19,15 +19,22 @@ const AIChatSidebar = ({
       }`}
     >
       <div className="w-full bg-gray-800 text-white h-full flex flex-col">
-        <div className="flex-1 overflow-y-auto">
-          <div className="flex items-center justify-between p-4 border-b border-gray-700">
-            <h2 className="text-xl font-semibold">Chat History</h2>
-            <button
-              onClick={() => startNewChat()}
-              className="bg-hover_accent hover:bg-accent p-2 rounded-full"
-            >
+        <div className="flex-1 overflow-y-auto ">
+          <div
+            onClick={() => startNewChat()}
+            className="flex items-center justify-between p-4 border-b border-gray-600 hover:bg-accent cursor-pointer"
+          >
+            <h2 className="text-2xl tracking-widest font-logo_text font-semibold">
+              New Chat
+            </h2>
+            <button className="bg-hover_accent p-2 rounded-full">
               <FaPlus />
             </button>
+          </div>
+          <div className="flex items-center  p-4 border-b border-gray-600 ">
+            <h2 className="text-2xl tracking-tight font-bold font-montserrat ">
+              Chat History
+            </h2>
           </div>
           {chatPages.map((chatpage, index) => (
             <div

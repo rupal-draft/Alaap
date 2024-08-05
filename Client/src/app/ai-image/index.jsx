@@ -98,7 +98,7 @@ const AIImagePage = () => {
           Reset
         </button>
       </form>
-      <div className={`grid grid-cols-${numImages} gap-4`}>
+      {/* <div className={`grid grid-cols-${numImages} gap-4`}>
         {generatedImages.map((image, index) => (
           <div
             key={index}
@@ -117,6 +117,17 @@ const AIImagePage = () => {
             </button>
           </div>
         ))}
+      </div> */}
+
+      <div className={`grid grid-cols-1 gap-4 mb-10`}>
+        <img
+          src="https://imgv3.fotor.com/images/side/ai-generate-watercolor-fairy-from-text-with-Fotor-ai-image-generator.jpg"
+          className=" w-full h-full "
+        />
+        <img
+          src="https://buffer.com/library/content/images/size/w1200/2023/10/free-images.jpg"
+          className=" w-full h-full "
+        />
       </div>
     </div>
   );

@@ -45,7 +45,7 @@ export default function RootLayout({ children }) {
             <main className="flex-grow overflow-auto">{children}</main>
             {shouldRenderNavbar && (
               <div
-                className={` cursor-pointer fixed z-30 bottom-1 transition-all duration-700 ${
+                className={` cursor-pointer fixed z-50 bottom-1 transition-all duration-700 ${
                   open ? "left-[5rem] px-2 py-1" : "left-0 px-2 py-1"
                 }`}
               >
