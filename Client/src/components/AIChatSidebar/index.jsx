@@ -42,13 +42,11 @@ const AIChatSidebar = ({
               className={`p-4 flex gap-2 items-center justify-between cursor-pointer border-b-2 border-shadow hover:bg-gray-700 ${
                 chatpage._id === currentChatId ? "bg-gray-700" : ""
               }`}
+              onClick={() => {
+                setCurrentChatId(chatpage._id);
+              }}
             >
-              <div
-                className="w-full h-full"
-                onClick={() => {
-                  setCurrentChatId(chatpage._id);
-                }}
-              >
+              <div className="w-full h-full">
                 {chatpage.messages.length > 0
                   ? chatpage.messages[0].message.slice(0, 25)
                   : "New Chat"}

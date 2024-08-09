@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { IoSendSharp, IoMic, IoMicOff } from "react-icons/io5";
+import React, { useEffect, useState, useRef } from "react";
+import { IoMic, IoMicOff } from "react-icons/io5";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaRegCopy } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
@@ -19,6 +19,17 @@ export default function AIChatPage() {
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState(null);
   const [error, setError] = useState(false);
+
+  // Reference to the chat container
+  const chatContainerRef = useRef(null);
+
+  // Scroll to the bottom whenever currentChat updates
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [currentChat]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -176,7 +187,10 @@ export default function AIChatPage() {
 
           <div className="flex-1 w-full p-2 overflow-hidden">
             {/** The message section */}
-            <div className="flex flex-col bg-shadow space-y-4 overflow-y-auto rounded-lg shadow-md h-full p-4">
+            <div
+              className="flex flex-col bg-shadow space-y-4 overflow-y-auto rounded-lg shadow-md h-full p-4"
+              ref={chatContainerRef} // Attach the ref to the chat container
+            >
               {currentChat.map((chat, index) => (
                 <div key={index} className="flex flex-col space-y-4">
                   <div className="p-2 rounded-lg flex bg-accent text-primary_text self-end">

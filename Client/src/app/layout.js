@@ -45,12 +45,12 @@ export default function RootLayout({ children }) {
             <main className="flex-grow overflow-auto">{children}</main>
             {shouldRenderNavbar && (
               <div
-                className={` cursor-pointer fixed z-50 bottom-1 transition-all duration-700 ${
+                className={` cursor-pointer fixed z-40 bottom-1 transition-all duration-700 ${
                   open ? "left-[5rem] px-2 py-1" : "left-0 px-2 py-1"
                 }`}
               >
                 <h1
-                  className="text-2xl bg-hover_accent hover:bg-background2 text-primary_text p-2 flex-grow flex items-center justify-center cursor-pointer  duration-500 rounded-lg "
+                  className="text-2xl bg-accent hover:bg-hover_accent text-black p-2 flex-grow flex items-center justify-center cursor-pointer  duration-500 rounded-lg "
                   onClick={() => {
                     setOpen(!open);
                   }}

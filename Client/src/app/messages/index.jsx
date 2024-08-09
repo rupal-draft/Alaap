@@ -482,7 +482,7 @@ const MessagesIndexPage = () => {
         }`}
       >
         <h1
-          className="text-[1.6rem] bg-highlight text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
+          className="text-[2.65rem] bg-highlight text-accent hover:text-hover_accent rounded-lg font-semibold transition-transform duration-700"
           onClick={() => {
             setSidebarOpen(!sidebarOpen);
           }}
