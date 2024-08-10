@@ -84,7 +84,7 @@ export const Post = ({
   return (
     <div className="flex w-full  flex-col gap-[15px] rounded-xl bg-shadow p-5 ">
       <div className="flex items-center justify-between gap-5 ">
-        <div className="flex w-full items-center gap-2.5">
+        <div className="flex  items-start gap-2.5">
           <Link
             href={`/userprofile/${post.postedBy?._id}`}
             className="flex items-center justify-center "
@@ -106,8 +106,8 @@ export const Post = ({
               />
             )}
           </Link>
-          <div className="flex flex-col items-start gap-[2px]">
-            <h1 className="!text-primary_text font-serif font-bold text-[17px] sm:text-[1.6rem] leading-7">
+          <div className="flex flex-wrap w-[80%] sm:w-full xl:w-[85%] flex-col items-start gap-[2px]">
+            <h1 className="!text-primary_text break-words font-serif font-bold text-[17px] sm:text-[1.6rem] leading-5 sm:leading-7">
               {post.postedBy?.name}
             </h1>
             <p

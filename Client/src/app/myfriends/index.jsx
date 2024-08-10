@@ -212,7 +212,7 @@ export default function MyFriendsPage() {
                             className="h-[14px] w-[14px]"
                           />
                         }
-                        className="flex-grow flex items-center justify-center cursor-pointer bg-hover_accent hover:bg-accent duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-[10px] md:text-lg"
+                        className="flex-grow flex items-center justify-center cursor-pointer bg-hover_accent hover:bg-accent duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-lg md:text-lg"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleFollow(search);
@@ -278,7 +278,7 @@ export default function MyFriendsPage() {
                         className="h-[14px] w-[14px]"
                       />
                     }
-                    className="flex-grow flex items-center justify-center cursor-pointer bg-hover_accent hover:bg-accent duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-[10px] md:text-lg"
+                    className="flex-grow flex items-center justify-center cursor-pointer bg-hover_accent hover:bg-accent duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-lg "
                     onClick={(e) => {
                       e.stopPropagation();
                       handleFollow(follow);
@@ -347,7 +347,7 @@ export default function MyFriendsPage() {
                         className="h-[14px] w-[14px]"
                       />
                     }
-                    className="flex-grow flex items-center justify-center cursor-pointer bg-hover_accent hover:bg-accent duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-[10px] md:text-lg"
+                    className="flex-grow flex items-center justify-center cursor-pointer bg-hover_accent hover:bg-accent duration-500 rounded-lg px-4 py-1 font-ubuntu font-medium text-primary_text text-lg"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleUnfollow(fan);

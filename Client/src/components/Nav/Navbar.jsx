@@ -18,11 +18,7 @@ export const navData = [
   { name: "Home", path: "/home", icon: <FaHome /> },
   { name: "Profile", path: "/myprofile", icon: <FaCircleUser /> },
   { name: "Friends", path: "/myfriends", icon: <FaUserFriends /> },
-  {
-    name: "Notifications",
-    path: "",
-    icon: <IoIosNotifications />,
-  },
+  { name: "Notifications", path: "", icon: <IoIosNotifications /> },
   { name: "Messages", path: "/messages", icon: <BsSendFill /> },
   { name: "Sociofy-AI", path: "/sociofy-ai", icon: <PiRobotFill /> },
 ];
@@ -32,6 +28,11 @@ export const navData1 = [
 ];
 
 const Navbar = ({ open, setOpen, socket, myId }) => {
+  const dispatch = useDispatch();
+  const [isOpenPopup, setIsOpenPopup] = useState(false);
+  const notificationRef = useRef(null);
+  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+
   const handleLogout = () => {
     resetClient();
     window.location.href = "/login";
@@ -41,11 +42,6 @@ const Navbar = ({ open, setOpen, socket, myId }) => {
     });
     if (socket && myId) socket.current.emit("logout", myId);
   };
-  const dispatch = useDispatch();
-
-  const [isOpenPopup, setIsOpenPopup] = useState(false);
-  const notificationRef = useRef(null);
-  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     if (notificationRef.current) {
@@ -54,15 +50,16 @@ const Navbar = ({ open, setOpen, socket, myId }) => {
     }
   }, [isOpenPopup]);
 
-  const handleIconClick = (link) => {
+  const handleIconClick = (link, event) => {
     if (link.name === "Notifications") {
+      event.preventDefault(); // Prevent default link behavior
       setIsOpenPopup(!isOpenPopup);
     }
   };
 
   return (
     <div
-      className={`fixed z-40  top-0 h-full lg:h-screen self-stretch overflow-auto bg-background pt-0 flex flex-col items-center border-r-[2px] border-[#31363F]  transition-width duration-700 ${
+      className={`fixed z-50 top-0 h-full lg:h-screen self-stretch overflow-auto bg-background pt-0 flex flex-col items-center border-r-[2px] border-[#31363F] text-primary_text transition-width duration-700 ${
         open ? "w-[80px]" : "w-[0px]"
       }`}
     >
@@ -75,15 +72,16 @@ const Navbar = ({ open, setOpen, socket, myId }) => {
       <div className="flex flex-col gap-6 items-center justify-center my-3">
         {navData.map((link, index) => (
           <div key={index} className="mx-2">
-            <Link
-              href={link.path}
-              onClick={() => handleIconClick(link)}
-              className="flex flex-col items-center justify-center relative group w-full"
-              ref={link.name === "Notifications" ? notificationRef : null}
-            >
-              <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg text-2xl text-primary_text hover:text-hover_accent">
-                {link.icon}
-              </div>
+            <Link legacyBehavior={true} href={link.path}>
+              <a
+                onClick={(event) => handleIconClick(link, event)}
+                className="flex flex-col items-center justify-center relative group w-full"
+                ref={link.name === "Notifications" ? notificationRef : null}
+              >
+                <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg text-2xl text-primary_text hover:text-hover_accent">
+                  {link.icon}
+                </div>
+              </a>
             </Link>
             {link.name === "Notifications" && isOpenPopup && (
               <Popup setIsOpenPopup={setIsOpenPopup} position={popupPosition} />
@@ -95,15 +93,15 @@ const Navbar = ({ open, setOpen, socket, myId }) => {
       {/* Settings and Log Out buttons */}
       <div className="flex flex-col gap-6 items-center justify-center mt-auto my-3">
         {navData1.map((link, index) => (
-          <Link href={link.path} key={index} className="mx-2">
-            <div
+          <Link legacyBehavior={true} href={link.path} key={index}>
+            <a
               className="flex flex-col items-center justify-center relative group w-full"
               onClick={link.action === "logout" ? handleLogout : undefined}
             >
               <div className="flex items-center justify-center py-1 px-3 cursor-pointer rounded-lg text-2xl text-primary_text hover:text-hover_accent">
                 {link.icon}
               </div>
-            </div>
+            </a>
           </Link>
         ))}
       </div>

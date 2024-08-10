@@ -375,7 +375,7 @@ const Posts = () => {
                 </Link>
               )}
             </div>
-            <div className="flex flex-col w-[90%] gap-y-2">
+            <div className="flex flex-col w-[75%] sm:w-[90%] xl:w-[85%] gap-y-2">
               <textarea
                 placeholder="What are you thinking…"
                 value={content}
@@ -402,7 +402,7 @@ const Posts = () => {
                 <button
                   type="button"
                   onClick={() => imageInputRef.current.click()}
-                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-hover_accent hover:bg-accent duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] ${
+                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-hover_accent hover:bg-accent duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] py-1 ${
                     isVideoSelected ? "cursor-not-allowed" : ""
                   }`}
                   disabled={isVideoSelected}
@@ -412,7 +412,7 @@ const Posts = () => {
                 <button
                   type="button"
                   onClick={() => videoInputRef.current.click()}
-                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-hover_accent hover:bg-accent duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] ${
+                  className={`flex-grow flex items-center justify-center cursor-pointer border bg-hover_accent hover:bg-accent duration-500 rounded-lg border-shadow text-primary_text text-[10px] md:text-[1rem] py-1 ${
                     isImageSelected ? "cursor-not-allowed" : ""
                   }`}
                   disabled={isImageSelected}

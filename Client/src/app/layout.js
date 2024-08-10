@@ -13,18 +13,18 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.matchMedia("(min-width: 768px)").matches) {
-        setOpen(true);
-      } else {
-        setOpen(false);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (window.matchMedia("(min-width: 768px)").matches) {
+  //       setOpen(true);
+  //     } else {
+  //       setOpen(false);
+  //     }
+  //   };
+  //   handleResize();
+  //   window.addEventListener("resize", handleResize);
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []);
 
   const noNavbarRoutes = ["/", "/login", "/signup", "/forgot-password"];
   const shouldRenderNavbar =
@@ -32,7 +32,6 @@ export default function RootLayout({ children }) {
     !pathname.startsWith("/reset-password/");
 
   useEffect(() => {
-    // Set the title of the page
     document.title = "Sociofy";
   }, [pathname]);
 
@@ -46,12 +45,12 @@ export default function RootLayout({ children }) {
             <main className="flex-grow overflow-auto">{children}</main>
             {shouldRenderNavbar && (
               <div
-                className={` cursor-pointer fixed z-30 bottom-1 transition-all duration-700 ${
+                className={` cursor-pointer fixed z-40 bottom-1 transition-all duration-700 ${
                   open ? "left-[5rem] px-2 py-1" : "left-0 px-2 py-1"
                 }`}
               >
                 <h1
-                  className="text-2xl bg-hover_accent text-shadow p-2 rounded-lg font-semibold transition-transform duration-700"
+                  className="text-2xl bg-accent hover:bg-hover_accent text-black p-2 flex-grow flex items-center justify-center cursor-pointer  duration-500 rounded-lg "
                   onClick={() => {
                     setOpen(!open);
                   }}

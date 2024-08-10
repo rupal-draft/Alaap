@@ -147,7 +147,7 @@ export const PopupPost = ({
                   />
                 )}
                 <div className="flex flex-wrap flex-col items-start gap-[2px]">
-                  <h1 className="!text-primary_text font-serif font-bold text-[20px] sm:text-[1.6rem] leading-7">
+                  <h1 className="!text-primary_text font-serif font-bold text-[20px] sm:text-[1.6rem] leading-5 sm:leading-7">
                     {post.postedBy?.name}
                   </h1>
                   <p className="!text-secondary_text text-[10px] lg:text-xs xl:text-sm font-semibold">

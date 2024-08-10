@@ -1,12 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { IoSendSharp, IoMic, IoMicOff } from "react-icons/io5";
+import React, { useEffect, useState, useRef } from "react";
+import { IoMic, IoMicOff } from "react-icons/io5";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaRegCopy } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
 import { toast } from "react-toastify";
 import AIChatSidebar from "@/components/AIChatSidebar";
 import fastapi from "@/utils/fastapi";
+import { SendOutlined } from "@ant-design/icons";
 
 export default function AIChatPage() {
   const [open, setOpen] = useState(false);
@@ -18,6 +19,17 @@ export default function AIChatPage() {
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState(null);
   const [error, setError] = useState(false);
+
+  // Reference to the chat container
+  const chatContainerRef = useRef(null);
+
+  // Scroll to the bottom whenever currentChat updates
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [currentChat]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -169,13 +181,16 @@ export default function AIChatPage() {
         <div className="flex flex-col flex-1">
           <div className="flex flex-col w-full items-center py-2 justify-center gap-5">
             <h1 className="text-primary_text font-logo_text text-3xl font-medium">
-              Ask your doubt!
+              Get Your Caption!
             </h1>
           </div>
 
-          <div className="flex-1 w-full px-4 lg:px-14 py-2 overflow-hidden">
+          <div className="flex-1 w-full p-2 overflow-hidden">
             {/** The message section */}
-            <div className="flex flex-col bg-shadow space-y-4 overflow-y-auto rounded-lg shadow-md h-full p-4">
+            <div
+              className="flex flex-col bg-shadow space-y-4 overflow-y-auto rounded-lg shadow-md h-full p-4"
+              ref={chatContainerRef} // Attach the ref to the chat container
+            >
               {currentChat.map((chat, index) => (
                 <div key={index} className="flex flex-col space-y-4">
                   <div className="p-2 rounded-lg flex bg-accent text-primary_text self-end">
@@ -188,7 +203,7 @@ export default function AIChatPage() {
                       </div>
                       <button
                         onClick={() => copyToClipboard(chat.response)}
-                        className="ml-2 text-gray-500 hover:text-gray-700 flex flex-col justify-start items-start"
+                        className="ml-2 text-background hover:text-shadow flex flex-col justify-start items-start"
                       >
                         <FaRegCopy />
                       </button>
@@ -210,14 +225,14 @@ export default function AIChatPage() {
           </div>
 
           {/** The input section */}
-          <div className="w-full pl-14 pr-4 lg:px-14 py-2 bg-background">
+          <div className="w-full   p-2 bg-background">
             <div className="flex items-center gap-x-2">
               <input
                 type="text"
                 value={fetching ? "" : message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 p-2 border rounded-lg text-black"
+                className="w-full p-2 bg-hover_accent rounded-lg text-primary_text focus:outline-none focus:bg-hover_accent focus:border-hover_accent"
                 placeholder={
                   isListening
                     ? "Listening..."
@@ -235,16 +250,18 @@ export default function AIChatPage() {
                   <button
                     onClick={isListening ? stopListening : startListening}
                     className={`p-2 ${
-                      isListening ? "bg-red-500" : "bg-green-500"
+                      isListening
+                        ? "bg-red-500"
+                        : "bg-green-500 hover:bg-green-700"
                     } text-white-A700 rounded-full`}
                   >
                     {isListening ? <IoMicOff /> : <IoMic />}
                   </button>
                   <button
                     onClick={handleSendMessage}
-                    className="p-2 bg-hover_accent hover:bg-accent text-white-A700 rounded-full"
+                    className="py-2 px-4 bg-hover_accent text-secondary_text hover:bg-accent rounded-xl focus:outline-none "
                   >
-                    <IoSendSharp />
+                    <SendOutlined className="text-primary_text" />
                   </button>
                 </>
               )}
@@ -252,8 +269,21 @@ export default function AIChatPage() {
           </div>
         </div>
       ) : (
-        <div className="flex justify-center items-center">
-          <img src="ai-robot.png" className="h-80 w-80" />
+        <div className="flex flex-col items-center justify-center  bg-background flex-1 gap-3 px-10">
+          <h1 className="text-lg text-primary_text font-lato text-center">
+            <b>
+              {" "}
+              Engage in stimulating conversations with AI, explore shared
+              interests, and forge meaningful connections on <em>Sociofy</em> AI
+              Chat.
+            </b>{" "}
+            Experience the power of intelligent dialogue and discover new
+            perspectives with every interaction.{" "}
+          </h1>
+
+          <div className=" w-fit h-fit">
+            <img src="aichat.png" className="h-80 w-80" />
+          </div>
         </div>
       )}
     </div>
