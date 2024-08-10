@@ -120,6 +120,27 @@ const AIImagePage = () => {
       </div> */}
 
       <div className={`grid grid-cols-1 gap-4 mb-10`}>
+        {generatedImages.map((image, index) => (
+          <div
+            key={index}
+            className="relative border rounded-lg overflow-hidden"
+          >
+            <img
+              src={image}
+              alt={`Generated ${index}`}
+              className="w-full h-full object-cover"
+            />
+            <button
+              onClick={() => handleDownload(image)}
+              className="absolute bottom-2 right-2 bg-shadow p-1 rounded-full text-xl"
+            >
+              <AiOutlineDownload className="text-primary_text" />
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* <div className={`grid grid-cols-1 gap-4 mb-10`}>
         <img
           src="https://imgv3.fotor.com/images/side/ai-generate-watercolor-fairy-from-text-with-Fotor-ai-image-generator.jpg"
           className=" w-full h-full "
@@ -128,7 +149,7 @@ const AIImagePage = () => {
           src="https://buffer.com/library/content/images/size/w1200/2023/10/free-images.jpg"
           className=" w-full h-full "
         />
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -12,4 +12,4 @@ pymongo==4.8.0
 passlib==1.7.4
 PyJWT==2.8.0
 google-generativeai==0.7.2
-replicate==0.30.1
+replicate==0.31.0
