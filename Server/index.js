@@ -82,7 +82,7 @@ app.use("/api", userRoutes);
 app.use("/api", uploadRoutes);
 app.use("/api", messageRoutes);
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 http.listen(port, () => {
   console.log(`Server running on port ${port}`);

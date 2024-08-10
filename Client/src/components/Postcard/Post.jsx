@@ -119,11 +119,13 @@ export const Post = ({
             </p>
           </div>
         </div>
-        <DeleteOutlined
-          className="text-red-500 cursor-pointer text-xl sm:text-2xl duration-500
+        {post?.postedBy?._id === user?._id && (
+          <DeleteOutlined
+            className="text-red-500 cursor-pointer text-xl sm:text-2xl duration-500
           transition-transform hover:scale-125"
-          onClick={handleDelete}
-        />
+            onClick={handleDelete}
+          />
+        )}
       </div>
       <div
         className="flex flex-col items-center justify-center gap-y-5
@@ -210,22 +212,24 @@ export const Post = ({
               </h1>
             </div>
           </div>
-          <div className="flex items-center text-primary_text cursor-pointer relative">
-            {isClient &&
-            user.saved?.some((savedPost) => savedPost._id === post._id) ? (
-              <BsSaveFill
-                onClick={() => {
-                  handleUnSave(post._id);
-                }}
-              />
-            ) : (
-              <BsSave
-                onClick={() => {
-                  handleSave(post._id);
-                }}
-              />
-            )}{" "}
-          </div>
+          {post?.postedBy?._id !== user?._id && (
+            <div className="flex items-center text-primary_text cursor-pointer relative">
+              {isClient &&
+              user.saved?.some((savedPost) => savedPost._id === post._id) ? (
+                <BsSaveFill
+                  onClick={() => {
+                    handleUnSave(post._id);
+                  }}
+                />
+              ) : (
+                <BsSave
+                  onClick={() => {
+                    handleSave(post._id);
+                  }}
+                />
+              )}{" "}
+            </div>
+          )}
         </div>
       </div>
       {isPopupOpen && (
