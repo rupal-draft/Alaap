@@ -3,7 +3,7 @@ import React from "react";
 import Page from ".";
 
 export const metadata = {
-  title: "Sociofy",
+  title: "Alaap",
   description: "Web site created using create-react-app",
   //ogTitle:'...'
 };

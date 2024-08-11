@@ -70,10 +70,10 @@ const forgotPassword = async (_, { email }) => {
     var mailOptions = {
       from: process.env.EMAIL_ID,
       to: email,
-      subject: "Reset your password - Sociofy",
+      subject: "Reset your password - Alaap",
       text: `Dear ${user.name},
 
-      We received a request to reset your password for your Sociofy account. To proceed with this request, please follow the instructions below:
+      We received a request to reset your password for your Alaap account. To proceed with this request, please follow the instructions below:
       
         1. Click on the following link to reset your password:
         ${process.env.FRONTEND}/reset-password/${user.id}/${token}
@@ -84,10 +84,10 @@ const forgotPassword = async (_, { email }) => {
       
       If you did not request this password reset, please disregard this email. Your account is still secure, and no changes have been made.
       
-      Thank you for using Sociofy.
+      Thank you for using Alaap.
       
       Best regards,
-      Sociofy Team`,
+      Alaap Team`,
     };
 
     await transporter.sendMail(mailOptions);

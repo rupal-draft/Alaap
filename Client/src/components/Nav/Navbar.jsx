@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import Logo from "../../../public/sociofyLogoTemp.png";
+import Logo from "../../../public/alaap_logo.png";
 import Link from "next/link";
 import Popup from "./Popup";
 
@@ -20,7 +20,7 @@ export const navData = [
   { name: "Friends", path: "/myfriends", icon: <FaUserFriends /> },
   { name: "Notifications", path: "", icon: <IoIosNotifications /> },
   { name: "Messages", path: "/messages", icon: <BsSendFill /> },
-  { name: "Sociofy-AI", path: "/sociofy-ai", icon: <PiRobotFill /> },
+  { name: "Alaap-AI", path: "/Alaap-ai", icon: <PiRobotFill /> },
 ];
 export const navData1 = [
   { name: "Settings", path: "/settings", icon: <IoIosSettings /> },

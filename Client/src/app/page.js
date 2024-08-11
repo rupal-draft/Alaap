@@ -42,7 +42,7 @@ export default function Home() {
             <span>Let's create your own social verse </span>
           </h1>
           <p className="xl:text-lg md:text-lg text-[0.8rem] font-open_sans">
-            Sociofy is a user-friendly social media app with a beautiful,
+            Alaap is a user-friendly social media app with a beautiful,
             responsive UI. It offers features like posting videos, photos, and
             stories, and allows users to like, comment, and receive
             notifications. Enjoy real-time chat, a personal profile showcasing

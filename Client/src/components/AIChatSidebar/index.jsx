@@ -60,12 +60,12 @@ const AIChatSidebar = ({
       </div>
 
       <div
-        className={`lg:hidden fixed z-30 bottom-0 transition-all duration-700 ${
+        className={`lg:hidden fixed z-30 bottom-1 transition-all duration-700 ${
           sidebarOpen ? "right-0 px-2 py-1" : "right-0 px-2 py-1"
         }`}
       >
         <h1
-          className="text-[1.6rem] bg-accent text-primary_text hover:bg-hover_accent p-2 rounded-lg font-semibold transition-transform duration-700"
+          className="text-[1.75rem] bg-accent text-primary_text hover:bg-hover_accent p-2 rounded-lg font-semibold transition-transform duration-700"
           onClick={() => {
             setSidebarOpen(!sidebarOpen);
           }}

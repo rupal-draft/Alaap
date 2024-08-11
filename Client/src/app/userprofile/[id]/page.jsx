@@ -207,7 +207,7 @@ export default function UserProfilePage({ params }) {
 
                   {posts.length > maxDisplayedPhotos && (
                     <Link
-                      href="/mygallery"
+                      href={`/gallery/${id}`}
                       className="font-semibold text-secondary_text hover:text-primary_text"
                     >
                       See more...

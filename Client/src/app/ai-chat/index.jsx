@@ -181,7 +181,7 @@ export default function AIChatPage() {
         <div className="flex flex-col flex-1">
           <div className="flex flex-col w-full items-center py-2 justify-center gap-5">
             <h1 className="text-primary_text font-logo_text text-3xl font-medium">
-              Get Your Caption!
+              Generate your content!
             </h1>
           </div>
 
@@ -225,7 +225,7 @@ export default function AIChatPage() {
           </div>
 
           {/** The input section */}
-          <div className="w-full   p-2 bg-background">
+          <div className="w-full   p-2 bg-background gap-2 mb-12 lg:mb-2 border-t ">
             <div className="flex items-center gap-x-2">
               <input
                 type="text"
@@ -274,7 +274,7 @@ export default function AIChatPage() {
             <b>
               {" "}
               Engage in stimulating conversations with AI, explore shared
-              interests, and forge meaningful connections on <em>Sociofy</em> AI
+              interests, and forge meaningful connections on <em>Alaap</em> AI
               Chat.
             </b>{" "}
             Experience the power of intelligent dialogue and discover new
