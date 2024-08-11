@@ -13,19 +13,6 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.matchMedia("(min-width: 768px)").matches) {
-  //       setOpen(true);
-  //     } else {
-  //       setOpen(false);
-  //     }
-  //   };
-  //   handleResize();
-  //   window.addEventListener("resize", handleResize);
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, []);
-
   const noNavbarRoutes = ["/", "/login", "/signup", "/forgot-password"];
   const shouldRenderNavbar =
     !noNavbarRoutes.includes(pathname) &&
