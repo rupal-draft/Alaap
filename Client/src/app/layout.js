@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
     !pathname.startsWith("/reset-password/");
 
   useEffect(() => {
-    document.title = "Sociofy";
+    document.title = "Alaap";
   }, [pathname]);
 
   return (

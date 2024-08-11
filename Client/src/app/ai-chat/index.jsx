@@ -274,7 +274,7 @@ export default function AIChatPage() {
             <b>
               {" "}
               Engage in stimulating conversations with AI, explore shared
-              interests, and forge meaningful connections on <em>Sociofy</em> AI
+              interests, and forge meaningful connections on <em>Alaap</em> AI
               Chat.
             </b>{" "}
             Experience the power of intelligent dialogue and discover new

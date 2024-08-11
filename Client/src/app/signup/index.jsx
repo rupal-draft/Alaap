@@ -60,7 +60,7 @@ export default function SignupPage() {
           className=" flex flex-col items-center justify-center gap-y-2 cursor-pointer"
         >
           <Image
-            src="/sociofyLogoTemp.png"
+            src="/alaap_logo.png"
             width={75}
             height={75}
             alt="headerlogo"

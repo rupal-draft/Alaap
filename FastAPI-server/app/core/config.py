@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "Sociofy FastAPI Application"
+    PROJECT_NAME: str = "Alaap FastAPI Application"
     MONGODB_URI: str
     GEMINI_API_KEY: str
     SITE_URL: str

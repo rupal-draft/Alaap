@@ -74,7 +74,7 @@ export default function LoginPage() {
         >
           {" "}
           <Image
-            src="/sociofyLogoTemp.png"
+            src="/alaap_logo.png"
             width={75}
             height={75}
             alt="headerlogo"

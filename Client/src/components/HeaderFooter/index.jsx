@@ -13,7 +13,7 @@ const HeaderFooter = () => {
         >
           {" "}
           <Image
-            src="/sociofyLogoTemp.png"
+            src="/alaap_logo.png"
             width={50}
             height={50}
             alt="headerlogo"
@@ -21,7 +21,7 @@ const HeaderFooter = () => {
           />
         </Link>
         <h2 className="text-4xl text-primary_text font-logo_text  font-bold ">
-          Sociofy
+          Alaap
         </h2>
       </div>
 
@@ -41,7 +41,7 @@ const HeaderFooter = () => {
             </Link>
           </div>
           <div className=" text-primary_text text-sm  text-primary-text font-semibold font-open_sans text-center">
-            <p>© 2024 Sociofy. All rights reserved.</p>
+            <p>© 2024 Alaap. All rights reserved.</p>
           </div>
         </div>
       </div>

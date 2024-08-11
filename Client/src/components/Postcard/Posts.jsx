@@ -345,7 +345,7 @@ const Posts = () => {
   };
 
   return (
-    <div className="grid gap-[30px] w-full h-full min-h-screen">
+    <div className="grid gap-[30px]  w-full h-full min-h-screen">
       <div className="flex flex-col xl:flex-row flex-grow flex-shrink gap-[30px] px-5">
         {/* Create Post Section */}
         <div className=" flex flex-col items-center justify-between w-full gap-[7px] rounded-[12px] bg-shadow p-5">
@@ -562,7 +562,7 @@ const Posts = () => {
       </div>
 
       {/* Posts */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-[30px] px-5 w-full h-full min-h-screen bg-background">
+      <div className="grid grid-cols-1 pb-5 xl:grid-cols-2 gap-[30px] px-5 w-full h-full min-h-screen bg-background">
         {posts &&
           posts.map((post, index) => (
             <Post

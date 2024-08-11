@@ -1,5 +1,5 @@
 "use client";
-import Logo from "../../../public/sociofyLogoTemp.png";
+import Logo from "../../../public/alaap_logo.png";
 import MessageImg from "../../../public/sociofyMessage1.png";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
@@ -717,14 +717,14 @@ const MessagesIndexPage = () => {
       ) : (
         <div className="flex flex-col items-center justify-center  bg-background flex-1 gap-3 px-10">
           <div className="w-[60px] lg:w-[70px]">
-            <Image src={Logo} alt="sociofy" className="rounded-full" />
+            <Image src={Logo} alt="Alaap" className="rounded-full" />
           </div>
 
           <h1 className="text-lg text-primary_text font-lato">
             <b>
               {" "}
               Reconnect with friends, share laughter, and create unforgettable
-              memories on <em>Sociofy</em>.
+              memories on <em>Alaap</em>.
             </b>{" "}
             Dive into endless conversations, explore shared interests, and
             strengthen bonds with those who matter most. Experience the joy of

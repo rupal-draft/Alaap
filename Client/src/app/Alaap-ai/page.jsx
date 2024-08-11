@@ -7,6 +7,6 @@ export const metadata = {
   //ogTitle:'...'
 };
 
-export default function MyProfilePage() {
+export default function SociofyAI() {
   return <Page />;
 }
