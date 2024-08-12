@@ -34,7 +34,7 @@ class UserAllChatsResponse(BaseModel):
     
 class ImageRequest(BaseModel):
     text: str
-    num_images: int = Field(default=1, gt=0, le=2, description="Number of images to generate (1-2)")
+    num_images: int = Field(default=1, gt=0, le=3, description="Number of images to generate (1-3)")
 
 class ImageResponse(BaseModel):
     image_urls: list[str]

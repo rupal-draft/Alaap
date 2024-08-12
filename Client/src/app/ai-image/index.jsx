@@ -2,6 +2,8 @@
 import fastapi from "@/utils/fastapi";
 import React, { useState } from "react";
 import { AiOutlineDownload } from "react-icons/ai";
+import { VscHubot } from "react-icons/vsc";
+import Link from "next/link";
 
 const AIImagePage = () => {
   const [prompt, setPrompt] = useState("");
@@ -54,7 +56,14 @@ const AIImagePage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-background p-4">
+      <Link
+        href="/Alaap-ai"
+        className="absolute top-2 right-2 text-primary_text"
+      >
+        <VscHubot className=" w-14 h-14 " />
+      </Link>
+
       <img
         src="https://images.tech.co/wp-content/uploads/2024/02/20074049/AdobeStock_583862221-1.jpeg"
         alt="AI image"
@@ -78,9 +87,9 @@ const AIImagePage = () => {
           type="text"
           value={numImages}
           onChange={(e) => setNumImages(e.target.value)}
-          placeholder="Enter the number of images to generate (1-2)"
+          placeholder="Enter the number of images to generate (1-3)"
           min="1"
-          max="2"
+          max="3"
           className="w-full text-lg px-4 py-2 border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-hover_accent text-primary_text"
         />
         <button
