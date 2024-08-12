@@ -8,23 +8,18 @@ Alaap is a modern social media application designed to connect people and foster
 
 #### Landing Page -
 
-![Screenshot 2024-07-14 221805](https://github.com/user-attachments/assets/9425a2db-7865-4619-84e3-e6f47041cfde)
 
 #### Login Page -
 
-![Screenshot 2024-07-14 221829](https://github.com/user-attachments/assets/4d7d8321-09c7-4215-bebe-f207f56b5e87)
 
 #### Sign Up Page -
 
-![Screenshot 2024-07-14 221850](https://github.com/user-attachments/assets/9b42d964-bb79-4e26-96ab-4bafe6b487b1)
 
 #### My Profile Page -
 
-![Screenshot 2024-07-14 222701](https://github.com/user-attachments/assets/7395cde7-344f-4db8-8776-a8d21591db10)
 
 #### Settings Page -
 
-![Screenshot 2024-07-14 222401](https://github.com/user-attachments/assets/bdbe9860-3578-4bd2-9215-8ac6dd56fd7b)
 
 ### To set up Alaap on your local machine, follow these simple steps:
 
