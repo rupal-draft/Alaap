@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
+import { VscHubot } from "react-icons/vsc";
+import Link from "next/link";
 import { TbHistory, TbHistoryOff } from "react-icons/tb";
 
 const AIChatSidebar = ({
@@ -20,6 +22,17 @@ const AIChatSidebar = ({
     >
       <div className="w-full bg-gray-800 text-white h-full flex flex-col">
         <div className="flex-1 overflow-y-auto ">
+          <div className="flex items-center  p-4 border-b border-gray-600 ">
+            <Link
+              href="/Alaap-ai"
+              className=" flex items-center text-primary_text"
+            >
+              <VscHubot className=" absolute  right-2 w-10 h-10 " />
+            </Link>
+            <h2 className="text-2xl tracking-tight font-bold font-montserrat ">
+              Chat History
+            </h2>
+          </div>
           <div
             onClick={() => startNewChat()}
             className="flex items-center justify-between p-4 border-b border-gray-600 hover:bg-accent cursor-pointer"
@@ -31,11 +44,7 @@ const AIChatSidebar = ({
               <FaPlus />
             </button>
           </div>
-          <div className="flex items-center  p-4 border-b border-gray-600 ">
-            <h2 className="text-2xl tracking-tight font-bold font-montserrat ">
-              Chat History
-            </h2>
-          </div>
+
           {chatPages.map((chatpage, index) => (
             <div
               key={index}

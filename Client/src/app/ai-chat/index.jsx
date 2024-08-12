@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { IoMic, IoMicOff } from "react-icons/io5";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaRegCopy } from "react-icons/fa";
+
 import ReactMarkdown from "react-markdown";
 import { toast } from "react-toastify";
 import AIChatSidebar from "@/components/AIChatSidebar";

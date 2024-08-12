@@ -85,10 +85,7 @@ export const Post = ({
     <div className="flex w-full  flex-col gap-[15px] rounded-xl bg-shadow p-5 ">
       <div className="flex items-center justify-between gap-5 ">
         <div className="flex  items-start gap-2.5">
-          <Link
-            href={`/userprofile/${post.postedBy?._id}`}
-            className="flex items-center justify-center "
-          >
+          <Link href={`/userprofile/${post.postedBy?._id}`} className="flex ">
             {post?.postedBy?.photo?.url ? (
               <img
                 src={post.postedBy?.photo?.url}
@@ -106,15 +103,11 @@ export const Post = ({
               />
             )}
           </Link>
-          <div className="flex flex-wrap w-[80%] sm:w-full xl:w-[85%] flex-col items-start gap-[2px]">
-            <h1 className="!text-primary_text break-words font-serif font-bold text-[17px] sm:text-[1.6rem] leading-5 sm:leading-7">
+          <div className="flex flex-wrap flex-col items-start gap-[2px]">
+            <h1 className="!text-primary_text font-serif font-bold text-[20px] sm:text-[1.6rem] leading-5 sm:leading-7">
               {post.postedBy?.name}
             </h1>
-            <p
-              size="s"
-              as="p"
-              className="!text-secondary_text text-[10px] md:text-sm font-semibold"
-            >
+            <p className="!text-secondary_text text-[10px] lg:text-xs xl:text-sm font-semibold">
               {formattedDate}
             </p>
           </div>

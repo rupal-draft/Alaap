@@ -8,7 +8,9 @@ import Popup from "./Popup";
 import { FaHome, FaUserFriends } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
 import { BsSendFill } from "react-icons/bs";
-import { PiRobotFill } from "react-icons/pi";
+// import { PiRobotFill } from "react-icons/pi";
+import { VscHubot } from "react-icons/vsc";
+
 import { IoIosNotifications, IoIosSettings, IoIosLogOut } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { resetClient } from "@/utils/graphql";
@@ -20,7 +22,11 @@ export const navData = [
   { name: "Friends", path: "/myfriends", icon: <FaUserFriends /> },
   { name: "Notifications", path: "", icon: <IoIosNotifications /> },
   { name: "Messages", path: "/messages", icon: <BsSendFill /> },
-  { name: "Alaap-AI", path: "/Alaap-ai", icon: <PiRobotFill /> },
+  {
+    name: "Alaap-AI",
+    path: "/Alaap-ai",
+    icon: <VscHubot className=" w-8 h-8 " />,
+  },
 ];
 export const navData1 = [
   { name: "Settings", path: "/settings", icon: <IoIosSettings /> },
