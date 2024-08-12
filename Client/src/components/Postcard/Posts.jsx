@@ -59,6 +59,7 @@ const Posts = () => {
   const scrollRight = () => {
     sliderRef.current.scrollBy({ left: 200, behavior: "smooth" });
   };
+
   const { data, loading, error, refetch } = useQuery(GET_POSTS_QUERY);
   const loadPosts = async () => {
     await refetch();
@@ -481,32 +482,24 @@ const Posts = () => {
         </div>
 
         {/* Stories Section */}
-        <div className="relative  flex flex-col items-center justify-center w-full p-5 rounded-[12px] bg-shadow ">
+        <div className="relative overflow-auto flex flex-col items-center justify-center w-full p-5 rounded-[12px] bg-shadow">
           <button
             onClick={scrollLeft}
-            className="absolute  z-10 px-1 left-0 rounded-full text-3xl  hover:text-hover_accent text-accent hidden lg:flex"
+            className="absolute z-10 px-1 left-0 rounded-full text-3xl hover:text-hover_accent text-accent hidden lg:flex"
           >
             <IoIosArrowBack />
           </button>
 
           <button
             onClick={scrollRight}
-            className="rounded-full text-3xl font-bold  hover:text-hover_accent text-accent hidden absolute  z-10 px-1 right-0 lg:flex"
+            className="rounded-full text-3xl font-bold hover:text-hover_accent text-accent hidden absolute z-10 px-1 right-0 lg:flex"
           >
             <IoIosArrowForward />
           </button>
-          <div className=" flex flex-col items-center justify-between w-full  bg-shadow ">
-            <div
-              className="relative flex items-center justify-center gap-x-3 overflow-hidden
-              w-[240px]
-              min-[360px]:w-[300px]
-              sm:w-[570px]
-              md:w-[700px]
-              lg:w-[870px] 
-              xl:w-[520px]
-              2xl:w-[610px] "
-            >
-              <div ref={sliderRef} className="flex  gap-x-3 ">
+
+          <div className="flex flex-col items-center justify-between w-full bg-shadow">
+            <div className="relative flex items-center justify-center gap-x-3 overflow-hidden overflow-x-scroll scrollbar-hide w-[240px] min-[360px]:w-[300px] sm:w-[570px] md:w-[700px] lg:w-[870px] xl:w-[520px] 2xl:w-[610px]">
+              <div ref={sliderRef} className="flex items-center gap-x-3">
                 {showPlusSign && (
                   <div className="flex-shrink-0 flex items-center justify-center w-[80px] h-[80px] bg-accent hover:bg-hover_accent border-2 border-hover_accent rounded-full cursor-pointer">
                     <label
@@ -527,13 +520,14 @@ const Posts = () => {
                     </label>
                   </div>
                 )}
-                <div className=" flex gap-x-2">
+
+                <div className="flex gap-x-2  pl-12">
                   {stories.map((story, index) => (
                     <div
                       key={index}
-                      className="flex  flex-col items-center justify-between gap-y-1 w-[80px]"
+                      className="flex flex-col  items-center justify-between gap-y-1 w-[80px]"
                     >
-                      <div className="flex items-center justify-center w-full relative ">
+                      <div className="flex items-center  justify-center w-full relative">
                         <img
                           src={story.image?.url}
                           alt="sidebarlogo"
@@ -542,7 +536,7 @@ const Posts = () => {
                         />
                         {story.postedBy?._id === user?._id && (
                           <AiOutlineClose
-                            className="absolute w-4 h-4 top-0 -left-1 cursor-pointer text-red-500 duration-500   transition-transform hover:scale-125"
+                            className="absolute w-4 h-4 top-0 -left-1 cursor-pointer text-red-500 duration-500 transition-transform hover:scale-125"
                             onClick={() => handleDeleteStory(story._id)}
                           />
                         )}
