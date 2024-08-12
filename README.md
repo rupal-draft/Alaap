@@ -2,26 +2,37 @@
 
 ## Alaap: A Social Media App
 
-Alaap is a modern social media application designed to connect people and foster meaningful interactions. Built on the MERN (MongoDB, Express.js, React.js, Node.js) stack with RestAPI and GraphQL for the backend, Next.js for the frontend, and Socket.io for real-time updates. Alaap offers a seamless user experience coupled with powerful features. It is a user-friendly social media app with a beautiful, responsive UI. It offers features like posting videos, photos, and stories, and allows users to like, comment, and receive notifications. Enjoy real-time chat, a personal profile showcasing your posts and followers, and a personalized settings page to modify your profile.
+Alaap is a modern social media application designed to connect people and foster meaningful interactions. Built on the MERN (MongoDB, Express.js, React.js, Node.js) stack with RestAPI and GraphQL for the backend, Next.js for the frontend, and Socket.io for real-time updates. Alaap offers a seamless user experience coupled with powerful features. It is a user-friendly social media app with a beautiful, responsive UI. It provides features like posting videos, photos, and stories, and allows users to like, comment, and receive notifications. Enjoy real-time chat, a personal profile showcasing your posts and followers, and a personalized settings page to modify your profile.
 
-## Demo Images -
+## Demo Youtube Video Link -
 
-#### Landing Page -
+[Alaap Live](https://youtu.be/u51sKAr8gLA?si=N4NKrKcXfKXAzvMu)
 
+#### Demo 1 (Landing + Login + Sign Up + Forgot Password) -
 
-#### Login Page -
+![landing login sign up forgot password](https://github.com/user-attachments/assets/bb86ccd7-a75c-4f93-9675-930445fa3a00)
 
+#### Demo 2 (Home + My Friends) -
 
-#### Sign Up Page -
+![home + my friends](https://github.com/user-attachments/assets/68b82633-83cf-4702-99b2-98899071ceff)
 
+#### Demo 3 (Image Post + Video Post) -
 
-#### My Profile Page -
+![img + video](https://github.com/user-attachments/assets/cd7e9d56-4b91-4d53-b8d2-102b05c616be)
 
+#### Demo 4 (My Profile + Chats) -
 
-#### Settings Page -
+![myprofile + chats](https://github.com/user-attachments/assets/10287dc1-8fe5-4ea7-9b03-3554bf494a8f)
 
+#### Demo 5 (Stories + Settings) -
 
-### To set up Alaap on your local machine, follow these simple steps:
+![story+settings](https://github.com/user-attachments/assets/4a1ff87c-a9f1-4d62-94ae-c905dc08f41d)
+
+#### Demo 6 (AI Services + Notification) -
+
+![ai + notification](https://github.com/user-attachments/assets/37560fa5-c801-4de5-9449-af59eebe996e)
+
+## To set up Alaap on your local machine, follow these simple steps:
 
 #### To clone the repository run the following command in your terminal -
 
