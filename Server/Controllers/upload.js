@@ -31,7 +31,7 @@ export const videoUpload = async (req, res) => {
     if (!video) return res.status(404).send("No Video found!");
 
     const params = {
-      Bucket: "Alaap-bucket",
+      Bucket: "sociofy-bucket",
       Key: `${nanoid()}.${video.type.split("/")[1]}`,
       Body: readFileSync(video.path),
       ACL: "public-read",
