@@ -118,9 +118,9 @@ Now enjoy Alaap! on your localhost:3000. 🥳🥳
 
 We welcome contributions from the community. If you'd like to contribute to Alaap, please fork the repository and submit pull requests with your changes.
 
-## Documentation
+### Documentation
 
-[For detailed API information,visit Alaap API Documentation]([https://linktodocumentation](https://documenter.getpostman.com/view/30415721/2sA3JKdMzQ))
+For detailed API documentation, visit [Alaap Documentation](https://documenter.getpostman.com/view/30415721/2sA3JKdMzQ).
 
 ### License
 
